@@ -1,0 +1,79 @@
+//
+// Copyright (c) 2017 Contributors to the Eclipse Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+[[clientexamples]]
+== MicroProfile Rest Client Definition Examples
+
+MicroProfile TypeSafe Rest Clients are defined as Java interfaces.
+
+=== Sample Definitions
+
+[source, java]
+----
+public interface MyServiceClient {
+    @GET
+    @Path("/greet")
+    Response greet();
+}
+----
+
+This simple API exposes one API call, located at `/greet` from the base URL of the client.  Invoking this endpoint returns a `javax.ws.rs.core.Response` object that represents the raw response from invoking the API.  Below is a more comprehensive example of a client.
+
+[source, java]
+----
+@Path("/users")
+@Produces("application/json")
+@Consumes("application/json")
+public interface UsersClient {
+    @OPTIONS
+    Response options();
+
+    @HEAD
+    Response head();
+
+    @GET
+    List<User> getUsers();
+
+    @GET
+    @Path("/{userId}")
+    User getUser(@PathParam("userId") String userId);
+
+    @HEAD
+    @Path("/{userId}")
+    Response headUser(@PathParam("userId") String userId);
+
+    @POST
+    Response createUser(@HeaderParam("Authorization") String authorization, User user);
+
+    @PUT
+    @Path("/{userId}")
+    Response updateUser(@BeanParam PutUser putUser, User user);
+
+    @DELETE
+    @Path("/{userId}")
+    Response deleteUser(@CookieParam("AuthToken") String authorization, @PathParam("userId") String userId);
+}
+
+public class PutUser {
+    @HeaderParam("Authorization")
+    private String authorization;
+    @PathParam("userId")
+    private String userId;
+    // getters, setters, constructors omitted
+}
+----
+
+All built in HTTP methods are supported by the client API.  Likewise, all base parameter types (query, cookie, matrix, path, form and bean) are supported.  If you only need to inspect the body, you can provide a POJO can be processed by the underlying `MessageBodyReader` or `MessageBodyWriter`.  Otherwise, you can receive the entire `Response` object for parsing the body and header information from the server invocation.
