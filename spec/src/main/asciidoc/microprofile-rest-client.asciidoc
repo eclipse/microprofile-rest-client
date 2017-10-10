@@ -17,4 +17,30 @@
 // limitations under the License.
 //
 
-# Rest Client for MicroProfile
+= Rest Client for MicroProfile
+:authors: John D. Ament
+:email: john.d.ament@gmail.com
+:revnumber: 1.0
+:revdate: 2017-11-31
+:revremark: Draft
+:version-label!:
+:sectanchors:
+:doctype: book
+:license: Apache License v2.0
+:source-highlighter: coderay
+:toc: left
+:toclevels: 4
+:sectnumlevels: 4
+ifdef::backend-pdf[]
+:pagenums:
+endif::[]
+
+
+include::license-alv2.asciidoc[]
+
+== Microprofile Rest Client
+
+
+include::clientexamples.asciidoc[]
+
+include::release_notes.asciidoc[]
