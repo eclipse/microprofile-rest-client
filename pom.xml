@@ -22,7 +22,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MicroProfile Rest Client</name>
-
+    <description>Typesafe Rest Client APIs for MicroProfile</description>
     <url>http://microprofile.io</url>
 
     <properties>
@@ -45,24 +45,21 @@
 
     <scm>
         <connection>scm:git:https://github.com/eclipse/microprofile-rest-client.git</connection>
-        <developerConnection>scm:git:https://github.com/eclipse/microprofile-rest-client.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:eclipse/microprofile-rest-client.git</developerConnection>
         <url>https://github.com/eclipse/microprofile-rest-client</url>
-        <tag>HEAD</tag>
+        <tag>release-testing</tag>
     </scm>
 
     <distributionManagement>
         <repository>
-            <id>repo.eclipse.org</id>
-            <name>Eclipse MicroProfile Repository - Releases</name>
-            <url>https://repo.eclipse.org/content/repositories/microprofile-releases/</url>
+            <id>ossrh</id>
+            <name>Sonatype OSSRH - Release Staging Area</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <snapshotRepository>
-            <id>repo.eclipse.org</id>
-            <name>Eclipse MicroProfile Repository - Snapshots</name>
-            <url>https://repo.eclipse.org/content/repositories/microprofile-snapshots/</url>
-
-            <uniqueVersion>true</uniqueVersion>  <!-- for keeping multipe snapshot versions - maybe for staging a final version besides nightly versions -->
-
+            <id>ossrh</id>
+            <name>Sonatype OSSRH Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -96,13 +93,14 @@
         </dependencies>
     </dependencyManagement>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.eclipse.org</id>
-            <name>Project Repository - Releases</name>
-            <url>https://repo.eclipse.org/content/groups/cbi/</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <developers>
+        <developer>
+            <name>John D. Ament</name>
+            <url>https://github.com/johnament</url>
+            <organization>Sparta Systems, Inc</organization>
+            <organizationUrl>https://www.spartasystems.com</organizationUrl>
+        </developer>
+    </developers>
 
     <build>
         <pluginManagement>
@@ -113,14 +111,10 @@
                     <version>2.5.3</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <pushChanges>false</pushChanges>
                         <localCheckout>true</localCheckout>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <arguments>${arguments} -Prelease</arguments>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.cbi.maven.plugins</groupId>
-                    <artifactId>eclipse-jarsigner-plugin</artifactId>
-                    <version>1.1.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -141,6 +135,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.10.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -167,72 +166,73 @@
                     <logViolationsToConsole>true</logViolationsToConsole>
                     <checkstyleRules>
                         <module name="Checker">
-                            <module name="SuppressionCommentFilter" />
+                            <module name="SuppressionCommentFilter"/>
                             <module name="FileLength">
-                                <property name="max" value="3500" />
-                                <property name="fileExtensions" value="java" />
+                                <property name="max" value="3500"/>
+                                <property name="fileExtensions" value="java"/>
                             </module>
-                            <module name="FileTabCharacter" />
+                            <module name="FileTabCharacter"/>
                             <module name="TreeWalker">
-                                <module name="FileContentsHolder" />
+                                <module name="FileContentsHolder"/>
                                 <module name="ConstantName">
-                                    <property name="format" value="^(([A-Z][A-Z0-9]*(_[A-Z0-9]+)*))$" />
+                                    <property name="format" value="^(([A-Z][A-Z0-9]*(_[A-Z0-9]+)*))$"/>
                                 </module>
-                                <module name="LocalVariableName" />
+                                <module name="LocalVariableName"/>
                                 <module name="MethodName">
-                                    <property name="format" value="${checkstyle.methodNameFormat}" />
+                                    <property name="format" value="${checkstyle.methodNameFormat}"/>
                                 </module>
-                                <module name="PackageName" />
-                                <module name="LocalFinalVariableName" />
-                                <module name="ParameterName" />
-                                <module name="StaticVariableName" />
+                                <module name="PackageName"/>
+                                <module name="LocalFinalVariableName"/>
+                                <module name="ParameterName"/>
+                                <module name="StaticVariableName"/>
 
                                 <module name="TypeName">
-                                    <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$|packageinfo" />
+                                    <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$|packageinfo"/>
                                 </module>
                                 <module name="AvoidStarImport">
-                                    <property name="excludes" value="java.io,java.net,java.util,javax.enterprise.inject.spi,javax.enterprise.context" />
+                                    <property name="excludes"
+                                              value="java.io,java.net,java.util,javax.enterprise.inject.spi,javax.enterprise.context"/>
                                 </module>
-                                <module name="IllegalImport" />
-                                <module name="RedundantImport" />
-                                <module name="UnusedImports" />
+                                <module name="IllegalImport"/>
+                                <module name="RedundantImport"/>
+                                <module name="UnusedImports"/>
                                 <module name="LineLength">
-                                    <property name="max" value="150" />
-                                    <property name="ignorePattern" value="@version|@see" />
+                                    <property name="max" value="150"/>
+                                    <property name="ignorePattern" value="@version|@see"/>
                                 </module>
                                 <module name="MethodLength">
-                                    <property name="max" value="250" />
+                                    <property name="max" value="250"/>
                                 </module>
                                 <module name="ParameterNumber">
-                                    <property name="max" value="11" />
+                                    <property name="max" value="11"/>
                                 </module>
                                 <module name="EmptyBlock">
-                                    <property name="option" value="text" />
+                                    <property name="option" value="text"/>
                                 </module>
-                                <module name="NeedBraces" />
+                                <module name="NeedBraces"/>
                                 <module name="LeftCurly">
-                                    <property name="option" value="EOL" />
+                                    <property name="option" value="EOL"/>
                                 </module>
                                 <module name="RightCurly">
-                                    <property name="option" value="ALONE" />
+                                    <property name="option" value="ALONE"/>
                                 </module>
-                                <module name="EmptyStatement" />
-                                <module name="EqualsHashCode" />
-                                <module name="DefaultComesLast" />
-                                <module name="MissingSwitchDefault" />
-                                <module name="FallThrough" />
-                                <module name="MultipleVariableDeclarations" />
+                                <module name="EmptyStatement"/>
+                                <module name="EqualsHashCode"/>
+                                <module name="DefaultComesLast"/>
+                                <module name="MissingSwitchDefault"/>
+                                <module name="FallThrough"/>
+                                <module name="MultipleVariableDeclarations"/>
                                 <module name="com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck">
-                                    <property name="severity" value="ignore" />
+                                    <property name="severity" value="ignore"/>
                                 </module>
-                                <module name="HideUtilityClassConstructor" />
+                                <module name="HideUtilityClassConstructor"/>
                                 <module name="com.puppycrawl.tools.checkstyle.checks.design.VisibilityModifierCheck">
-                                    <property name="packageAllowed" value="false" />
-                                    <property name="protectedAllowed" value="true" />
-                                    <property name="publicMemberPattern" value="^serialVersionUID" />
-                                    <property name="severity" value="warning" />
+                                    <property name="packageAllowed" value="false"/>
+                                    <property name="protectedAllowed" value="true"/>
+                                    <property name="publicMemberPattern" value="^serialVersionUID"/>
+                                    <property name="severity" value="warning"/>
                                 </module>
-                                <module name="UpperEll" />
+                                <module name="UpperEll"/>
                             </module>
                         </module>
                     </checkstyleRules>
@@ -258,17 +258,57 @@
                         <exclude>.checkstyle</exclude>
                         <exclude>.factorypath</exclude>
                         <exclude>.editorconfig</exclude>
+                        <exclude>buildScripts/release.groovy</exclude>
                     </excludes>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
     <profiles>
         <profile>
-            <id>eclipse-jarsigner</id>
-            <!-- turns on signing of JARs by the Eclipse signer plugin -->
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 

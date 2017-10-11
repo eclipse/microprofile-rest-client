@@ -27,6 +27,7 @@
     <artifactId>microprofile-rest-client-spec</artifactId>
     <packaging>pom</packaging>
     <name>MicroProfile Rest Client Specification</name>
+    <description>Typesafe Rest Client APIs for MicroProfile :: Specification</description>
 
     <properties>
         <asciidoctor-maven.version>1.5.5</asciidoctor-maven.version>
