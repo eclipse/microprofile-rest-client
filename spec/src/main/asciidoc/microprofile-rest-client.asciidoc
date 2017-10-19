@@ -43,4 +43,6 @@ include::license-alv2.asciidoc[]
 
 include::clientexamples.asciidoc[]
 
+include::programmatic_lookup.asciidoc[]
+
 include::release_notes.asciidoc[]
