@@ -1,0 +1,36 @@
+//
+// Copyright (c) 2017 Contributors to the Eclipse Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+[[programmatic_lookup]]
+== MicroProfile Rest Client Programmatic Lookup
+
+Type Safe Rest Clients support both programmatic look up and CDI injection approaches for usage.  An implementation of MicroProfile Rest Client is expected to support both use cases.
+
+=== Sample Builder Usage
+
+[source, java]
+----
+public class SomeService {
+   public Response doWorkAgainstApi(URL apiUrl, ApiModel apiModel) {
+       RemoteApi remoteApi = TypeSafeClientBuilder.newBuilder()
+            .baseUrl(apiUrl)
+            .proxy(RemoteApi.class);
+       return remoteApi.execute(apiModel);
+   }
+}
+----
+
+Specifying the `baseUrl` is the URL to the remote service.  The `proxy` method takes an interface that defines one or more API methods to be invoked, returning back an instance of that interface that can be used to perform API calls.
