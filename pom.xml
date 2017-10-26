@@ -17,7 +17,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.eclipse.microprofile.rest.client</groupId>
+    <groupId>org.eclipse.microprofile.rest-client</groupId>
     <artifactId>microprofile-rest-client-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -32,6 +32,10 @@
 
         <checkstyle.version>2.17</checkstyle.version>
         <checkstyle.methodNameFormat>^_?[a-z][a-zA-Z0-9]*$</checkstyle.methodNameFormat>
+        <!-- whether autorelease maven central staging repositories - default true to allow review and manually release repositories -->
+        <autorelease>false</autorelease>
+        <!-- keeping closed repos with failure - default is false because the errors are visible in the maven output, but true will leave the repo open for investigation in Sonatype Nexus -->
+        <keepStagingReposOnFailure>false</keepStagingReposOnFailure>
     </properties>
 
     <licenses>
@@ -43,10 +47,29 @@
         </license>
     </licenses>
 
+    <organization>
+        <name>Eclipse Foundation</name>
+        <url>http://www.eclipse.org/</url>
+    </organization>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/eclipse/microprofile-fault-tolerance/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>Emily Jiang</name>
+            <url>https://github.com/Emily-Jiang</url>
+            <organization>IBM</organization>
+            <organizationUrl>https://www.ibm.com</organizationUrl>
+        </developer>
+    </developers>
+
     <scm>
-        <connection>scm:git:https://github.com/eclipse/microprofile-rest-client.git</connection>
-        <developerConnection>scm:git:https://github.com/eclipse/microprofile-rest-client.git</developerConnection>
-        <url>https://github.com/eclipse/microprofile-rest-client</url>
+        <connection>scm:git:https://github.com/eclipse/microprofile-fault-tolerance.git</connection>
+        <developerConnection>scm:git:https://github.com/eclipse/microprofile-fault-tolerance.git</developerConnection>
+        <url>https://github.com/eclipse/microprofile-fault-tolerance</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -66,6 +89,7 @@
         </snapshotRepository>
     </distributionManagement>
 
+
     <modules>
         <module>api</module>
         <module>tck</module>
@@ -78,14 +102,12 @@
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
                 <version>1.2</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>2.0.1</version>
-                <scope>provided</scope>
-            </dependency>
+            	<groupId>javax.ws.rs</groupId>
+            	<artifactId>javax.ws.rs-api</artifactId>
+            	<version>2.0.1</version>
+        	</dependency>
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
@@ -103,7 +125,6 @@
             <url>https://repo.eclipse.org/content/groups/cbi/</url>
         </pluginRepository>
     </pluginRepositories>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -141,6 +162,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.10.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -253,6 +279,7 @@
                 </executions>
                 <configuration>
                     <excludes>
+                        <exclude>.travis.yml.*</exclude>
                         <exclude>bnd.bnd</exclude>
                         <exclude>*.log</exclude>
                         <exclude>.checkstyle</exclude>
@@ -264,12 +291,40 @@
 
         </plugins>
     </build>
-
+    
     <profiles>
         <profile>
-            <id>eclipse-jarsigner</id>
-            <!-- turns on signing of JARs by the Eclipse signer plugin -->
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.3</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <serverId>ossrh</serverId>
+                            <autoReleaseAfterClose>${autorelease}</autoReleaseAfterClose>
+                            <keepStagingRepositoryOnCloseRuleFailure>${keepStagingReposOnFailure}</keepStagingRepositoryOnCloseRuleFailure>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
-
 </project>
