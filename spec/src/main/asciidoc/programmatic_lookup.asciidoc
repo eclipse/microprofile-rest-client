@@ -25,9 +25,9 @@ Type Safe Rest Clients support both programmatic look up and CDI injection appro
 ----
 public class SomeService {
    public Response doWorkAgainstApi(URL apiUrl, ApiModel apiModel) {
-       RemoteApi remoteApi = TypeSafeClientBuilder.newBuilder()
+       RemoteApi remoteApi = RestClientBuilder.newBuilder()
             .baseUrl(apiUrl)
-            .proxy(RemoteApi.class);
+            .build(RemoteApi.class);
        return remoteApi.execute(apiModel);
    }
 }

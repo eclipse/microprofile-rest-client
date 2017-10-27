@@ -20,7 +20,7 @@ import javax.annotation.Priority;
 import java.net.URL;
 
 @Priority(1)
-public class BuilderImpl1 extends RestClientBuilder {
+public class BuilderImpl1 extends AbstractBuilder {
     @Override
     public RestClientBuilder baseUrl(URL url) {
         throw new IllegalStateException("not implemented");
