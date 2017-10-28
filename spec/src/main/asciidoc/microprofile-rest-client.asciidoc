@@ -47,4 +47,6 @@ include::programmatic_lookup.asciidoc[]
 
 include::providers.asciidoc[]
 
+include::cdi.asciidoc[]
+
 include::release_notes.asciidoc[]

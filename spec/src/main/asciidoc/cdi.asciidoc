@@ -1,0 +1,49 @@
+//
+// Copyright (c) 2017 Contributors to the Eclipse Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+[[restcdi]]
+== MicroProfile Rest Client CDI Support
+
+Rest Client interfaces may be injected as CDI beans.  It is only required to support injection points that are defined by the application, programmatic lookup is not required to work.
+
+Interfaces are assumed to have a scope of `@Dependent` unless there is another scope defined on the interface.
+
+=== Support for MicroProfile Config
+
+For CDI defined interfaces, it is possible to use MicroProfile Config properties to define additional behaviors of the rest interface.  Assuming this interface:
+
+[source, java]
+----
+package com.mycompany.remoteServices;
+
+public interface MyServiceClient {
+    @GET
+    @Path("/greet")
+    Response greet();
+}
+----
+
+The values of the following properties will be provided via MicroProfile Config:
+
+- `com.mycompany.remoteServices.MyServiceClient/mp-rest/url`: The base URL to use for this service, the equivalent of the `baseUrl` method.  This property is considered required, however implementations may have other ways to define these URLs.
+- `com.mycompany.remoteServices.MyServiceClient/mp-rest/scope`: The fully qualified classname to a CDI scope to use for injection, defaults to `javax.enterprise.context.Dependent` as mentioned above.
+- `com.mycompany.remoteServices.MyServiceClient/mp-rest/providers`: A comma separated list of fully-qualified provider classnames to include in the client, the equivalent of the `register` method or the `@RegisterProviders` annotation.
+
+Implementations may support other custom properties registered in similar fashions or other ways.
+
+The `url` property must resolve to a value that can be parsed by the `URL` converter required by the MicroProfile Config spec.
+
+The `providers` property is not aggregated, the value will be read from the highest property `ConfigSource`

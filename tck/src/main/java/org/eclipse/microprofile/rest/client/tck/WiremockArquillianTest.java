@@ -27,16 +27,24 @@ import org.testng.annotations.BeforeMethod;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public abstract class WiremockArquillianTest extends Arquillian{
-    protected static int port;
-    protected WireMockServer wireMockServer;
+    static int port;
+    WireMockServer wireMockServer;
+
+    protected static int getPort() {
+        return port;
+    }
+
+    protected WireMockServer getWireMockServer() {
+        return wireMockServer;
+    }
 
     @BeforeClass
-    public static void getPort() {
+    public static void setupPort() {
         port = Integer.parseInt(System.getProperty("wiremock.server.port","8765"));
     }
 
     @BeforeMethod
-    public void setupMockServer() {
+    public void startMockServer() {
         wireMockServer = new WireMockServer(options().port(port));
         wireMockServer.start();
     }
