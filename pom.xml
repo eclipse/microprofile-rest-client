@@ -30,13 +30,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
         <checkstyle.version>2.17</checkstyle.version>
         <checkstyle.methodNameFormat>^_?[a-z][a-zA-Z0-9]*$</checkstyle.methodNameFormat>
-        <!-- whether autorelease maven central staging repositories - default true to allow review and manually release repositories -->
-        <autorelease>false</autorelease>
-        <!-- keeping closed repos with failure - default is false because the errors are visible in the maven output, but true will leave the repo open for investigation in Sonatype Nexus -->
-        <keepStagingReposOnFailure>false</keepStagingReposOnFailure>
     </properties>
 
     <licenses>
@@ -99,11 +94,11 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-            	<groupId>javax.ws.rs</groupId>
-            	<artifactId>javax.ws.rs-api</artifactId>
-            	<version>2.0.1</version>
-            	<scope>provided</scope>
-        	</dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>2.0.1</version>
+                <scope>provided</scope>
+            </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>javax.annotation-api</artifactId>
@@ -286,7 +281,6 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>.travis.yml.*</exclude>
                         <exclude>bnd.bnd</exclude>
                         <exclude>*.log</exclude>
                         <exclude>.checkstyle</exclude>
@@ -301,37 +295,8 @@
     
     <profiles>
         <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.3</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <serverId>ossrh</serverId>
-                            <autoReleaseAfterClose>${autorelease}</autoReleaseAfterClose>
-                            <keepStagingRepositoryOnCloseRuleFailure>${keepStagingReposOnFailure}</keepStagingRepositoryOnCloseRuleFailure>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <id>eclipse-jarsigner</id>
+            <!-- turns on signing of JARs by the Eclipse signer plugin -->
         </profile>
     </profiles>
 </project>
