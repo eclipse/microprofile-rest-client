@@ -45,4 +45,6 @@ include::clientexamples.asciidoc[]
 
 include::programmatic_lookup.asciidoc[]
 
+include::providers.asciidoc[]
+
 include::release_notes.asciidoc[]

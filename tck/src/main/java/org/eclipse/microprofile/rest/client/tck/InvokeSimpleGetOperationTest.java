@@ -16,17 +16,12 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
@@ -36,34 +31,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.testng.Assert.assertEquals;
 
-public class InvokeSimpleGetOperationTest extends Arquillian{
-    private static int port;
-    private WireMockServer wireMockServer;
-
+public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
             .addClass(SimpleGetApi.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-
-    @BeforeClass
-    public static void getPort() {
-        port = Integer.parseInt(System.getProperty("wiremock.server.port","8765"));
-    }
-
-    @BeforeMethod
-    public void setupMockServer() {
-        wireMockServer = new WireMockServer(options().port(port));
-        wireMockServer.start();
-    }
-
-    @AfterMethod
-    public void stopServer() {
-        wireMockServer.stop();
     }
 
     @Test
