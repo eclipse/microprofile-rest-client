@@ -86,7 +86,7 @@ class PrivateRestClientBuilder {
             Priority priority = value.getClass().getAnnotation(Priority.class);
             if (priority == null) {
                 return 1;
-            } 
+            }
             else {
                 return priority.value();
             }
