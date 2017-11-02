@@ -20,9 +20,6 @@
 = Rest Client for MicroProfile
 :authors: John D. Ament
 :email: john.d.ament@gmail.com
-:revnumber: 1.0
-:revdate: 2017-11-31
-:revremark: Draft
 :version-label!:
 :sectanchors:
 :doctype: book
