@@ -17,9 +17,44 @@
 [[restcdi]]
 == MicroProfile Rest Client CDI Support
 
-Rest Client interfaces may be injected as CDI beans.  It is only required to support injection points that are defined by the application, programmatic lookup is not required to work.
+Rest Client interfaces may be injected as CDI beans.  It is only required to support clients which have a `RestClient` qualifier on them.  Any injection point or programmatic look up that uses the qualifier `RestClient` is expected to be resolved by the MicroProfile Rest Client runtime.  Below is an example of said interface, with its matching injection point:
 
-Interfaces are assumed to have a scope of `@Dependent` unless there is another scope defined on the interface.
+[source, java]
+----
+package com.mycompany.remoteServices;
+
+public interface MyServiceClient {
+    @GET
+    @Path("/greet")
+    Response greet();
+}
+----
+
+[source, java]
+----
+@ApplicationScoped
+public class MyService {
+    @Inject
+    @RestClient
+    private MyServiceClient client;
+}
+----
+
+Likewise, a user can perform programmatic look up of the interface.  Here is one example, but any CDI look up should work:
+
+[source, java]
+----
+@ApplicationScoped
+public class MyService {
+    public void execute() {
+        MyServiceClient client = CDI.current().select(MyServiceClient.class, RestClient.LITERAL).get();
+    }
+}
+----
+
+The qualifier is used to differentiate use cases of the interface that are managed by this runtime, versus use cases that may be managed by other runtimes.
+
+Interfaces are assumed to have a scope of `@Dependent` unless there is another scope defined on the interface.  Implementations are expected to support all of the built in scopes for a bean.  Support for custom registered scopes should work, but is not guaranteed.
 
 === Support for MicroProfile Config
 

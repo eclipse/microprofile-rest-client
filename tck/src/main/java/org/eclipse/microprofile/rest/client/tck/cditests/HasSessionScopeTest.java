@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
@@ -56,14 +57,14 @@ public class HasSessionScopeTest extends Arquillian{
     }
     @Test
     public void testHasSingletonScoped() {
-        Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class);
+        Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), SessionScoped.class);
     }
 
     @Test
     public void testHasSessionScopedWhenAnnotated() {
-        Set<Bean<?>> beans = beanManager.getBeans(MySessionScopedApi.class);
+        Set<Bean<?>> beans = beanManager.getBeans(MySessionScopedApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), SessionScoped.class);
     }

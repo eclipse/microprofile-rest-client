@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
@@ -58,14 +59,14 @@ public class HasAppScopeTest extends Arquillian {
 
     @Test
     public void testHasApplicationScoped() {
-        Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class);
+        Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), ApplicationScoped.class);
     }
 
     @Test
     public void testHasApplicationScopedWhenAnnotated() {
-        Set<Bean<?>> beans = beanManager.getBeans(MyAppScopedApi.class);
+        Set<Bean<?>> beans = beanManager.getBeans(MyAppScopedApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), ApplicationScoped.class);
     }

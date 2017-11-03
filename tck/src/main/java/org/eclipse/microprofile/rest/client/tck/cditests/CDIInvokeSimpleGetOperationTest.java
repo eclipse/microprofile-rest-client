@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -45,6 +46,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Inject
+    @RestClient
     private SimpleGetApi api;
     @Inject
     private BeanManager beanManager;
@@ -76,9 +78,12 @@ public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
         getWireMockServer().verify(1, getRequestedFor(urlEqualTo("/")));
     }
 
+    /**
+     * Tests that the component injected has Dependent scope
+     */
     @Test
     public void testHasDependentScopedByDefault() {
-        Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class);
+        Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), Dependent.class);
     }

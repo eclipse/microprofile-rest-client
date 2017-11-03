@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithProvidersDefined;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientRequestFilter;
@@ -49,6 +50,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     @Inject
+    @RestClient
     private InterfaceWithProvidersDefined api;
 
     @Deployment
