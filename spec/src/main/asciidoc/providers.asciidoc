@@ -47,6 +47,20 @@ The `ReaderInterceptor` interface is a listener for when a read occurs against t
 
 The `WriterInterceptor` interface is a listener for when a write occurs to the stream to be sent on the remote service invocation.
 
+=== ResponseExceptionMapper
+
+The `ResponseExceptionMapper` is specific to MicroProfile Rest Client.  This mapper will take a `Response` object retrieved via an invocation of a client and convert it to a `Throwable`, if applicable.  The runtime should scan all of the registered mappers, sort them ascending based on `getPriority()`, find the ones that can handle the given `Response`, and invoke them.  The first one discovered where `toThrowable` returns a non-empty `Optional` object will be thrown by the runtime.
+
+==== How to Implement ResponseExceptionMapper
+
+The specification provides default methods for `getPriority()` and `handles(Response)` methods.  Priority is meant to be derived via a `@Priority` annotation added to the client.  The runtime will sort ascending, taking the one with the lowest numeric value first to check if it can handle the `Response` object.  The usage of ascending sorting is done to be consistent with JAX-RS behavior.
+
+Likewise, the `handles` method by default will handle any response code >= 400.  You may override this behavior if you so choose to handle other response codes (both a smaller ranger and a larger range are expected).
+
+The `toThrowable(Response)` method actually does the conversion work.  This method should not raise any `Throwable`, instead just return a `Throwable` if it can.  It returns `Optional<Throwable>` in case it just wants to do a payload inspection.
+
+Any methods that read the response body as a stream must ensure that they reset the stream.
+
 == Provider Declaration
 
 In addition to defining providers via the client definition, interfaces may use the `@RegisterProviders` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
