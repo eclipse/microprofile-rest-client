@@ -27,7 +27,7 @@
 
     <artifactId>microprofile-rest-client-api</artifactId>
     <name>MicroProfile Rest Client API</name>
-
+    <description>Typesafe Rest Client APIs for MicroProfile :: API</description>
     <dependencies>
         <dependency>
             <groupId>javax.enterprise</groupId>

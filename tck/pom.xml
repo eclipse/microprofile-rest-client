@@ -27,7 +27,7 @@
 
     <artifactId>microprofile-rest-client-tck</artifactId>
     <name>MicroProfile Rest Client TCK</name>
-
+    <description>Typesafe Rest Client APIs for MicroProfile :: TCK</description>
     <properties>
         <checkstyle.methodNameFormat>^_?[a-z][a-zA-Z0-9_]*$</checkstyle.methodNameFormat>
     </properties>
