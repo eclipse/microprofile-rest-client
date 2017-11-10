@@ -17,12 +17,13 @@
 [[restcdi]]
 == MicroProfile Rest Client CDI Support
 
-Rest Client interfaces may be injected as CDI beans.  It is only required to support clients which have a `RestClient` qualifier on them.  Any injection point or programmatic look up that uses the qualifier `RestClient` is expected to be resolved by the MicroProfile Rest Client runtime.  Below is an example of said interface, with its matching injection point:
+Rest Client interfaces may be injected as CDI beans.  The runtime must create a CDI bean for each interface annotated with `RegisterRestClient`.  The bean created will include a qualifier `@RestClient` to differentiate the use as an API call against any other beans registered of the same type.  Based on the rules of how CDI resolves bean, you are only required to use the qualifier if you have multiple beans of the same type.  Any injection point or programmatic look up that uses the qualifier `RestClient` is expected to be resolved by the MicroProfile Rest Client runtime.  Below is an example of said interface, with its matching injection point:
 
 [source, java]
 ----
 package com.mycompany.remoteServices;
 
+@RegisterRestClient
 public interface MyServiceClient {
     @GET
     @Path("/greet")

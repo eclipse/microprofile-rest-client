@@ -19,6 +19,7 @@
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
 import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientRequestFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientResponseFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestMessageBodyReader;
@@ -41,6 +42,7 @@ import javax.ws.rs.core.Response;
     TestMessageBodyWriter.class, TestParamConverterProvider.class, TestReaderInterceptor.class, TestWriterInterceptor.class})
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.TEXT_PLAIN)
+@RegisterRestClient
 public interface InterfaceWithProvidersDefined {
     @POST
     Response executePost(String body);
