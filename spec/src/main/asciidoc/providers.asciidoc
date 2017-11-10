@@ -61,6 +61,14 @@ The `toThrowable(Response)` method actually does the conversion work.  This meth
 
 Any methods that read the response body as a stream must ensure that they reset the stream.
 
+==== Built in ResponseExceptionMapper
+
+Each implementation will provide out of the box a `ResponseExceptionMapper` implementation that will map the response into a `WebApplicationException` whenever the response status code is >= 400.  It has a priority of `Integer.MAX_VALUE`.  It is meant to be used as a fall back whenever an error is encountered.  This mapper will be registered by default to all client interfaces.
+
+This behavior can be disabled by adding a configuration property `microprofile.rest.client.disable.default.mapper` with value `true` that will be resolved as a `boolean` via MicroProfile Config.
+
+It can also be disabled on a per client basis by using the same property when building the client, `RestClientBuilder.newBuilder().property("microprofile.rest.client.disable.default.mapper",true)`
+
 == Provider Declaration
 
 In addition to defining providers via the client definition, interfaces may use the `@RegisterProviders` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
