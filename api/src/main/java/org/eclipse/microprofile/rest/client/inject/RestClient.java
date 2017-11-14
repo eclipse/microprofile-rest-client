@@ -27,8 +27,8 @@ import java.lang.annotation.RetentionPolicy;
  * of a Type-Safe Rest Client.
  *
  * <pre>
- *     @Inject
- *     @RestClient
+ *     &#064;Inject
+ *     &#064;RestClient
  *     private MyRemoteApi api;
  * </pre>
  *
