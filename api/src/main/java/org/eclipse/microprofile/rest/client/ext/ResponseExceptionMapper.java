@@ -43,8 +43,8 @@ public interface ResponseExceptionMapper {
      *
      * If this method reads the response body as a stream it must ensure that it resets the stream.
      *
-     * @param response
-     * @return
+     * @param response the JAX-RS Response object that was received
+     * @return whether or not this mapper can convert the Response to a Throwable
      */
     default boolean handles(Response response) {
         return response.getStatus() >= 400;
@@ -52,8 +52,8 @@ public interface ResponseExceptionMapper {
 
     /**
      * The priority of this mapper.  By default, it will use the {@link Priority} annotation's value as the priority.
-     * If no annotation is present, it uses a default priority of {@link Priorities.USER}.
-     * @return
+     * If no annotation is present, it uses a default priority of {@link Priorities#USER}.
+     * @return the priority of this mapper
      */
     default int getPriority() {
         Priority priority = getClass().getAnnotation(Priority.class);
