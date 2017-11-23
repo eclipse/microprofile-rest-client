@@ -24,18 +24,19 @@ import javax.ws.rs.core.Response;
  * Converts an JAX-RS Response object into an Exception.
  *
  */
-public interface ResponseExceptionMapper {
+public interface ResponseExceptionMapper<T extends Throwable> {
     int DEFAULT_PRIORITY = Priorities.USER;
 
     /**
-     * Converts a given Response into a Throwable.  The runtime will throw this if it is non-null.
+     * Converts a given Response into a Throwable.  The runtime will throw this if it is non-null
+     * AND if it is possible to throw given the client method's signature.
      *
      * If this method reads the response body as a stream it must ensure that it resets the stream.
      *
      * @param response the JAX-RS response processed from the underlying client
      * @return A throwable, if this mapper could convert the response.
      */
-    Throwable toThrowable(Response response);
+    T toThrowable(Response response);
 
     /**
      * Whether or not this mapper will be used for the given response.  By default, any response code of 400 or higher will be handled.
