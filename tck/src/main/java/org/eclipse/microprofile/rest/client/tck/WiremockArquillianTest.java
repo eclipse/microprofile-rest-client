@@ -27,8 +27,8 @@ import org.testng.annotations.BeforeMethod;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public abstract class WiremockArquillianTest extends Arquillian{
-    static int port;
-    WireMockServer wireMockServer;
+    protected static int port;
+    protected WireMockServer wireMockServer;
 
     protected static int getPort() {
         return port;
