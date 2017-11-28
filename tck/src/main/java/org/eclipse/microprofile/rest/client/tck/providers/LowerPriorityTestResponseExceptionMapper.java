@@ -22,22 +22,23 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-@Priority(Priorities.USER + 1)
-public class TestResponseExceptionMapperHandles implements ResponseExceptionMapper {
+@Priority(Priorities.USER - 1)
+public class LowerPriorityTestResponseExceptionMapper implements ResponseExceptionMapper {
     private static boolean handlesCalled = false;
     private static boolean throwableCalled = false;
     @Override
     public Throwable toThrowable(Response response) {
         throwableCalled = true;
-        return null;
+        return new WebApplicationException(LowerPriorityTestResponseExceptionMapper.class.getSimpleName(), response);
     }
 
     @Override
     public boolean handles(Response response) {
         handlesCalled = true;
-        return true;
+        return response.getStatus() >= 400;
     }
 
     public static void reset() {

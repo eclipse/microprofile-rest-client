@@ -20,8 +20,7 @@ package org.eclipse.microprofile.rest.client.tck;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
-import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapper;
-import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapperOverridePriority;
+import org.eclipse.microprofile.rest.client.tck.providers.LowerPriorityTestResponseExceptionMapper;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,6 +37,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class DefaultExceptionMapperTest extends WiremockArquillianTest {
@@ -48,23 +48,21 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, DefaultExceptionMapperTest.class.getSimpleName()+".war")
-            .addClasses(SimpleGetApi.class)
+            .addClasses(SimpleGetApi.class, LowerPriorityTestResponseExceptionMapper.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @BeforeTest
     public void resetHandlers() {
-        TestResponseExceptionMapper.reset();
-        TestResponseExceptionMapperOverridePriority.reset();
+        LowerPriorityTestResponseExceptionMapper.reset();
         wireMockServer
             .stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
     }
 
     @Test
-    public void testWithOneRegisteredProvider() throws Exception {
+    public void testPropagationOfResponseDetailsFromDefaultMapper() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(new URL("http://localhost:"+ port))
-            .register(TestResponseExceptionMapper.class)
             .build(SimpleGetApi.class);
 
         try {
@@ -80,6 +78,27 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
             assertEquals(body, BODY,
                 "The body of the response should be propagated");
             response.close();
+        }
+    }
+
+    @Test
+    public void testLowerPriorityMapperTakesPrecedenceFromDefault() throws Exception {
+        SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
+            .baseUrl(new URL("http://localhost:"+ port))
+            .register(LowerPriorityTestResponseExceptionMapper.class)
+            .build(SimpleGetApi.class);
+
+        try {
+            simpleGetApi.executeGet();
+            fail("A "+WebApplicationException.class+" should have been thrown automatically");
+        }
+        catch (WebApplicationException w) {
+            assertTrue(LowerPriorityTestResponseExceptionMapper.isHandlesCalled(),
+                LowerPriorityTestResponseExceptionMapper.class +" should handle this exception");
+            assertTrue(LowerPriorityTestResponseExceptionMapper.isThrowableCalled(),
+                LowerPriorityTestResponseExceptionMapper.class +" should handle this exception");
+            assertEquals(w.getMessage(), LowerPriorityTestResponseExceptionMapper.class.getSimpleName(),
+                LowerPriorityTestResponseExceptionMapper.class+ " should be in the message");
         }
     }
 }

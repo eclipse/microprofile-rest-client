@@ -22,7 +22,6 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapperHandles;
-import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapperOverridePriority;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -53,13 +52,13 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
     @BeforeTest
     public void resetHandlers() {
         TestResponseExceptionMapper.reset();
-        TestResponseExceptionMapperOverridePriority.reset();
+        TestResponseExceptionMapperHandles.reset();
         wireMockServer
             .stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
     }
 
     @Test
-    public void testWithOneRegisteredProvider() throws Exception {
+    public void testCallsTwoProvidersWithTwoRegisteredProvider() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(new URL("http://localhost:"+ port))
             .register(TestResponseExceptionMapper.class)

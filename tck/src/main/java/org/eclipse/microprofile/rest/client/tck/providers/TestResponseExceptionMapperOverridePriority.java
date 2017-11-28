@@ -20,11 +20,13 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
+import javax.ws.rs.Priorities;
 import javax.ws.rs.core.Response;
 
 public class TestResponseExceptionMapperOverridePriority implements ResponseExceptionMapper {
     private static boolean handlesCalled = false;
     private static boolean throwableCalled = false;
+
     @Override
     public Throwable toThrowable(Response response) {
         throwableCalled = true;
@@ -52,6 +54,6 @@ public class TestResponseExceptionMapperOverridePriority implements ResponseExce
 
     @Override
     public int getPriority() {
-        return 5001;
+        return Priorities.USER + 1;
     }
 }

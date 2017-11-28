@@ -21,10 +21,11 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 import javax.annotation.Priority;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-@Priority(5002)
+@Priority(Priorities.USER + 2)
 public class TestResponseExceptionMapper implements ResponseExceptionMapper {
     public static final String MESSAGE = "A 200 OK was received, but I'm throwing an exception";
     private static boolean handlesCalled = false;
