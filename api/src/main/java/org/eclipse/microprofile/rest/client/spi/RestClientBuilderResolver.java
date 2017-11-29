@@ -95,7 +95,8 @@ public class RestClientBuilderResolver {
         Priority priority = value.getClass().getAnnotation(Priority.class);
         if (priority == null) {
             return 1;
-        } else {
+        }
+        else {
             return priority.value();
         }
     }
@@ -156,7 +157,8 @@ public class RestClientBuilderResolver {
                             "Multiple RestClientBuilderResolver implementations found: "
                             + spi.getClass().getName() + " and "
                             + resolver.getClass().getName());
-                } else {
+                }
+                else {
                     resolver = spi;
                 }
             }
