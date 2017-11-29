@@ -49,7 +49,7 @@ The `WriterInterceptor` interface is a listener for when a write occurs to the s
 
 === ResponseExceptionMapper
 
-The `ResponseExceptionMapper` is specific to MicroProfile Rest Client.  This mapper will take a `Response` object retrieved via an invocation of a client and convert it to a `Throwable`, if applicable.  The runtime should scan all of the registered mappers, sort them ascending based on `getPriority()`, find the ones that can handle the given `Response`, and invoke them.  The first one discovered where `toThrowable` returns a non-null `Throwable` will be thrown by the runtime.
+The `ResponseExceptionMapper` is specific to MicroProfile Rest Client.  This mapper will take a `Response` object retrieved via an invocation of a client and convert it to a `Throwable`, if applicable.  The runtime should scan all of the registered mappers, sort them ascending based on `getPriority()`, find the ones that can handle the given `Response`, and invoke them.  The first one discovered where `toThrowable` returns a non-null `Throwable` that can be thrown given the client method's signature will be thrown by the runtime.
 
 ==== How to Implement ResponseExceptionMapper
 
@@ -57,7 +57,32 @@ The specification provides default methods for `getPriority()` and `handles(Resp
 
 Likewise, the `handles` method by default will handle any response code >= 400.  You may override this behavior if you so choose to handle other response codes (both a smaller ranger and a larger range are expected).  If an implementation reads the body, it must properly reset the underlying stream.
 
-The `toThrowable(Response)` method actually does the conversion work.  This method should not raise any `Throwable`, instead just return a `Throwable` if it can.  This method may return `null` if no throwable should be raised.
+The `toThrowable(Response)` method actually does the conversion work.  This method should not raise any `Throwable`, instead just return a `Throwable` if it can.  This method may return `null` if no throwable should be raised.  If this method returns a non-null throwable that is a sub-class of RuntimeException or Error (i.e. unchecked throwables), then this exception will be thrown to the client.  Otherwise, the (checked) exception will only be thrown to the client if the client method declares that it throws that type of exception (or a super-class).  For example, assume there is a client interface like this:
+[source, java]
+----
+@Path("/")
+public interface SomeService {
+   @GET
+   public String get() throws SomeException;
+
+   @PUT
+   public String put(String someValue);
+}
+----
+
+and assume that the following ResponseExceptionMapper has been registered:
+[source, java]
+----
+public class MyResponseExceptionMapper implements ResponseExceptionMapper<SomeException> {
+
+   @Override
+   public SomeException toThrowable(Response response) {
+       return new SomeException();
+   }
+}
+----
+
+In this case, if the `get` method results in an exception (response status code of 400 or higher), SomeException will be thrown.  If the `put` method results in an exception, SomeException will not be thrown because it does not declare that it throws SomeException.  If another ResponseExceptionMapper (such as the default mapper, see below) is registered that returns a subclass of RuntimeException or Error, then that exception will be thrown.
 
 Any methods that read the response body as a stream must ensure that they reset the stream.
 
