@@ -22,7 +22,7 @@ import javax.ws.rs.core.Configurable;
 import javax.ws.rs.core.Configuration;
 import java.util.Map;
 
-public abstract class AbstractBuilder extends RestClientBuilder implements Configurable<RestClientBuilder> {
+public abstract class AbstractBuilder implements RestClientBuilder, Configurable<RestClientBuilder> {
     @Override
     public Configuration getConfiguration() {
         return null;

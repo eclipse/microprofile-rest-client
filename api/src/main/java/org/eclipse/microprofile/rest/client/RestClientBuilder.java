@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.eclipse.microprofile.rest.client;
 
 import javax.annotation.Priority;
@@ -39,7 +38,8 @@ import java.util.function.ToIntFunction;
  * The <pre>RestClientBuilder</pre> is a {@link Configurable} class as defined by JAX-RS.  This allows a user to register providers,
  * implementation specific configuration.
  */
-public abstract class RestClientBuilder implements Configurable<RestClientBuilder>{
+public interface RestClientBuilder extends Configurable<RestClientBuilder> {
+
     public static RestClientBuilder newBuilder() {
         ServiceLoader<RestClientBuilder> loader = ServiceLoader.load(RestClientBuilder.class);
         List<RestClientBuilder> clientBuilders = new ArrayList<>();
@@ -47,10 +47,10 @@ public abstract class RestClientBuilder implements Configurable<RestClientBuilde
         loader = ServiceLoader.load(RestClientBuilder.class, RestClientBuilder.class.getClassLoader());
         loader.forEach(clientBuilders::add);
 
-        if(clientBuilders.size() == 0) {
-            throw new RuntimeException("No implementation of '"+RestClientBuilder.class.getSimpleName()+"' found");
+        if (clientBuilders.size() == 0) {
+            throw new RuntimeException("No implementation of '" + RestClientBuilder.class.getSimpleName() + "' found");
         }
-        clientBuilders.sort(Comparator.comparingInt(priorityComparator()).reversed());
+        clientBuilders.sort(Comparator.comparingInt(PrivateRestClientBuilder.priorityComparator()).reversed());
         return clientBuilders.get(0);
     }
 
@@ -73,7 +73,15 @@ public abstract class RestClientBuilder implements Configurable<RestClientBuilde
      */
     public abstract <T> T build(Class<T> clazz) throws IllegalStateException;
 
-    private static ToIntFunction<Object> priorityComparator() {
+}
+
+class PrivateRestClientBuilder {
+    
+    private PrivateRestClientBuilder() {
+        // shouldn't be instantiated
+    }
+
+    static ToIntFunction<Object> priorityComparator() {
         return value -> {
             Priority priority = value.getClass().getAnnotation(Priority.class);
             if (priority == null) {
