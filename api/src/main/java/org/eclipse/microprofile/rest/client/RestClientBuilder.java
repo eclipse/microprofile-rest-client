@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either excodess or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -50,7 +50,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @param clazz the interface that defines REST API methods for use
      * @param <T> the type of the interface
      * @return a new instance of an implementation of this REST interface that
-     * @throws IllegalStateException if not all code-requisites are satisfied for the builder, this exception may get thrown.  For instance, if a URL
+     * @throws IllegalStateException if not all pre-requisites are satisfied for the builder, this exception may get thrown.  For instance, if a URL
      *  has not been set.
      */
     public abstract <T> T build(Class<T> clazz) throws IllegalStateException;
