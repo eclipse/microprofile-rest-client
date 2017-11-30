@@ -92,13 +92,14 @@ In addition to defining providers via the client definition, interfaces may use 
 
 == Automatic Provider Registration
 
-Implementations may provider any number of providers registered automatically, but t
+Implementations may provide any number of providers registered automatically, but t
 
 === JSON-P Provider
 
 When an interface is registered that contains:
-- `@Produces("\*/json")` or
-- `@Consumes("\*/json")` or
+
+- `@Produces("*/json")` or
+- `@Consumes("*/json")` or
 - a method that declares input or output of type `javax.json.JsonValue` or any subclass therein
 
 Then a JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the JAX-RS 2.0 specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
