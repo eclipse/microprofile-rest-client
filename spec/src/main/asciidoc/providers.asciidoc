@@ -92,7 +92,7 @@ In addition to defining providers via the client definition, interfaces may use 
 
 == Automatic Provider Registration
 
-Implementations may provide any number of providers registered automatically, but t
+Implementations may provide any number of providers registered automatically, but the following providers must be registered by the runtime.
 
 === JSON-P Provider
 
