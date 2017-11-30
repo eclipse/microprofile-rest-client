@@ -23,7 +23,7 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.core.Response;
 
-public class TestResponseExceptionMapperOverridePriority implements ResponseExceptionMapper {
+public class TestResponseExceptionMapperOverridePriority implements ResponseExceptionMapper<Throwable> {
     private static boolean handlesCalled = false;
     private static boolean throwableCalled = false;
 

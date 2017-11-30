@@ -25,7 +25,7 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.core.Response;
 
 @Priority(Priorities.USER + 1)
-public class TestResponseExceptionMapperHandles implements ResponseExceptionMapper {
+public class TestResponseExceptionMapperHandles implements ResponseExceptionMapper<Throwable> {
     private static boolean handlesCalled = false;
     private static boolean throwableCalled = false;
     @Override

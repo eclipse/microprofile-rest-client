@@ -26,7 +26,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 @Priority(Priorities.USER + 2)
-public class TestResponseExceptionMapper implements ResponseExceptionMapper {
+public class TestResponseExceptionMapper implements ResponseExceptionMapper<Throwable> {
     public static final String MESSAGE = "A 200 OK was received, but I'm throwing an exception";
     private static boolean handlesCalled = false;
     private static boolean throwableCalled = false;

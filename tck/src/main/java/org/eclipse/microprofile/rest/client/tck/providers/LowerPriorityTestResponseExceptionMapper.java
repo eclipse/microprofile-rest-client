@@ -26,7 +26,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 @Priority(Priorities.USER - 1)
-public class LowerPriorityTestResponseExceptionMapper implements ResponseExceptionMapper {
+public class LowerPriorityTestResponseExceptionMapper implements ResponseExceptionMapper<Throwable> {
     private static boolean handlesCalled = false;
     private static boolean throwableCalled = false;
     @Override
