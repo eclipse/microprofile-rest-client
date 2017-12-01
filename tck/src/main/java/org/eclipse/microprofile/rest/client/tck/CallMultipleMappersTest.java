@@ -25,13 +25,11 @@ import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionM
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.WebApplicationException;
-import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -45,22 +43,20 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, CallMultipleMappersTest.class.getSimpleName()+".war")
             .addClasses(TestResponseExceptionMapper.class, TestResponseExceptionMapperHandles.class)
-            .addClasses(SimpleGetApi.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addClasses(SimpleGetApi.class);
     }
 
     @BeforeTest
     public void resetHandlers() {
         TestResponseExceptionMapper.reset();
         TestResponseExceptionMapperHandles.reset();
-        wireMockServer
-            .stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
+        getWireMockServer().stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
     }
 
     @Test
     public void testCallsTwoProvidersWithTwoRegisteredProvider() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .register(TestResponseExceptionMapper.class)
             .register(TestResponseExceptionMapperHandles.class)
             .build(SimpleGetApi.class);

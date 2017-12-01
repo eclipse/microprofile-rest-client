@@ -25,6 +25,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
@@ -53,15 +54,16 @@ public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         String propertyName = SimpleGetApi.class.getName()+"/mp-rest/url";
-        String value = "http://localhost:"+ getPort();
-        return ShrinkWrap.create(WebArchive.class)
-            .addClass(SimpleGetApi.class)
+        String value = getStringURL();
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class).addClass(SimpleGetApi.class)
             .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class)
+            .addAsLibrary(jar)
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
-
     @Test
-    public void testInvokesOperation() throws Exception{
+    public void testInvokesGetOperationWithCDIBean() throws Exception{
         String expectedBody = "Hello, MicroProfile!";
         getWireMockServer().stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()

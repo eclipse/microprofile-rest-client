@@ -37,7 +37,7 @@ import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
  */
 public interface RestClientBuilder extends Configurable<RestClientBuilder> {
 
-    public static RestClientBuilder newBuilder() {
+    static RestClientBuilder newBuilder() {
         return RestClientBuilderResolver.instance().newBuilder();
     }
 
@@ -53,7 +53,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @param url the base Url for the service.
      * @return the current builder with the baseUrl set
      */
-    public abstract RestClientBuilder baseUrl(URL url);
+    RestClientBuilder baseUrl(URL url);
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the
@@ -66,6 +66,6 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * the builder, this exception may get thrown. For instance, if a URL has
      * not been set.
      */
-    public abstract <T> T build(Class<T> clazz) throws IllegalStateException;
+    <T> T build(Class<T> clazz) throws IllegalStateException;
 
 }

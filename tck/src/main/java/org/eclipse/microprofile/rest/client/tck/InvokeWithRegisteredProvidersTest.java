@@ -27,12 +27,10 @@ import org.eclipse.microprofile.rest.client.tck.providers.TestReaderInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TestWriterInterceptor;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
-import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -48,22 +46,21 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
             .addClass(InterfaceWithProvidersDefined.class)
-            .addPackage(TestClientResponseFilter.class.getPackage())
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addPackage(TestClientResponseFilter.class.getPackage());
     }
 
     @Test
-    public void testInvokesPostOperation() throws Exception{
+    public void testInvokesPostOperationWithAnnotatedProviders() throws Exception{
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
-        wireMockServer.stubFor(post(urlEqualTo("/"))
+        getWireMockServer().stubFor(post(urlEqualTo("/"))
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
         InterfaceWithProvidersDefined api = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .build(InterfaceWithProvidersDefined.class);
 
         Response response = api.executePost(inputBody);
@@ -74,7 +71,7 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
 
         assertEquals(body, expectedResponseBody);
 
-        wireMockServer.verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
+        getWireMockServer().verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
@@ -83,19 +80,19 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     }
 
     @Test
-    public void testInvokesPutOperation() throws Exception {
+    public void testInvokesPutOperationWithAnnotatedProviders() throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         String id = "id";
         String expectedId = "toStringid";
-        wireMockServer.stubFor(put(urlEqualTo("/"+expectedId))
+        getWireMockServer().stubFor(put(urlEqualTo("/"+expectedId))
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
         InterfaceWithProvidersDefined api = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .build(InterfaceWithProvidersDefined.class);
 
         Response response = api.executePut(id, inputBody);
@@ -106,7 +103,7 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
 
         assertEquals(body, expectedResponseBody);
 
-        wireMockServer.verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        getWireMockServer().verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);

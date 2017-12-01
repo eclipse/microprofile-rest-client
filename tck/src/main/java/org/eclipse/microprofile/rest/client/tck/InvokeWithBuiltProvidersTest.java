@@ -29,13 +29,11 @@ import org.eclipse.microprofile.rest.client.tck.providers.TestReaderInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TestWriterInterceptor;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -51,19 +49,16 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
             .addClass(InterfaceWithoutProvidersDefined.class)
-            .addPackage(TestClientResponseFilter.class.getPackage())
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addPackage(TestClientResponseFilter.class.getPackage());
     }
 
     @Test
-    public void testInvokesPostOperation() throws Exception{
+    public void testInvokesPostOperationWithRegisteredProviders() throws Exception{
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
-        wireMockServer.stubFor(post(urlEqualTo("/"))
-            .willReturn(aResponse()
-                .withBody(outputBody)));
+        getWireMockServer().stubFor(post(urlEqualTo("/")).willReturn(aResponse().withBody(outputBody)));
 
         InterfaceWithoutProvidersDefined api = createClient();
 
@@ -75,7 +70,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
 
         assertEquals(body, expectedResponseBody);
 
-        wireMockServer.verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
+        getWireMockServer().verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
@@ -84,14 +79,14 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
     }
 
     @Test
-    public void testInvokesPutOperation() throws Exception {
+    public void testInvokesPutOperationWithRegisteredProviders() throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         String id = "id";
         String expectedId = "toStringid";
-        wireMockServer.stubFor(put(urlEqualTo("/"+expectedId))
+        getWireMockServer().stubFor(put(urlEqualTo("/"+expectedId))
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
@@ -105,7 +100,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
 
         assertEquals(body, expectedResponseBody);
 
-        wireMockServer.verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        getWireMockServer().verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
@@ -122,7 +117,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
             .register(TestParamConverterProvider.class)
             .register(TestReaderInterceptor.class)
             .register(TestWriterInterceptor.class)
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .build(InterfaceWithoutProvidersDefined.class);
     }
 }
