@@ -86,14 +86,50 @@ In this case, if the `get` method results in an exception (response status code 
 
 Any methods that read the response body as a stream must ensure that they reset the stream.
 
-==== Built in ResponseExceptionMapper
+== Provider Declaration
+
+In addition to defining providers via the client definition, interfaces may use the `@RegisterProviders` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
+
+== Automatic Provider Registration
+
+Implementations may provide any number of providers registered automatically, but the following providers must be registered by the runtime.
+
+=== JSON-P Provider
+
+When an interface is registered that contains:
+
+- `@Produces("*/json")` or
+- `@Consumes("*/json")` or
+- a method that declares input or output of type `javax.json.JsonValue` or any subclass therein
+
+Then a JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the JAX-RS 2.0 specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
+
+=== Default Message Body Readers and Writers
+
+For the following types, and any media type, the runtime must support `MessageBodyReader`s and `MessageBodyWriter`s being automatically registered.
+
+- `byte[]`
+- `String`
+- `InputStream`
+- `Reader`
+- `File`
+
+==== Values supported with `text/plain`
+
+The following types are supported for automatic conversion, only when the media type is `text/plain`.
+
+- `Number`
+- `Character` and `char`
+- `Long` and `long`
+- `Integer` and `int`
+- `Double` and `double`
+- `Float` and `float`
+- `Boolean` and `boolean` (literal value of `true` and `false` only)
+
+=== Default ResponseExceptionMapper
 
 Each implementation will provide out of the box a `ResponseExceptionMapper` implementation that will map the response into a `WebApplicationException` whenever the response status code is >= 400.  It has a priority of `Integer.MAX_VALUE`.  It is meant to be used as a fall back whenever an error is encountered.  This mapper will be registered by default to all client interfaces.
 
 This behavior can be disabled by adding a configuration property `microprofile.rest.client.disable.default.mapper` with value `true` that will be resolved as a `boolean` via MicroProfile Config.
 
 It can also be disabled on a per client basis by using the same property when building the client, `RestClientBuilder.newBuilder().property("microprofile.rest.client.disable.default.mapper",true)`
-
-== Provider Declaration
-
-In addition to defining providers via the client definition, interfaces may use the `@RegisterProviders` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
