@@ -29,12 +29,14 @@ import javax.annotation.Priority;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
- * This class is not intended to be used by end-users but for portable container
- * integration purpose only.
- * <p>
- * Resolver for a {@link RestClientBuilder} implementation. The implementation
- * registers itself via the {@link java.util.ServiceLoader} mechanism or via
+ * Resolver for a {@link RestClientBuilder} implementation. A resolver should
+ * extend this class and and be registered via the
+ * {@link java.util.ServiceLoader} mechanism or via
  * {@link setInstance(RestClientBuilderResolver resolver)}.
+ * <p>
+ * This class is not intended to be used by end-users but for portable
+ * integration purpose only to provide implementation of
+ * <code>RestClientBuilder</code> instances.
  * <p>
  * This class provides a default implementation which uses the service loader
  * pattern to look for all implementations of <code>RestClientBuilder</code> and
@@ -95,7 +97,7 @@ public class RestClientBuilderResolver {
         Priority priority = value.getClass().getAnnotation(Priority.class);
         if (priority == null) {
             return 1;
-        }
+        } 
         else {
             return priority.value();
         }
@@ -157,7 +159,7 @@ public class RestClientBuilderResolver {
                             "Multiple RestClientBuilderResolver implementations found: "
                             + spi.getClass().getName() + " and "
                             + resolver.getClass().getName());
-                }
+                } 
                 else {
                     resolver = spi;
                 }

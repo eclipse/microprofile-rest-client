@@ -16,14 +16,34 @@
 
 package org.eclipse.microprofile.rest.client;
 
+import org.eclipse.microprofile.rest.client.spi.RestClientBuilder1Resolver;
+import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
+import org.testng.annotations.BeforeMethod;
 
 public class RestClientBuilderTest {
+
+    @BeforeMethod
+    public void cleanupResolver() {
+        RestClientBuilderResolver.setInstance(null);
+    }
+
     @Test
     public void testGetHighestService() {
         RestClientBuilder builder = RestClientBuilder.newBuilder();
         assertTrue(builder instanceof BuilderImpl2);
     }
+
+    @Test
+    public void testGetBuilderFromDynamicallyRegistered() {
+        // given
+        RestClientBuilderResolver.setInstance(new RestClientBuilder1Resolver());
+        // when
+        RestClientBuilder builder = RestClientBuilder.newBuilder();
+        //then
+        assertTrue(builder instanceof BuilderImpl1);
+    }
+    
 }
