@@ -24,14 +24,12 @@ import org.eclipse.microprofile.rest.client.tck.providers.LowerPriorityTestRespo
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -48,21 +46,19 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, DefaultExceptionMapperTest.class.getSimpleName()+".war")
-            .addClasses(SimpleGetApi.class, LowerPriorityTestResponseExceptionMapper.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addClasses(SimpleGetApi.class, LowerPriorityTestResponseExceptionMapper.class);
     }
 
     @BeforeTest
     public void resetHandlers() {
         LowerPriorityTestResponseExceptionMapper.reset();
-        wireMockServer
-            .stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
+        getWireMockServer().stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
     }
 
     @Test
     public void testPropagationOfResponseDetailsFromDefaultMapper() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .build(SimpleGetApi.class);
 
         try {
@@ -84,7 +80,7 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
     @Test
     public void testLowerPriorityMapperTakesPrecedenceFromDefault() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .register(LowerPriorityTestResponseExceptionMapper.class)
             .build(SimpleGetApi.class);
 

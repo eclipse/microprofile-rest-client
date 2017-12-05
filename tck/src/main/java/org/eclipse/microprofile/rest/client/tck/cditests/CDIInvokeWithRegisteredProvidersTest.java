@@ -30,6 +30,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
@@ -56,11 +57,14 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     @Deployment
     public static WebArchive createDeployment() {
         String propertyName = InterfaceWithProvidersDefined.class.getName()+"/mp-rest/url";
-        String value = "http://localhost:"+ getPort();
-        return ShrinkWrap.create(WebArchive.class)
+        String value = getStringURL();
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
             .addClass(InterfaceWithProvidersDefined.class)
             .addPackage(TestClientResponseFilter.class.getPackage())
             .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class)
+            .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 

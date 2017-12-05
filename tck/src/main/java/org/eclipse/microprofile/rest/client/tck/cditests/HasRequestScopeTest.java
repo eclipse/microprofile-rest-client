@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -25,6 +26,7 @@ import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
@@ -33,6 +35,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
@@ -50,9 +53,12 @@ public class HasRequestScopeTest extends Arquillian {
         String url = SimpleGetApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String url2 = MyRequestScopedApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String scope = SimpleGetApi.class.getName() + "/mp-rest/scope=" + RequestScoped.class.getName();
-        return ShrinkWrap.create(WebArchive.class)
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
             .addClasses(SimpleGetApi.class, MyRequestScopedApi.class)
             .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + url2), "microprofile-config.properties")
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class)
+            .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -71,6 +77,8 @@ public class HasRequestScopeTest extends Arquillian {
     }
 
     @RequestScoped
+    @RegisterRestClient
+    @Path("/")
     public interface MyRequestScopedApi {
         @GET
         public Response get();

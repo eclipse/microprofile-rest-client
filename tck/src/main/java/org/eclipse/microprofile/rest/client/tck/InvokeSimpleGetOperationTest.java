@@ -20,12 +20,10 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
-import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -37,19 +35,18 @@ public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-            .addClass(SimpleGetApi.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addClass(SimpleGetApi.class);
     }
 
     @Test
-    public void testInvokesOperation() throws Exception{
+    public void testGetExecutionWithBuiltClient() throws Exception{
         String expectedBody = "Hello, MicroProfile!";
-        wireMockServer.stubFor(get(urlEqualTo("/"))
+        getWireMockServer().stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
                 .withBody(expectedBody)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .build(SimpleGetApi.class);
 
         Response response = simpleGetApi.executeGet();
@@ -60,6 +57,6 @@ public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
 
         assertEquals(body, expectedBody);
 
-        wireMockServer.verify(1, getRequestedFor(urlEqualTo("/")));
+        getWireMockServer().verify(1, getRequestedFor(urlEqualTo("/")));
     }
 }

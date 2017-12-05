@@ -20,17 +20,22 @@ package org.eclipse.microprofile.rest.client.tck;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.jboss.arquillian.testng.Arquillian;
-import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
-public abstract class WiremockArquillianTest extends Arquillian{
-    protected static int port;
-    protected WireMockServer wireMockServer;
+public abstract class WiremockArquillianTest extends Arquillian {
+    private static Integer port;
+    private static WireMockServer wireMockServer;
 
-    protected static int getPort() {
+    private static Integer getPort() {
+        if(port == null) {
+            setupPort();
+        }
         return port;
     }
 
@@ -38,19 +43,32 @@ public abstract class WiremockArquillianTest extends Arquillian{
         return wireMockServer;
     }
 
-    @BeforeClass
-    public static void setupPort() {
-        port = Integer.parseInt(System.getProperty("wiremock.server.port","8765"));
+    protected static URL getServerURL() {
+        try {
+            return new URL(getStringURL());
+        }
+        catch (MalformedURLException e) {
+            throw new RuntimeException("Malformed URL not expected", e);
+        }
     }
 
-    @BeforeMethod
-    public void startMockServer() {
-        wireMockServer = new WireMockServer(options().port(port));
+    protected static String getStringURL() {
+        return "http://localhost:" + getPort();
+    }
+
+    @BeforeClass
+    public static void setupServer() {
+        setupPort();
+        wireMockServer = new WireMockServer(options().port(getPort()));
         wireMockServer.start();
     }
 
-    @AfterMethod
-    public void stopServer() {
+    private static void setupPort() {
+        port = Integer.parseInt(System.getProperty("wiremock.server.port", "8765"));
+    }
+
+    @AfterClass
+    public static void stopServer() {
         wireMockServer.stop();
     }
 }

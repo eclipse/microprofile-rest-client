@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -25,6 +26,7 @@ import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
@@ -48,11 +50,13 @@ public class HasSessionScopeTest extends Arquillian{
     @Deployment
     public static WebArchive createDeployment() {
         String url = SimpleGetApi.class.getName()+"/mp-rest/url=http://localhost:8080";
-        String url2 = MySessionScopedApi.class.getName()+"/mp-rest/url=http://localhost:8080";
         String scope = SimpleGetApi.class.getName()+"/mp-rest/scope="+ SessionScoped.class.getName();
-        return ShrinkWrap.create(WebArchive.class)
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
             .addClasses(SimpleGetApi.class, MySessionScopedApi.class)
             .addAsManifestResource(new StringAsset(url+"\n"+scope), "microprofile-config.properties")
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class)
+            .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     @Test
@@ -71,6 +75,7 @@ public class HasSessionScopeTest extends Arquillian{
 
     @SessionScoped
     @Path("/")
+    @RegisterRestClient
     public interface MySessionScopedApi {
         @GET
         public Response get();
