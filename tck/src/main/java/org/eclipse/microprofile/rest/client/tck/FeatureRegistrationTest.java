@@ -17,12 +17,16 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.interfaces.FeatureProviderClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
+import org.eclipse.microprofile.rest.client.tck.providers.InjectedSimpleFeature;
 import org.eclipse.microprofile.rest.client.tck.providers.SimpleFeature;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
+
+import javax.inject.Inject;
 
 import static org.testng.Assert.assertTrue;
 
@@ -33,15 +37,25 @@ public class FeatureRegistrationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-            .addClass(SimpleFeature.class)
-            .addClass(SimpleGetApi.class);
+            .addClasses(SimpleFeature.class, InjectedSimpleFeature.class,
+                SimpleGetApi.class, FeatureProviderClient.class);
     }
 
+    @Inject
+    private FeatureProviderClient featureProviderClient;
+
     @Test
-    public void testGetExecutionWithBuiltClient() throws Exception{
+    public void testFeatureRegistrationViaBuilder() {
         SimpleFeature.reset();
         RestClientBuilder.newBuilder().register(SimpleFeature.class);
 
-        assertTrue(SimpleFeature.wasInvoked(), "The SimpleFeature should have been invoked when building the client");
+        assertTrue(SimpleFeature.wasInvoked(), "The SimpleFeature should have been invoked " +
+            "when building the client");
+    }
+
+    @Test
+    public void testFeatureRegistrationViaCDI() {
+        assertTrue(InjectedSimpleFeature.wasInvoked(), "The InjectedSimpleFeature should have " +
+            "been invoked when building the client");
     }
 }
