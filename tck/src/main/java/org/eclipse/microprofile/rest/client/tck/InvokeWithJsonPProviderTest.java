@@ -32,7 +32,6 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
-import java.net.URL;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -42,7 +41,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 
 public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
@@ -54,7 +55,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
             .addClass(JsonPClient.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
@@ -65,9 +66,8 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     @BeforeTest
     public void setupClient() throws Exception{
         builtJsonPClient = RestClientBuilder.newBuilder()
-            .baseUrl(new URL("http://localhost:"+ port))
+            .baseUrl(getServerURL())
             .build(JsonPClient.class);
-        wireMockServer.resetAll();
     }
 
     @Test
@@ -95,7 +95,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     private void testGet(JsonPClient client, String clientType) {
-        wireMockServer.stubFor(get(urlEqualTo("/"))
+        stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
                 .withBody("[{key: \"value\"}, {key: \"anotherValue\"}]")));
         JsonArray jsonArray = client.get();
@@ -112,7 +112,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     private void testGetSingle(JsonPClient client, String clientType) {
-        wireMockServer.stubFor(get(urlEqualTo("/id"))
+        stubFor(get(urlEqualTo("/id"))
             .willReturn(aResponse()
                 .withBody("{key: \"value\"}")));
         JsonObject jsonObject = client.get("id");
@@ -122,24 +122,24 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     private void testPost(JsonPClient client, String clientType) {
-        wireMockServer.stubFor(post(urlEqualTo("/")).willReturn(aResponse().withStatus(200)));
+        stubFor(post(urlEqualTo("/")).willReturn(aResponse().withStatus(200)));
 
         JsonObject jsonObject = Json.createObjectBuilder().add("someKey", "newValue").build();
         Response response = client.post(jsonObject);
         response.close();
         assertEquals(response.getStatus(), 200, "Expected a 200 OK on client "+clientType);
 
-        wireMockServer.verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo("{someKey: \"newValue\"}")));
+        verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo("{someKey: \"newValue\"}")));
     }
 
     private void testPut(JsonPClient client, String clientType) {
-        wireMockServer.stubFor(put(urlEqualTo("/id")).willReturn(aResponse().withStatus(200).withBody("{someOtherKey: \"newValue\"}")));
+        stubFor(put(urlEqualTo("/id")).willReturn(aResponse().withStatus(200).withBody("{someOtherKey: \"newValue\"}")));
 
         JsonObject jsonObject = Json.createObjectBuilder().add("someKey", "newValue").build();
         JsonObject response = client.update("id", jsonObject);
         assertEquals(response.getString("someOtherKey"), "newValue",
             "The value of 'someOtherKey' on response should be 'someOtherKey' in client "+clientType);
 
-        wireMockServer.verify(1, putRequestedFor(urlEqualTo("/id")).withRequestBody(equalTo("{someKey: \"newValue\"}")));
+        verify(1, putRequestedFor(urlEqualTo("/id")).withRequestBody(equalTo("{someKey: \"newValue\"}")));
     }
 }

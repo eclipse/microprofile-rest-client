@@ -18,29 +18,24 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.testng.Arquillian;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-
+@RunAsClient
 public abstract class WiremockArquillianTest extends Arquillian {
     private static Integer port;
-    private static WireMockServer wireMockServer;
+    private static String host;
 
     private static Integer getPort() {
         if(port == null) {
-            setupPort();
+            setupWireMockConnection();
         }
         return port;
-    }
-
-    protected WireMockServer getWireMockServer() {
-        return wireMockServer;
     }
 
     protected static URL getServerURL() {
@@ -53,22 +48,19 @@ public abstract class WiremockArquillianTest extends Arquillian {
     }
 
     protected static String getStringURL() {
-        return "http://localhost:" + getPort();
+        int port = getPort();
+        return "http://"+host+":" + port;
     }
 
     @BeforeClass
     public static void setupServer() {
-        setupPort();
-        wireMockServer = new WireMockServer(options().port(getPort()));
-        wireMockServer.start();
+        setupWireMockConnection();
+        WireMock.configureFor(host, port);
+        WireMock.reset();
     }
 
-    private static void setupPort() {
+    private static void setupWireMockConnection() {
+        host = System.getProperty("wiremock.server.host", "localhost");
         port = Integer.parseInt(System.getProperty("wiremock.server.port", "8765"));
-    }
-
-    @AfterClass
-    public static void stopServer() {
-        wireMockServer.stop();
     }
 }

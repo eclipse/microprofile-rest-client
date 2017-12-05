@@ -43,7 +43,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -74,7 +76,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
-        getWireMockServer().stubFor(post(urlEqualTo("/"))
+        stubFor(post(urlEqualTo("/"))
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
@@ -86,7 +88,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
 
         assertEquals(body, expectedResponseBody);
 
-        getWireMockServer().verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
@@ -102,7 +104,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         String id = "id";
         String expectedId = "toStringid";
-        getWireMockServer().stubFor(put(urlEqualTo("/"+expectedId))
+        stubFor(put(urlEqualTo("/"+expectedId))
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
@@ -114,7 +116,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
 
         assertEquals(body, expectedResponseBody);
 
-        getWireMockServer().verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
