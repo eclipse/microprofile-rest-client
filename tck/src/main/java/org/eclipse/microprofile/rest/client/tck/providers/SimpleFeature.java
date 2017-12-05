@@ -24,19 +24,19 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class SimpleFeature implements Feature{
-    private static boolean INVOKED = false;
+    private static boolean invoked = false;
 
     @Override
     public boolean configure(FeatureContext featureContext) {
-        INVOKED = true;
+        invoked = true;
         return true;
     }
 
     public static boolean wasInvoked() {
-        return INVOKED;
+        return invoked;
     }
 
     public static void reset() {
-        INVOKED = false;
+        invoked = false;
     }
 }
