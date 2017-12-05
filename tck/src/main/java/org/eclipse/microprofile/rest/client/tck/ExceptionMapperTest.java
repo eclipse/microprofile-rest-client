@@ -33,6 +33,7 @@ import javax.ws.rs.WebApplicationException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -51,8 +52,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
     public void resetHandlers() {
         TestResponseExceptionMapper.reset();
         TestResponseExceptionMapperOverridePriority.reset();
-        getWireMockServer()
-            .stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
     }
 
     @Test

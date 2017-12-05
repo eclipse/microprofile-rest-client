@@ -28,7 +28,9 @@ import javax.ws.rs.core.Response;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 
 public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
@@ -41,7 +43,7 @@ public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Test
     public void testGetExecutionWithBuiltClient() throws Exception{
         String expectedBody = "Hello, MicroProfile!";
-        getWireMockServer().stubFor(get(urlEqualTo("/"))
+        stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
                 .withBody(expectedBody)));
 
@@ -57,6 +59,6 @@ public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
 
         assertEquals(body, expectedBody);
 
-        getWireMockServer().verify(1, getRequestedFor(urlEqualTo("/")));
+        verify(1, getRequestedFor(urlEqualTo("/")));
     }
 }
