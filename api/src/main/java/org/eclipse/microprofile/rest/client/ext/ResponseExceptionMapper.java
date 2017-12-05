@@ -18,6 +18,7 @@ package org.eclipse.microprofile.rest.client.ext;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 /**
@@ -40,15 +41,14 @@ public interface ResponseExceptionMapper<T extends Throwable> {
 
     /**
      * Whether or not this mapper will be used for the given response.  By default, any response code of 400 or higher will be handled.
-     * Individual mappers may override this method if they want to more narrowly focus on certain response codes.
+     * Individual mappers may override this method if they want to more narrowly focus on certain response codes or headers.
      *
-     * If this method reads the response body as a stream it must ensure that it resets the stream.
-     *
-     * @param response the JAX-RS Response object that was received
+     * @param status the response status code indicating the HTTP response
+     * @param headers the headers from the HTTP response
      * @return whether or not this mapper can convert the Response to a Throwable
      */
-    default boolean handles(Response response) {
-        return response.getStatus() >= 400;
+    default boolean handles(int status, MultivaluedMap<String, Object> headers) {
+        return status >= 400;
     }
 
     /**
