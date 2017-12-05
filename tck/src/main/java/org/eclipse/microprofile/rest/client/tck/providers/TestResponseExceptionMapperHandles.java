@@ -22,6 +22,7 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 @Priority(Priorities.USER + 1)
@@ -35,7 +36,7 @@ public class TestResponseExceptionMapperHandles implements ResponseExceptionMapp
     }
 
     @Override
-    public boolean handles(Response response) {
+    public boolean handles(int status, MultivaluedMap<String,Object> headers) {
         handlesCalled = true;
         return true;
     }

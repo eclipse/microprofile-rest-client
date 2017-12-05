@@ -21,6 +21,7 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 import javax.ws.rs.Priorities;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 public class TestResponseExceptionMapperOverridePriority implements ResponseExceptionMapper<Throwable> {
@@ -34,7 +35,7 @@ public class TestResponseExceptionMapperOverridePriority implements ResponseExce
     }
 
     @Override
-    public boolean handles(Response response) {
+    public boolean handles(int status, MultivaluedMap<String,Object> headers) {
         handlesCalled = true;
         return false;
     }

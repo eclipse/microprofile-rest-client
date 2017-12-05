@@ -23,13 +23,16 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 @Priority(Priorities.USER + 2)
 public class TestResponseExceptionMapper implements ResponseExceptionMapper<Throwable> {
     public static final String MESSAGE = "A 200 OK was received, but I'm throwing an exception";
     private static boolean handlesCalled = false;
+    private static boolean headerPassedToHandlesMethod = false;
     private static boolean throwableCalled = false;
+
     @Override
     public Throwable toThrowable(Response response) {
         throwableCalled = true;
@@ -37,18 +40,24 @@ public class TestResponseExceptionMapper implements ResponseExceptionMapper<Thro
     }
 
     @Override
-    public boolean handles(Response response) {
+    public boolean handles(int status, MultivaluedMap<String,Object> headers) {
         handlesCalled = true;
-        return response.getStatus() == 200;
+        headerPassedToHandlesMethod = "true".equals(headers.getFirst("CustomHeader"));
+        return status == 200;
     }
 
     public static void reset() {
         handlesCalled = false;
+        headerPassedToHandlesMethod = false;
         throwableCalled = false;
     }
 
     public static boolean isHandlesCalled() {
         return handlesCalled;
+    }
+
+    public static boolean isHeaderPassedToHandlesMethod() {
+      return headerPassedToHandlesMethod;
     }
 
     public static boolean isThrowableCalled() {

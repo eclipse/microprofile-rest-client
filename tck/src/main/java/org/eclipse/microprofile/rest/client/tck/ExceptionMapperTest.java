@@ -52,7 +52,8 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
     public void resetHandlers() {
         TestResponseExceptionMapper.reset();
         TestResponseExceptionMapperOverridePriority.reset();
-        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withHeader("CustomHeader", "true")
+            .withBody("body is ignored in this test")));
     }
 
     @Test
