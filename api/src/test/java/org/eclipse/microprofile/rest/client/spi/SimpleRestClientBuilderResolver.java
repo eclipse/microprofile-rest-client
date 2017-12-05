@@ -19,10 +19,18 @@
  *******************************************************************************/
 package org.eclipse.microprofile.rest.client.spi;
 
+import org.eclipse.microprofile.rest.client.BuilderImpl2;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+
 /**
  * A resolver that should be picked in tests by default
  * @author Ondrej Mihalyi
+ * @author John D. Ament
  */
 public class SimpleRestClientBuilderResolver extends RestClientBuilderResolver {
+    @Override
+    public RestClientBuilder newBuilder() {
+        return new BuilderImpl2();
+    }
 }
 

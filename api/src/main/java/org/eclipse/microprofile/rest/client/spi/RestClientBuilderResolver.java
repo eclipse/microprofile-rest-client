@@ -19,20 +19,17 @@
  *******************************************************************************/
 package org.eclipse.microprofile.rest.client.spi;
 
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.ServiceLoader;
-import javax.annotation.Priority;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  * Resolver for a {@link RestClientBuilder} implementation. A resolver should
  * extend this class and and be registered via the
  * {@link java.util.ServiceLoader} mechanism or via
- * {@link setInstance(RestClientBuilderResolver resolver)}.
+ * {@link #setInstance(RestClientBuilderResolver resolver)}.
  * <p>
  * This class is not intended to be used by end-users but for portable
  * integration purpose only to provide implementation of
@@ -41,14 +38,15 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
  * This class provides a default implementation which uses the service loader
  * pattern to look for all implementations of <code>RestClientBuilder</code> and
  * creates a new builder with the highest priority specified by the
- * {@link Priority} annotation.
+ * {@link javax.annotation.Priority} annotation.
  * <p>
- * Implementations may override the {@link newBuilder()} method to create custom
+ * Implementations may override the {@link #newBuilder()} method to create custom
  * <code>RestClientBuilder</code> implementations.
  *
  * @author Ondrej Mihalyi
+ * @author John D. Ament
  */
-public class RestClientBuilderResolver {
+public abstract class RestClientBuilderResolver {
 
     private static volatile RestClientBuilderResolver instance = null;
 
@@ -58,50 +56,12 @@ public class RestClientBuilderResolver {
     /**
      * Creates a new RestClientBuilder instance.
      * <p>
-     * Implementations are expected to override the {@link newBuilder()} method
+     * Implementations are expected to override the {@link #newBuilder()} method
      * to create custom RestClientBuilder implementations.
      * <p>
-     * The default implementation uses the service loader pattern to look for
-     * all implementations of RestClientBuilder and creates a new builder with
-     * the highest priority specified with the {@link Priority} annotation. The
-     * priority is 1 it the annotations isn't present.
-     * <p>
-     * The {@link ServiceLoader} will first search via the current Thread's
-     * Context ClassLoader, then {@link RestClientBuilder}'s {@link ClassLoader}
-     *
      * @return new RestClientBuilder instance
      */
-    public RestClientBuilder newBuilder() {
-        ServiceLoader<RestClientBuilder> loader = ServiceLoader.load(RestClientBuilder.class);
-        List<RestClientBuilder> clientBuilders = new ArrayList<>();
-        loader.forEach(clientBuilders::add);
-        loader = ServiceLoader.load(RestClientBuilder.class, RestClientBuilder.class.getClassLoader());
-        loader.forEach(clientBuilders::add);
-
-        if (clientBuilders.isEmpty()) {
-            throw new RuntimeException("No implementation of '" + RestClientBuilder.class.getSimpleName() + "' found");
-        }
-        clientBuilders.sort(Comparator.comparingInt(this::getBuilderPriority)
-                .reversed());
-        return clientBuilders.get(0);
-    }
-
-    /**
-     * Computes priority for a builder.
-     *
-     * @param value builder instance which can be annotated with
-     * {@link Priority}
-     * @return the priority of the builder
-     */
-    protected int getBuilderPriority(RestClientBuilder value) {
-        Priority priority = value.getClass().getAnnotation(Priority.class);
-        if (priority == null) {
-            return 1;
-        } 
-        else {
-            return priority.value();
-        }
-    }
+    public abstract RestClientBuilder newBuilder();
 
     /**
      * Gets or creates a RestClientBuilderResolver instance. Only used
@@ -116,13 +76,8 @@ public class RestClientBuilderResolver {
                 if (instance != null) {
                     return instance;
                 }
-
-                ClassLoader cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                    @Override
-                    public ClassLoader run() {
-                        return Thread.currentThread().getContextClassLoader();
-                    }
-                });
+                PrivilegedAction<ClassLoader> action = () -> Thread.currentThread().getContextClassLoader();
+                ClassLoader cl = AccessController.doPrivileged(action);
                 if (cl == null) {
                     cl = RestClientBuilderResolver.class.getClassLoader();
                 }
@@ -159,7 +114,7 @@ public class RestClientBuilderResolver {
                             "Multiple RestClientBuilderResolver implementations found: "
                             + spi.getClass().getName() + " and "
                             + resolver.getClass().getName());
-                } 
+                }
                 else {
                     resolver = spi;
                 }
