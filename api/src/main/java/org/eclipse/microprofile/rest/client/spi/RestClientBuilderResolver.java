@@ -59,14 +59,6 @@ public abstract class RestClientBuilderResolver {
      * Implementations are expected to override the {@link #newBuilder()} method
      * to create custom RestClientBuilder implementations.
      * <p>
-     * The default implementation uses the service loader pattern to look for
-     * all implementations of RestClientBuilder and creates a new builder with
-     * the highest priority specified with the {@link javax.annotation.Priority} annotation. The
-     * priority is 1 it the annotations isn't present.
-     * <p>
-     * The {@link ServiceLoader} will first search via the current Thread's
-     * Context ClassLoader, then {@link RestClientBuilder}'s {@link ClassLoader}
-     *
      * @return new RestClientBuilder instance
      */
     public abstract RestClientBuilder newBuilder();
@@ -84,9 +76,8 @@ public abstract class RestClientBuilderResolver {
                 if (instance != null) {
                     return instance;
                 }
-
-                ClassLoader cl = AccessController.doPrivileged(
-                    (PrivilegedAction<ClassLoader>) () -> Thread.currentThread().getContextClassLoader());
+                PrivilegedAction<ClassLoader> action = () -> Thread.currentThread().getContextClassLoader();
+                ClassLoader cl = AccessController.doPrivileged(action);
                 if (cl == null) {
                     cl = RestClientBuilderResolver.class.getClassLoader();
                 }
