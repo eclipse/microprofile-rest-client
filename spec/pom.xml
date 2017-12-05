@@ -74,6 +74,11 @@
                         </goals>
                         <configuration>
                             <backend>html5</backend>
+                            <attributes>
+                                <revnumber>${project.version}</revnumber>
+                                <revremark>${revremark}</revremark>
+                                <revdate>${revisiondate}</revdate>
+                            </attributes>
                         </configuration>
                     </execution>
                 </executions>
