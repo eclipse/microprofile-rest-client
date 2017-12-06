@@ -35,12 +35,7 @@ import java.util.ServiceLoader;
  * integration purpose only to provide implementation of
  * <code>RestClientBuilder</code> instances.
  * <p>
- * This class provides a default implementation which uses the service loader
- * pattern to look for all implementations of <code>RestClientBuilder</code> and
- * creates a new builder with the highest priority specified by the
- * {@link javax.annotation.Priority} annotation.
- * <p>
- * Implementations may override the {@link #newBuilder()} method to create custom
+ * Implementations have to provide the {@link #newBuilder()} method to create custom
  * <code>RestClientBuilder</code> implementations.
  *
  * @author Ondrej Mihalyi
