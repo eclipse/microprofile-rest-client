@@ -18,8 +18,8 @@
 //
 
 = Rest Client for MicroProfile
-:authors: John D. Ament
-:email: john.d.ament@gmail.com
+:authors: John D. Ament, Andy McCright
+:email: john.d.ament@gmail.com, j.andrew.mccright@gmail.com
 :version-label!:
 :sectanchors:
 :doctype: book
