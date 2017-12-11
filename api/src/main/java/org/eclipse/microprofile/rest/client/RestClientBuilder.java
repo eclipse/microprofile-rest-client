@@ -22,7 +22,7 @@ import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 /**
  * This is the main entry point for creating a Type Safe Rest Client.
  * <p>
- * Invoking {@link newBuilder()} is intended to always create a new instance,
+ * Invoking {@link #newBuilder()} is intended to always create a new instance,
  * not use a cached version.
  * </p>
  * <p>

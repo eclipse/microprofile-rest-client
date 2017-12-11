@@ -18,7 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
+import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientRequestFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientResponseFilter;
@@ -38,8 +38,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/")
-@RegisterProviders({TestClientRequestFilter.class, TestClientResponseFilter.class, TestMessageBodyReader.class,
-    TestMessageBodyWriter.class, TestParamConverterProvider.class, TestReaderInterceptor.class, TestWriterInterceptor.class})
+@RegisterProvider(TestClientRequestFilter.class)
+@RegisterProvider(TestClientResponseFilter.class)
+@RegisterProvider(TestMessageBodyReader.class)
+@RegisterProvider(TestMessageBodyWriter.class)
+@RegisterProvider(TestParamConverterProvider.class)
+@RegisterProvider(TestReaderInterceptor.class)
+@RegisterProvider(TestWriterInterceptor.class)
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.TEXT_PLAIN)
 @RegisterRestClient

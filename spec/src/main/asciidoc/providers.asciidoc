@@ -88,7 +88,17 @@ Any methods that read the response body as a stream must ensure that they reset 
 
 == Provider Declaration
 
-In addition to defining providers via the client definition, interfaces may use the `@RegisterProviders` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
+In addition to defining providers via the client definition, interfaces may use the `@RegisterProvider` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
+
+=== Provider Priority
+
+Providers may be registered via both annotations and the builder pattern.  Providers registered via  a builder will take precedence over the `@RegisterProvider` annotation. The `@RegisterProvider` annotation takes precedence over the `@Priority` annotation on the class.
+
+Provider priorities can be overridden using the various `register` methods on `Configurable`, which can take a provider class, provider instance as well as priority and mappings of those priorities.
+
+=== Feature Registration
+
+If the type of provider registered is a `Feature`, then the priority set by that `Feature` will be a part of the builder as well.  Implementations must maintain the overall priority of registered providers, regardless of how they are registered.  A `Feature` will be used to register additional providers at runtime, and may be registered via `@RegisterProvider`, configuration or via `RestClientBuilder`.  A `Feature` will be executed immediately, as a result its priority is not taken into account (features are always executed).
 
 == Automatic Provider Registration
 
