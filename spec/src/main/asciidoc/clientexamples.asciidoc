@@ -77,3 +77,72 @@ public class PutUser {
 ----
 
 All built in HTTP methods are supported by the client API.  Likewise, all base parameter types (query, cookie, matrix, path, form and bean) are supported.  If you only need to inspect the body, you can provide a POJO can be processed by the underlying `MessageBodyReader` or `MessageBodyWriter`.  Otherwise, you can receive the entire `Response` object for parsing the body and header information from the server invocation.
+
+=== Invalid Client Interface Examples
+
+Invalid client interfaces will result in a RestClientDefinitionException (which may be wrapped in a `DefinitionException` if using CDI).  Invalid interfaces can include:
+
+* Using multiple HTTP method annotations on the same method
+
+A client interface method may contain, at most, one HTTP method annotation (such as `javax.ws.rs.GET`, `javax.ws.rs.PUT`, `javax.ws.rs.OPTIONS`, etc.).  If a method is annotated with more than one HTTP method, the implementation must throw a `RestClientDefinitionException`.
+
+[source, java]
+----
+public interface MultipleVerbsClient {
+    @GET
+    @DELETE
+    Response ambiguousClientMethod()
+}
+----
+
+* Invalid URI templates
+
+A client interface that accepts parameters based on the URI path must ensure that the path parameter is defined correctly in the `@Path` annotation.  For example:
+
+[source, java]
+----
+@Path("/somePath/{someParam}")
+public interface GoodInterfaceOne {
+    @DELETE
+    public Response deleteEntry(@PathParam("someParam") String entryNameToDelete);
+}
+
+@Path("/someOtherPath")
+public interface GoodInterfaceTwo {
+    @HEAD
+    @Path("/{someOtherParam}")
+    public Response quickCheck(@PathParam("someOtherParam") String entryNameToCheck);
+}
+----
+
+Both of these interfaces show valid usage of the `@PathParam` annotation.  In `GoodInterfaceOne`, the URI template is specified at the class-level `@Path` annotation; in `GoodInterfaceTwo`, the template is specified at the method-level.
+
+Implementations must throw a RestClientDefinitionException if a `@Path` annotation specifies an unresolved URI template or if a `@PathParam` annotations specifies a template that is not specified in a `@Path` annotation on the enclosing method or interface.  For example, the following three interfaces will result in a RestClientDefinitionException:
+
+[source, java]
+----
+@Path("/somePath/{someParam}")
+public interface BadInterfaceOne {
+    @DELETE
+    public Response deleteEntry();
+}
+
+@Path("/someOtherPath")
+public interface BadInterfaceTwo {
+    @HEAD
+    @Path("/abc")
+    public Response quickCheck(@PathParam("someOtherParam") String entryNameToCheck);
+}
+
+@Path("/yetAnotherPath")
+public interface BadInterfaceThree {
+    @GET
+    @Path("/{someOtherParam}")
+    public Response quickCheck(@PathParam("notTheSameParam") String entryNameToCheck);
+}
+----
+
+`BadInterfaceOne` declares a URI template named "someParam" but the `deleteEntry` method does not specify a `@PathParam("someParam")` annotation.
+`BadInterfaceTwo` does not declare a URI template, but the `quickCheck` method specifies a `@PathParam` annotation on a parameter.
+`BadInterfaceThree` has a mismatch.  The `@Path` annotation declares a URI template named "someOtherParam" but the `@PathParam` annotation specifies a template named "notTheSameParam".
+All three interfaces will result in a RestClientDefinitionException.

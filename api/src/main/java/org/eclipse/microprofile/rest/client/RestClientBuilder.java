@@ -65,7 +65,9 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @throws IllegalStateException if not all pre-requisites are satisfied for
      * the builder, this exception may get thrown. For instance, if a URL has
      * not been set.
+     * @throws RestClientDefinitionException if the passed-in interface class is
+     * invalid.
      */
-    <T> T build(Class<T> clazz) throws IllegalStateException;
+    <T> T build(Class<T> clazz) throws IllegalStateException, RestClientDefinitionException;
 
 }
