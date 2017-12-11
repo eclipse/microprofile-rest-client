@@ -73,6 +73,14 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <developers>
+        <developer>
+            <name>MicroProfile Community</name>
+            <url>http://microprofile.io/</url>
+            <organization>Eclipse Foundation</organization>
+        </developer>
+    </developers>
+
     <modules>
         <module>api</module>
         <module>tck</module>
