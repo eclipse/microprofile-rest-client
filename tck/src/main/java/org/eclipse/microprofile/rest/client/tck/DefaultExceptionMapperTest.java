@@ -57,6 +57,24 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
     }
 
     @Test
+    public void testNoExceptionThrownWhenDisabledDuringBuild() throws Exception {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
+
+        SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
+            .baseUrl(getServerURL())
+            .property("microprofile.rest.client.disable.default.mapper", true)
+            .build(SimpleGetApi.class);
+
+        try {
+            Response response = simpleGetApi.executeGet();
+            assertEquals(response.getStatus(), STATUS);
+        }
+        catch (Exception w) {
+            fail("No exception should be thrown", w);
+        }
+    }
+
+    @Test
     public void testPropagationOfResponseDetailsFromDefaultMapper() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
@@ -75,6 +93,23 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
             assertEquals(body, BODY,
                 "The body of the response should be propagated");
             response.close();
+        }
+    }
+
+    @Test
+    public void testExceptionThrownWhenPropertySetToFalse() throws Exception {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
+
+        SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
+            .baseUrl(getServerURL())
+            .property("microprofile.rest.client.disable.default.mapper", false)
+            .build(SimpleGetApi.class);
+
+        try {
+            simpleGetApi.executeGet();
+            fail("A "+WebApplicationException.class+" should have been thrown automatically");
+        }
+        catch (WebApplicationException w) {
         }
     }
 
