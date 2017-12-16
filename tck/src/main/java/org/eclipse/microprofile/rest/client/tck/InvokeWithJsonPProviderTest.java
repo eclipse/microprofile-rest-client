@@ -23,6 +23,7 @@ import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -41,6 +42,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.reset;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
@@ -53,9 +55,11 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
 
     @Deployment
     public static WebArchive createDeployment() {
+        StringAsset mpConfig = new StringAsset(JsonPClient.class.getName() + "/mp-rest/url=" + "http://localhost:8765");
         return ShrinkWrap.create(WebArchive.class)
             .addClass(JsonPClient.class)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+            .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties");
     }
 
     @Inject
@@ -95,9 +99,10 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     private void testGet(JsonPClient client, String clientType) {
+        reset();
         stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
-                .withBody("[{key: \"value\"}, {key: \"anotherValue\"}]")));
+                .withBody("[{\"key\": \"value\"}, {\"key\": \"anotherValue\"}]")));
         JsonArray jsonArray = client.get();
         assertEquals(jsonArray.size(), 2, "Expected 2 values in the array for client "+clientType);
         List<JsonObject> jsonObjects = jsonArray.getValuesAs(JsonObject.class);
@@ -112,9 +117,10 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     private void testGetSingle(JsonPClient client, String clientType) {
+        reset();
         stubFor(get(urlEqualTo("/id"))
             .willReturn(aResponse()
-                .withBody("{key: \"value\"}")));
+                .withBody("{\"key\": \"value\"}")));
         JsonObject jsonObject = client.get("id");
         assertEquals(jsonObject.keySet().size(), 1, "There should only be one key in object for client "+clientType);
         assertEquals(jsonObject.getString("key"), "value", "The value of 'key' on object should be 'value' in client "+clientType);
@@ -122,24 +128,28 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     private void testPost(JsonPClient client, String clientType) {
+        reset();
         stubFor(post(urlEqualTo("/")).willReturn(aResponse().withStatus(200)));
 
         JsonObject jsonObject = Json.createObjectBuilder().add("someKey", "newValue").build();
+        String jsonObjectAsString = jsonObject.toString();
         Response response = client.post(jsonObject);
         response.close();
         assertEquals(response.getStatus(), 200, "Expected a 200 OK on client "+clientType);
 
-        verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo("{someKey: \"newValue\"}")));
+        verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(jsonObjectAsString)));
     }
 
     private void testPut(JsonPClient client, String clientType) {
-        stubFor(put(urlEqualTo("/id")).willReturn(aResponse().withStatus(200).withBody("{someOtherKey: \"newValue\"}")));
+        reset();
+        stubFor(put(urlEqualTo("/id")).willReturn(aResponse().withStatus(200).withBody("{\"someOtherKey\":\"newValue\"}")));
 
         JsonObject jsonObject = Json.createObjectBuilder().add("someKey", "newValue").build();
+        String jsonObjectAsString = jsonObject.toString();
         JsonObject response = client.update("id", jsonObject);
         assertEquals(response.getString("someOtherKey"), "newValue",
             "The value of 'someOtherKey' on response should be 'someOtherKey' in client "+clientType);
 
-        verify(1, putRequestedFor(urlEqualTo("/id")).withRequestBody(equalTo("{someKey: \"newValue\"}")));
+        verify(1, putRequestedFor(urlEqualTo("/id")).withRequestBody(equalTo(jsonObjectAsString)));
     }
 }
