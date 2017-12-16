@@ -69,9 +69,9 @@ public class AdditionalRegistrationTest extends Arquillian{
         Configuration configuration = builder.getConfiguration();
         assertTrue(configuration.isRegistered(TestClientRequestFilter.class), TestClientRequestFilter.class + " should be registered");
         assertTrue(configuration.isRegistered(instance), TestClientRequestFilter.class + " should be registered");
-        Map<Class<?>, Integer> contracts = configuration.getContracts(ClientResponseFilter.class);
+        Map<Class<?>, Integer> contracts = configuration.getContracts(TestClientRequestFilter.class);
         assertEquals(contracts.size(), 1, "There should be a registered contract for "+TestClientRequestFilter.class);
-        assertEquals(contracts.get(TestClientRequestFilter.class), priority, "The priority for "+TestClientRequestFilter.class+" should be 1000");
+        assertEquals(contracts.get(ClientRequestFilter.class), priority, "The priority for "+TestClientRequestFilter.class+" should be 1000");
     }
 
     @Test
@@ -119,9 +119,9 @@ public class AdditionalRegistrationTest extends Arquillian{
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(TestClientRequestFilter.class, priority);
         Configuration configuration = builder.getConfiguration();
         assertTrue(configuration.isRegistered(TestClientRequestFilter.class), TestClientRequestFilter.class + " should be registered");
-        Map<Class<?>, Integer> contracts = configuration.getContracts(ClientResponseFilter.class);
+        Map<Class<?>, Integer> contracts = configuration.getContracts(TestClientRequestFilter.class);
         assertEquals(contracts.size(), 1, "There should be a registered contract for "+TestClientRequestFilter.class);
-        assertEquals(contracts.get(TestClientRequestFilter.class), priority, "The priority for "+TestClientRequestFilter.class+" should be 1000");
+        assertEquals(contracts.get(ClientRequestFilter.class), priority, "The priority for "+TestClientRequestFilter.class+" should be 1000");
     }
 
     @Test
