@@ -30,6 +30,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.testng.Assert.assertEquals;
 
 public class MultiRegisteredTest extends WiremockArquillianTest {
@@ -42,6 +46,7 @@ public class MultiRegisteredTest extends WiremockArquillianTest {
 
     @Test
     public void testOverrideProviderAnnotationOnBuilder() {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(200).withBody("")));
         InterfaceWithoutPriority client = RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
             .register(Prioritized2000MessageBodyReader.class, 500)
             .baseUrl(getServerURL())
@@ -52,6 +57,7 @@ public class MultiRegisteredTest extends WiremockArquillianTest {
 
     @Test
     public void testOverrideInterfaceAndProviderAnnotationOnBuilder() {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(200).withBody("")));
         InterfaceWithPriority client = RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
             .register(Prioritized2000MessageBodyReader.class, 500)
             .baseUrl(getServerURL())

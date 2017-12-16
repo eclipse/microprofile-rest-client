@@ -52,12 +52,12 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
     public void resetHandlers() {
         TestResponseExceptionMapper.reset();
         TestResponseExceptionMapperOverridePriority.reset();
-        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withHeader("CustomHeader", "true")
-            .withBody("body is ignored in this test")));
     }
 
     @Test
     public void testWithOneRegisteredProvider() throws Exception {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withHeader("CustomHeader", "true")
+            .withBody("body is ignored in this test")));
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
             .register(TestResponseExceptionMapper.class)
@@ -79,6 +79,8 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
 
     @Test
     public void testWithTwoRegisteredProviders() throws Exception{
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withHeader("CustomHeader", "true")
+            .withBody("body is ignored in this test")));
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
             .register(TestResponseExceptionMapper.class)
