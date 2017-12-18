@@ -29,7 +29,7 @@ public class CustomHttpMethodFilter implements ClientRequestFilter {
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
         String httpMethod = clientRequestContext.getMethod();
         if ("MYMETHOD".equals(httpMethod)) {
-            clientRequestContext.abortWith(Response.ok().build());
+            clientRequestContext.abortWith(Response.ok(httpMethod).build());
         }
         else {
             clientRequestContext.abortWith(Response.status(405).entity(httpMethod).build());
