@@ -18,8 +18,6 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -29,7 +27,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-@Priority(Priorities.USER - 1)
 public class TestMessageBodyReader implements MessageBodyReader<String> {
 
     public static final String REPLACED_BODY = "this is the replaced body";
