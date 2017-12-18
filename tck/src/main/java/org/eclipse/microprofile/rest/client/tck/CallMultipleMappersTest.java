@@ -26,7 +26,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.WebApplicationException;
@@ -47,15 +46,11 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
             .addClasses(SimpleGetApi.class);
     }
 
-    @BeforeTest
-    public void resetHandlers() {
+    @Test
+    public void testCallsTwoProvidersWithTwoRegisteredProvider() throws Exception {
         TestResponseExceptionMapper.reset();
         TestResponseExceptionMapperHandles.reset();
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
-    }
-
-    @Test
-    public void testCallsTwoProvidersWithTwoRegisteredProvider() throws Exception {
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
             .register(TestResponseExceptionMapper.class)

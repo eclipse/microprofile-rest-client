@@ -42,7 +42,7 @@ import static org.testng.Assert.fail;
 public class DefaultExceptionMapperTest extends WiremockArquillianTest {
 
     private static final int STATUS = 401;
-    public static final String BODY = "body is used by this test";
+    private static final String BODY = "body is used by this test";
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -53,7 +53,6 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
     @BeforeTest
     public void resetHandlers() {
         LowerPriorityTestResponseExceptionMapper.reset();
-        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
     }
 
     @Test
@@ -76,6 +75,8 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
 
     @Test
     public void testPropagationOfResponseDetailsFromDefaultMapper() throws Exception {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
+
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
             .build(SimpleGetApi.class);
@@ -115,6 +116,8 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
 
     @Test
     public void testLowerPriorityMapperTakesPrecedenceFromDefault() throws Exception {
+        stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
+
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
             .register(LowerPriorityTestResponseExceptionMapper.class)

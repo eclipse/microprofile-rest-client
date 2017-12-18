@@ -23,6 +23,9 @@ import org.eclipse.microprofile.rest.client.tck.providers.InjectedSimpleFeature;
 import org.eclipse.microprofile.rest.client.tck.providers.SimpleFeature;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
@@ -36,9 +39,13 @@ import static org.testng.Assert.assertTrue;
 public class FeatureRegistrationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-            .addClasses(SimpleFeature.class, InjectedSimpleFeature.class,
-                SimpleGetApi.class, FeatureProviderClient.class);
+        StringAsset mpConfig = new StringAsset("org.eclipse.microprofile.rest.client.tck.interfaces.FeatureProviderClient/mp-rest/url=" +
+            "http://localhost/null");
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class).addClasses(SimpleFeature.class, InjectedSimpleFeature.class,
+            SimpleGetApi.class, FeatureProviderClient.class)
+            .addAsManifestResource(mpConfig,"microprofile-config.properties")
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class).addAsLibrary(jar);
     }
 
     @Inject
