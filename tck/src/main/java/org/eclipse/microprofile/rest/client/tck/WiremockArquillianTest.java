@@ -28,6 +28,8 @@ import java.net.URL;
 public abstract class WiremockArquillianTest extends Arquillian {
     private static Integer port;
     private static String host;
+    private static String scheme;
+    private static String context;
 
     private static Integer getPort() {
         if(port == null) {
@@ -47,18 +49,20 @@ public abstract class WiremockArquillianTest extends Arquillian {
 
     protected static String getStringURL() {
         int port = getPort();
-        return "http://"+host+":" + port;
+        return scheme+"://"+host+":" + port+""+context;
     }
 
     @BeforeClass
     public static void setupServer() {
         setupWireMockConnection();
-        WireMock.configureFor(host, port);
+        WireMock.configureFor(scheme, host, port, context);
         WireMock.reset();
     }
 
     private static void setupWireMockConnection() {
         host = System.getProperty("wiremock.server.host", "localhost");
         port = Integer.parseInt(System.getProperty("wiremock.server.port", "8765"));
+        scheme = System.getProperty("wiremock.server.scheme", "http");
+        context = System.getProperty("wiremock.server.context", "/");
     }
 }

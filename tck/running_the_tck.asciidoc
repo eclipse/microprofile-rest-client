@@ -89,7 +89,16 @@ WireMock can be run as a maven plugin.  Below is one example configuration:
 </plugin>
 ----
 
-Note that if you change the port, you will need to set a system property `wiremock.server.port` to the new port number.  Likewise, if you choose to run WireMock externally, on another host, you can use `wiremock.server.host` to set the host.
+=== WireMock Configuration
+The TCK exposes the following system properties for you to override if needed to point to your WireMock instance
+
+|=======
+|Property|Description|Default Value|
+|wiremock.server.host|The host where WireMock is running|localhost|
+|wiremock.server.port|The port where WireMock is running|8765|
+|wiremock.server.scheme|The TCP scheme to use when connecting to WireMock (valid values: http, https)|http|
+|wiremock.server.context|The context (URI) that the server is running against|/|
+|=======
 
 === Adding WireMock to your servers
 
