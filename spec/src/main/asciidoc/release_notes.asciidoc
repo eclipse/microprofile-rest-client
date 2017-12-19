@@ -20,3 +20,58 @@
 
 [[release_notes_10]]
 == Release Notes for MicroProfile Rest Client 1.0
+
+http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/microprofile-rest-client.pdf[MicroProfile Rest Client Spec PDF]
+http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/microprofile-rest-client.html[MicroProfile Rest Client Spec HTML]
+http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/apidocs/[MicroProfile Rest Client Spec Javadocs]
+
+Key features:
+
+- Built in alignment to other MicroProfile Specs - automatic registration of JSON provider, CDI support for injecting clients, fully configurable clients via MicroProfile Config
+- Can map JAX-RS `Response` objects into `Exception`s to be handled by your client code
+- Fully declarative annotation driven configuration, with supported builder patterns
+- Closely aligned to JAX-RS with configuration and behavior based on the JAX-RS `Client` object
+
+To get started, simply add this dependency to your project, assuming you have an implementation available:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.eclipse.microprofile.rest.client</groupId>
+    <artifactId>microprofile-rest-client-api</artifactId>
+    <version>1.0</version>
+    <scope>provided</scope>
+</dependency>
+----
+
+And then programmatically create an interface:
+
+[source,java]
+----
+public interface SimpleGetApi {
+    @GET
+    Response executeGet();
+}
+// in your client code
+SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
+            .baseUrl(getApplicationUrl())
+            .build(SimpleGetApi.class);
+----
+
+or you can use CDI to inject it:
+
+[source,java]
+----
+@Path("/")
+@Dependent
+@RegisterRestClient
+public interface SimpleGetApi {
+    @GET
+    Response executeGet();
+}
+// in your client code
+@Inject
+private SimpleGetApi simpleGetApi
+// in your config source
+com.mycompany.myapp.client.SimpleGetApi/mp-rest/url=http://microprofile.io
+----
