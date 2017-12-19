@@ -19,14 +19,12 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.testng.Arquillian;
 import org.testng.annotations.BeforeClass;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-@RunAsClient
 public abstract class WiremockArquillianTest extends Arquillian {
     private static Integer port;
     private static String host;

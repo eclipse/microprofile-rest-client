@@ -56,6 +56,12 @@ To enable the tests in your project you need to add the following dependency to 
     <version>6.9.9</version>
     <scope>test</scope>
 </dependency>
+<dependency>
+    <groupId>com.github.tomakehurst</groupId>
+    <artifactId>wiremock</artifactId>
+    <version>2.10.1</version>
+    <scope>test</scope>
+</dependency>
 ----
 
 == Setting up WireMock via Plugin
@@ -84,6 +90,33 @@ WireMock can be run as a maven plugin.  Below is one example configuration:
 ----
 
 Note that if you change the port, you will need to set a system property `wiremock.server.port` to the new port number.  Likewise, if you choose to run WireMock externally, on another host, you can use `wiremock.server.host` to set the host.
+
+=== Adding WireMock to your servers
+
+The TCK does not ship a pre-built way to load WireMock, to avoid any expectation on how to run WireMock in the test suite.  You may want to run it standalone, inside a servlet container.  Please review their integration guides to setup anything that may be missing.
+
+==== WireMock as a Servlet
+
+WireMock ships with Jetty integration as its servlet runtime.  When running standalone this is how it starts, however there are examples of how to use it as a servlet runtime as well, https://github.com/tomakehurst/wiremock/tree/master/sample-war[WireMock Sample WAR]
+
+==== Shading Dependencies
+
+WireMock (and its dependencies) can be shaded into any WAR file if you need them to be.  You can use an Arquillian `ApplicationArchiveProcessor` and a `LoadableExtension` to register the processor.  Below is one example, but you could also use ShrinkWrap resolver to bring in the JAR and any other dependency (below example would be for a servlet runtime).
+
+[source, java]
+----
+public class WiremockArchiveProcessor implements ApplicationArchiveProcessor {
+    @Override
+    public void process(Archive<?> archive, TestClass testClass) {
+        if(archive instanceof WebArchive) {
+            JavaArchive wiremock = ShrinkWrap.create(JavaArchive.class, "wiremock.jar")
+                .addPackages(true, "com.github.tomakehurst.wiremock");
+            archive.as(WebArchive.class).addAsLibrary(wiremock);
+        }
+    }
+}
+
+----
 
 == Declaring the Tests to run
 
