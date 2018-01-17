@@ -74,7 +74,8 @@ public abstract class RestClientBuilderResolver {
                 PrivilegedAction<ClassLoader> action = () -> Thread.currentThread().getContextClassLoader();
                 ClassLoader cl = AccessController.doPrivileged(action);
                 if (cl == null) {
-                    cl = RestClientBuilderResolver.class.getClassLoader();
+                    action = () -> RestClientBuilderResolver.class.getClassLoader();
+                    cl = AccessController.doPrivileged(action);
                 }
 
                 RestClientBuilderResolver newInstance = loadSpi(cl);
@@ -98,7 +99,8 @@ public abstract class RestClientBuilderResolver {
         }
 
         // start from the root CL and go back down to the TCCL
-        RestClientBuilderResolver resolver = loadSpi(cl.getParent());
+        PrivilegedAction<ClassLoader> action = () -> cl.getParent();
+        RestClientBuilderResolver resolver = loadSpi(AccessController.doPrivileged(action));
 
         if (resolver == null) {
             ServiceLoader<RestClientBuilderResolver> sl = ServiceLoader.load(
