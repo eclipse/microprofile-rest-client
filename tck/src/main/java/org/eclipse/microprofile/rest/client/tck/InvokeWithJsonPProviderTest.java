@@ -102,7 +102,9 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
         reset();
         stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
-                .withBody("[{\"key\": \"value\"}, {\"key\": \"anotherValue\"}]")));
+                .withHeader("Content-Type", "application/json")
+                .withBody("[{\"key\": \"value\"}, {\"key\": \"anotherValue\"}]"))
+                    );
         JsonArray jsonArray = client.get();
         assertEquals(jsonArray.size(), 2, "Expected 2 values in the array for client "+clientType);
         List<JsonObject> jsonObjects = jsonArray.getValuesAs(JsonObject.class);
@@ -120,6 +122,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
         reset();
         stubFor(get(urlEqualTo("/id"))
             .willReturn(aResponse()
+                .withHeader("Content-Type", "application/json")
                 .withBody("{\"key\": \"value\"}")));
         JsonObject jsonObject = client.get("id");
         assertEquals(jsonObject.keySet().size(), 1, "There should only be one key in object for client "+clientType);
@@ -129,7 +132,10 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
 
     private void testPost(JsonPClient client, String clientType) {
         reset();
-        stubFor(post(urlEqualTo("/")).willReturn(aResponse().withStatus(200)));
+        stubFor(post(urlEqualTo("/"))
+                    .willReturn(aResponse()
+                                .withHeader("Content-Type", "application/json")
+                                 .withStatus(200)));
 
         JsonObject jsonObject = Json.createObjectBuilder().add("someKey", "newValue").build();
         String jsonObjectAsString = jsonObject.toString();
@@ -142,7 +148,10 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
 
     private void testPut(JsonPClient client, String clientType) {
         reset();
-        stubFor(put(urlEqualTo("/id")).willReturn(aResponse().withStatus(200).withBody("{\"someOtherKey\":\"newValue\"}")));
+        stubFor(put(urlEqualTo("/id"))
+                    .willReturn(aResponse()
+                                .withHeader("Content-Type", "application/json")
+                                .withStatus(200).withBody("{\"someOtherKey\":\"newValue\"}")));
 
         JsonObject jsonObject = Json.createObjectBuilder().add("someKey", "newValue").build();
         String jsonObjectAsString = jsonObject.toString();
