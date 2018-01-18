@@ -108,7 +108,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
-        Response response = api.executePut(id, inputBody);
+        Response response = api.executePut(expectedId, inputBody);
 
         String body = response.readEntity(String.class);
 
