@@ -97,7 +97,7 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
             .baseUrl(getServerURL())
             .build(InterfaceWithProvidersDefined.class);
 
-        Response response = api.executePut(id, inputBody);
+        Response response = api.executePut(expectedId, inputBody);
 
         String body = response.readEntity(String.class);
 
