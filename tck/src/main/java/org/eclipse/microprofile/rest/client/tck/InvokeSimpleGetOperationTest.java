@@ -36,7 +36,7 @@ import static org.testng.Assert.assertEquals;
 public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, InvokeSimpleGetOperationTest.class.getSimpleName()+".war")
             .addClass(SimpleGetApi.class);
     }
 

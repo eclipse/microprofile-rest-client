@@ -49,7 +49,7 @@ import static org.testng.Assert.assertEquals;
 public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, InvokeWithBuiltProvidersTest.class.getSimpleName()+".war")
             .addClass(InterfaceWithoutProvidersDefined.class)
             .addPackage(TestClientResponseFilter.class.getPackage());
     }

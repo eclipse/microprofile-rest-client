@@ -39,7 +39,7 @@ import static org.testng.Assert.assertEquals;
 public class MultiRegisteredTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, MultiRegisteredTest.class.getSimpleName()+".war")
             .addClasses(InterfaceWithoutPriority.class, InterfaceWithPriority.class)
             .addPackage(InjectedSimpleFeature.class.getPackage());
     }

@@ -41,8 +41,9 @@ import static org.testng.Assert.assertTrue;
 public class BeanParamTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-            .addPackage(BeanParamFilter.class.getPackage());
+        return ShrinkWrap.create(WebArchive.class, BeanParamTest.class.getSimpleName()+".war")
+            .addPackage(BeanParamFilter.class.getPackage())
+            .addClasses(InterfaceUsingBeanParam.class, MyBean.class);
     }
 
     @Test

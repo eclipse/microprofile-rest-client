@@ -46,7 +46,7 @@ import static org.testng.Assert.assertEquals;
 public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, InvokeWithRegisteredProvidersTest.class.getSimpleName()+".war")
             .addClass(InterfaceWithProvidersDefined.class)
             .addPackage(TestClientResponseFilter.class.getPackage());
     }

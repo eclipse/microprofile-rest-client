@@ -41,7 +41,8 @@ import static org.testng.Assert.assertTrue;
 public class SubResourceTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, SubResourceTest.class.getSimpleName()+".war")
+            .addClasses(RootResource.class, SubResource.class)
             .addPackage(ReturnWithURLRequestFilter.class.getPackage());
     }
 

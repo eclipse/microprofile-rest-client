@@ -41,8 +41,9 @@ import static org.testng.Assert.assertTrue;
 public class InheritanceTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-            .addPackage(ReturnWithURLRequestFilter.class.getPackage());
+        return ShrinkWrap.create(WebArchive.class, InheritanceTest.class.getSimpleName()+".war")
+            .addPackage(ReturnWithURLRequestFilter.class.getPackage())
+            .addClasses(BaseClient.class, ChildClient.class);
     }
 
     @Test
