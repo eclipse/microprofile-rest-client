@@ -48,7 +48,7 @@ import static org.testng.Assert.assertTrue;
 public class AdditionalRegistrationTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, AdditionalRegistrationTest.class.getSimpleName()+".war")
             .addPackage(InjectedSimpleFeature.class.getPackage());
     }
 

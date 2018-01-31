@@ -45,7 +45,7 @@ public class FeatureRegistrationTest extends WiremockArquillianTest{
             SimpleGetApi.class, FeatureProviderClient.class)
             .addAsManifestResource(mpConfig,"microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        return ShrinkWrap.create(WebArchive.class).addAsLibrary(jar);
+        return ShrinkWrap.create(WebArchive.class, FeatureRegistrationTest.class.getSimpleName()+".war").addAsLibrary(jar);
     }
 
     @Inject

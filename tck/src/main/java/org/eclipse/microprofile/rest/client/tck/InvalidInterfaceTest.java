@@ -36,7 +36,10 @@ import org.testng.annotations.Test;
 public class InvalidInterfaceTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, InvalidInterfaceTest.class.getSimpleName()+".war");
+        return ShrinkWrap.create(WebArchive.class, InvalidInterfaceTest.class.getSimpleName()+".war")
+                         .addClasses(MissingPathParam.class, MissingPathParamSub.class,
+                                     MissingUriTemplate.class, MultipleHTTPMethodAnnotations.class,
+                                     TemplateMismatch.class);
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})

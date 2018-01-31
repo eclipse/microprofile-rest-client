@@ -56,7 +56,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         StringAsset mpConfig = new StringAsset(JsonPClient.class.getName() + "/mp-rest/url=" + getStringURL());
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, InvokeWithJsonPProviderTest.class.getSimpleName()+".war")
             .addClass(JsonPClient.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties");

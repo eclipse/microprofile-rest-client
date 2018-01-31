@@ -38,8 +38,9 @@ import static org.testng.Assert.assertEquals;
 public class CustomHttpMethodTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-            .addPackage(CustomHttpMethodFilter.class.getPackage());
+        return ShrinkWrap.create(WebArchive.class, CustomHttpMethodTest.class.getSimpleName()+".war")
+            .addPackage(CustomHttpMethodFilter.class.getPackage())
+            .addClass(CustomHttpMethod.class);
     }
 
     @Test
