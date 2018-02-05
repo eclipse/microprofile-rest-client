@@ -94,7 +94,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
 
         InterfaceWithoutProvidersDefined api = createClient();
 
-        Response response = api.executePut(expectedId, inputBody);
+        Response response = api.executePut(id, inputBody);
 
         String body = response.readEntity(String.class);
 
