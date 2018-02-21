@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 
-import java.net.URL;
+import java.net.URI;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -50,7 +50,7 @@ public class SubResourceTest extends Arquillian{
     public void canInvokeMethodOnSubResourceInterface() throws Exception {
         ReturnWithURLRequestFilter filter = new ReturnWithURLRequestFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        RootResource client = builder.baseUrl(new URL("http://localhost/stub")).build(RootResource.class);
+        RootResource client = builder.baseUri(new URI("http://localhost/stub")).build(RootResource.class);
         SubResource subClient = client.sub();
         assertNotNull(subClient, "SubResource interface is null");
         Response response = subClient.getFromSub();

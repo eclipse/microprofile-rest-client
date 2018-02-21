@@ -53,7 +53,7 @@ public class DefaultExceptionMapperConfigTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(SimpleGetApi.class);
 
         try {

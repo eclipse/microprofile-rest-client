@@ -16,7 +16,12 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import java.net.URI;
+import java.net.URL;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
+import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -24,7 +29,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
 
 public class ProvidesRestClientBuilderTest extends Arquillian{
     @Deployment
@@ -36,5 +43,35 @@ public class ProvidesRestClientBuilderTest extends Arquillian{
     public void testCanCallStaticLoader() {
         RestClientBuilder builder = RestClientBuilder.newBuilder();
         assertNotNull(builder);
+    }
+
+    @Test
+    public void testLastBaseUriOrBaseUrlCallWins() throws Exception {
+        RestClientBuilder builder = RestClientBuilder.newBuilder();
+        builder = builder.register(ReturnWithURLRequestFilter.class);
+
+        builder = builder.baseUri(new URI("http://localhost:8080/wrong1"));
+        builder = builder.baseUrl(new URL("http://localhost:8080/right1"));
+        SimpleGetApi client = builder.build(SimpleGetApi.class);
+        assertEquals("GET http://localhost:8080/right1", client.executeGet().readEntity(String.class));
+
+        builder = builder.baseUrl(new URL("http://localhost:8080/wrong2"));
+        builder = builder.baseUri(new URI("http://localhost:8080/wrong2b"));
+        builder = builder.baseUri(new URI("http://localhost:8080/right2"));
+        client = builder.build(SimpleGetApi.class);
+        assertEquals("GET http://localhost:8080/right2", client.executeGet().readEntity(String.class));
+    }
+
+    @Test
+    public void testIllegalStateExceptionThrownWhenNoBaseUriOrUrlSpecified() {
+        RestClientBuilder builder = RestClientBuilder.newBuilder();
+        builder = builder.register(ReturnWithURLRequestFilter.class);
+        try {
+            builder.build(SimpleGetApi.class);
+            fail("Did not throw expected IllegalStateException");
+        }
+        catch (Throwable t) {
+            assertEquals(IllegalStateException.class, t.getClass());
+        }
     }
 }

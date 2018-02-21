@@ -32,19 +32,19 @@ service like this:
  public interface MovieReviewService {
      @GET
      Set<Movie> getAllMovies();
-     
+
      @GET
      @Path("/{movieId}/reviews")
      Set<Review> getAllReviews( @PathParam("movieId") String movieId );
-     
+
      @GET
      @Path("/{movieId}/reviews/{reviewId}"
      Review getReview( @PathParam("movieId") String movieId, @PathParam("reviewId") String reviewId );
-     
+
      @POST
      @Path("/{movieId}/reviews")
      String submitReview( @PathParam("movieId") String movieId, Review review );
-     
+
      @PUT
      @Path("/{movieId}/reviews/{reviewId}"
      Review updateReview( @PathParam("movieId") String movieId, @PathParam("reviewId") String reviewId, Review review );
@@ -53,18 +53,18 @@ service like this:
 
 Now we can use this interface as a means to invoke the actual remote review service like this:
 ```java
-String apiUrl = "http://localhost:9080/movieReviewService";
+URI apiUri = new URI("http://localhost:9080/movieReviewService");
 MovieReviewService reviewSvc = RestClientBuilder.newBuilder()
-            .baseUrl(apiUrl)
+            .baseUri(apiUri)
             .build(MovieReviewService.class);
 Review review = new Review(3 /* stars */, "This was a delightful comedy, but not terribly realistic.");
 reviewSvc.submitReview( movieId, review );
 ```
 
-This allows for a much more natural coding style, and the underlying MicroProfile implementation handles the communication 
-between the client and service - it makes the HTTP connection, serializes the Review object to JSON/XML/etc. so that the 
+This allows for a much more natural coding style, and the underlying MicroProfile implementation handles the communication
+between the client and service - it makes the HTTP connection, serializes the Review object to JSON/XML/etc. so that the
 remote service can process it.
 
-This project is creating a specification for REST clients. It does not provide an implementation. Various vendors are 
-involved in this project and will provide their own implementation of this specification. This project is still under 
+This project is creating a specification for REST clients. It does not provide an implementation. Various vendors are
+involved in this project and will provide their own implementation of this specification. This project is still under
 development - participation welcome!

@@ -52,7 +52,7 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
         TestResponseExceptionMapperHandles.reset();
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withBody("body is ignored in this test")));
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .register(TestResponseExceptionMapper.class)
             .register(TestResponseExceptionMapperHandles.class)
             .build(SimpleGetApi.class);

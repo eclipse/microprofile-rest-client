@@ -49,7 +49,7 @@ public class MultiRegisteredTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(200).withBody("")));
         InterfaceWithoutPriority client = RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
             .register(Prioritized2000MessageBodyReader.class, 500)
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(InterfaceWithoutPriority.class);
         String body = client.get().readEntity(String.class);
         assertEquals(body, "Prioritized 2000", "The body returned should be the body from "+Prioritized2000MessageBodyReader.class);
@@ -60,7 +60,7 @@ public class MultiRegisteredTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(200).withBody("")));
         InterfaceWithPriority client = RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
             .register(Prioritized2000MessageBodyReader.class, 500)
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(InterfaceWithPriority.class);
         String body = client.get().readEntity(String.class);
         assertEquals(body, "Prioritized 2000", "The body returned should be the body from "+Prioritized2000MessageBodyReader.class);

@@ -62,7 +62,7 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
                 .withBody(outputBody)));
 
         InterfaceWithProvidersDefined api = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(InterfaceWithProvidersDefined.class);
 
         Response response = api.executePost(inputBody);
@@ -94,7 +94,7 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
                 .withBody(outputBody)));
 
         InterfaceWithProvidersDefined api = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(InterfaceWithProvidersDefined.class);
 
         Response response = api.executePut(id, inputBody);

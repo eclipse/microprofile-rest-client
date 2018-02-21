@@ -24,13 +24,13 @@ Type Safe Rest Clients support both programmatic look up and CDI injection appro
 [source, java]
 ----
 public class SomeService {
-   public Response doWorkAgainstApi(URL apiUrl, ApiModel apiModel) {
+   public Response doWorkAgainstApi(URI apiUri, ApiModel apiModel) {
        RemoteApi remoteApi = RestClientBuilder.newBuilder()
-            .baseUrl(apiUrl)
+            .baseUri(apiUri)
             .build(RemoteApi.class);
        return remoteApi.execute(apiModel);
    }
 }
 ----
 
-Specifying the `baseUrl` is the URL to the remote service.  The `proxy` method takes an interface that defines one or more API methods to be invoked, returning back an instance of that interface that can be used to perform API calls.
+Specifying the `baseUri` is the URI to the remote service.  The `proxy` method takes an interface that defines one or more API methods to be invoked, returning back an instance of that interface that can be used to perform API calls.

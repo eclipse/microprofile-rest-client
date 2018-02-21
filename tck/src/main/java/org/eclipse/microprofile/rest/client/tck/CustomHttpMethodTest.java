@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 
-import java.net.URL;
+import java.net.URI;
 
 import static org.testng.Assert.assertEquals;
 
@@ -47,7 +47,7 @@ public class CustomHttpMethodTest extends Arquillian{
     public void invokesUserDefinedHttpMethod() throws Exception {
         CustomHttpMethodFilter filter = new CustomHttpMethodFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        CustomHttpMethod client = builder.baseUrl(new URL("http://localhost/stub")).build(CustomHttpMethod.class);
+        CustomHttpMethod client = builder.baseUri(new URI("http://localhost/stub")).build(CustomHttpMethod.class);
         Response response = client.executeMyMethod();
         assertEquals(response.getStatus(), 200, "Unexpected HTTP Method sent from client - " +
             "expected \"MYMETHOD\", was \"" + response.readEntity(String.class) + "\"");

@@ -16,6 +16,7 @@
 package org.eclipse.microprofile.rest.client;
 
 import javax.ws.rs.core.Configurable;
+import java.net.URI;
 import java.net.URL;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 
@@ -50,10 +51,35 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * <code>http://my-service:8080/service/api</code> in addition to any
      * <code>@Path</code> annotations included on the method.
      *
+     * The {@link #baseUri(URI)} method should be preferred over this method.
+     *
+     * Subsequent calls to this method will replace the previously specified
+     * baseUri/baseUrl.
+     *
      * @param url the base Url for the service.
      * @return the current builder with the baseUrl set
+     * @deprecated use {@link #baseUri(java.net.URI)} instead.
      */
+    @Deprecated
     RestClientBuilder baseUrl(URL url);
+
+    /**
+     * Specifies the base URI to be used when making requests. Assuming that the
+     * interface has a <code>@Path("/api")</code> at the interface level and a
+     * <code>uri</code> is given with
+     * <code>http://my-service:8080/service</code> then all REST calls will be
+     * invoked with a <code>uri</code> of
+     * <code>http://my-service:8080/service/api</code> in addition to any
+     * <code>@Path</code> annotations included on the method.
+     *
+     * Subsequent calls to this method will replace the previously specified
+     * baseUri/baseUrl.
+     *
+     * @param uri the base URI for the service.
+     * @return the current builder with the baseUri set
+     * @since 1.1
+     */
+    RestClientBuilder baseUri(URI uri);
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the
@@ -63,8 +89,8 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @param <T> the type of the interface
      * @return a new instance of an implementation of this REST interface that
      * @throws IllegalStateException if not all pre-requisites are satisfied for
-     * the builder, this exception may get thrown. For instance, if a URL has
-     * not been set.
+     * the builder, this exception may get thrown. For instance, if the base
+     * URI/URL has not been set.
      * @throws RestClientDefinitionException if the passed-in interface class is
      * invalid.
      */

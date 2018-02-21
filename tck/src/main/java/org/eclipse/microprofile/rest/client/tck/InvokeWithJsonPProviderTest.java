@@ -70,7 +70,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     @BeforeTest
     public void setupClient() throws Exception{
         builtJsonPClient = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(JsonPClient.class);
     }
 

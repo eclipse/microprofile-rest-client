@@ -48,7 +48,7 @@ public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
                 .withBody(expectedBody)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(SimpleGetApi.class);
 
         Response response = simpleGetApi.executeGet();
