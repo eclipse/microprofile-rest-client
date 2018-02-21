@@ -53,11 +53,12 @@ public class HasConversationScopeTest extends Arquillian {
         String url = SimpleGetApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String url2 = MyConversationScopedApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String scope = SimpleGetApi.class.getName() + "/mp-rest/scope=" + ConversationScoped.class.getName();
-        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
+        String simpleName = HasConversationScopeTest.class.getSimpleName();
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(SimpleGetApi.class, MyConversationScopedApi.class)
             .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + url2), "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
             .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

@@ -37,7 +37,7 @@ public class InvokeSimpleGetOperationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, InvokeSimpleGetOperationTest.class.getSimpleName()+".war")
-            .addClass(SimpleGetApi.class);
+            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class);
     }
 
     @Test

@@ -42,7 +42,7 @@ public class FeatureRegistrationTest extends WiremockArquillianTest{
         StringAsset mpConfig = new StringAsset("org.eclipse.microprofile.rest.client.tck.interfaces.FeatureProviderClient/mp-rest/url=" +
             "http://localhost/null");
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class).addClasses(SimpleFeature.class, InjectedSimpleFeature.class,
-            SimpleGetApi.class, FeatureProviderClient.class)
+            SimpleGetApi.class, FeatureProviderClient.class, WiremockArquillianTest.class)
             .addAsManifestResource(mpConfig,"microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, FeatureRegistrationTest.class.getSimpleName()+".war").addAsLibrary(jar);

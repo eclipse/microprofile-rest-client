@@ -45,7 +45,7 @@ public class DefaultExceptionMapperConfigTest extends WiremockArquillianTest {
         StringAsset mpConfig = new StringAsset("microprofile.rest.client.disable.default.mapper=true");
         return ShrinkWrap.create(WebArchive.class, DefaultExceptionMapperConfigTest.class.getSimpleName()+".war")
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties")
-            .addClasses(SimpleGetApi.class);
+            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class);
     }
 
     @Test
@@ -65,4 +65,3 @@ public class DefaultExceptionMapperConfigTest extends WiremockArquillianTest {
         }
     }
 }
-

@@ -45,7 +45,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ExceptionMapperTest.class.getSimpleName()+".war")
             .addClasses(TestResponseExceptionMapper.class, TestResponseExceptionMapperOverridePriority.class)
-            .addClasses(SimpleGetApi.class);
+            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class);
     }
 
     @BeforeTest

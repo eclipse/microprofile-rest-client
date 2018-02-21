@@ -52,11 +52,12 @@ public class HasSingletonScopeTest extends Arquillian {
     public static WebArchive createDeployment() {
         String url = SimpleGetApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String scope = SimpleGetApi.class.getName() + "/mp-rest/scope=" + Singleton.class.getName();
-        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
+        String simpleName = HasSingletonScopeTest.class.getSimpleName();
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(SimpleGetApi.class, MySingletonApi.class)
             .addAsManifestResource(new StringAsset(url + "\n" + scope), "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
             .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
