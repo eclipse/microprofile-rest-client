@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2016-2018 Contributors to the Eclipse Foundation
+ * Copyright (c) 2018 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -17,25 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+package org.eclipse.microprofile.rest.client.tck.spi;
 
-/**
- * APIs for building a type-safe RESTful client leveraging existing JAX-RS
- * APIs, for example:
- * <pre>
- * public interface MyClientService {
- *     &#064;GET
- *     &#064;Path("/myService/{id}")
- *     Widget getWidget(&#064;PathParam("id") String id);
- * }
- *
- * ...
- *
- * MyClientService service = RestClientBuilder.newBuilder()
- *                                            .baseUrl(url)
- *                                            .build();
- * Widget w = service.getWidget(widgetId); // invokes remote service, returns domain object
- * </pre>
- * @since 1.0
- */
-@org.osgi.annotation.versioning.Version("1.1")
-package org.eclipse.microprofile.rest.client;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
+import org.eclipse.microprofile.rest.client.tck.providers.ReturnWith200RequestFilter;
+
+public class SimpleRestClientBuilderListenerImpl implements RestClientBuilderListener {
+
+    @Override
+    public void onNewBuilder(RestClientBuilder builder) {
+        builder.register(ReturnWith200RequestFilter.class, 1);
+    }
+}
