@@ -40,7 +40,7 @@ public class MultiRegisteredTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, MultiRegisteredTest.class.getSimpleName()+".war")
-            .addClasses(InterfaceWithoutPriority.class, InterfaceWithPriority.class)
+            .addClasses(InterfaceWithoutPriority.class, InterfaceWithPriority.class, WiremockArquillianTest.class)
             .addPackage(InjectedSimpleFeature.class.getPackage());
     }
 

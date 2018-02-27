@@ -43,7 +43,7 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, CallMultipleMappersTest.class.getSimpleName()+".war")
             .addClasses(TestResponseExceptionMapper.class, TestResponseExceptionMapperHandles.class)
-            .addClasses(SimpleGetApi.class);
+            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class);
     }
 
     @Test

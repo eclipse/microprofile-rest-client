@@ -60,12 +60,13 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     public static WebArchive createDeployment() {
         String propertyName = InterfaceWithProvidersDefined.class.getName()+"/mp-rest/url";
         String value = getStringURL();
-        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClass(InterfaceWithProvidersDefined.class)
+        String simpleName = CDIInvokeWithRegisteredProvidersTest.class.getSimpleName();
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
+            .addClasses(InterfaceWithProvidersDefined.class, WiremockArquillianTest.class)
             .addPackage(TestClientResponseFilter.class.getPackage())
             .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        return ShrinkWrap.create(WebArchive.class)
+        return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
             .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
