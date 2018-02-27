@@ -16,6 +16,7 @@
 package org.eclipse.microprofile.rest.client;
 
 import javax.ws.rs.core.Configurable;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
@@ -51,16 +52,12 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * <code>http://my-service:8080/service/api</code> in addition to any
      * <code>@Path</code> annotations included on the method.
      *
-     * The {@link #baseUri(URI)} method should be preferred over this method.
-     *
      * Subsequent calls to this method will replace the previously specified
      * baseUri/baseUrl.
      *
      * @param url the base Url for the service.
      * @return the current builder with the baseUrl set
-     * @deprecated use {@link #baseUri(java.net.URI)} instead.
      */
-    @Deprecated
     RestClientBuilder baseUrl(URL url);
 
     /**
@@ -77,9 +74,17 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      *
      * @param uri the base URI for the service.
      * @return the current builder with the baseUri set
+     * @throws IllegalArgumentException if the passed in URI is invalid
      * @since 1.1
      */
-    RestClientBuilder baseUri(URI uri);
+    default RestClientBuilder baseUri(URI uri) {
+        try {
+            return baseUrl(uri.toURL());
+        }
+        catch (MalformedURLException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the

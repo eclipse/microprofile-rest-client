@@ -23,7 +23,7 @@
 
 Changes since 1.0:
 
-- New `baseUri` method on `RestClientBuilder` - this is preferred over the now-deprecated `baseUrl` method.
+- New `baseUri` method on `RestClientBuilder`.
 
 
 [[release_notes_10]]
