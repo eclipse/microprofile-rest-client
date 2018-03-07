@@ -23,6 +23,7 @@ import java.security.PrivilegedAction;
 import java.util.ServiceLoader;
 
 import javax.ws.rs.core.Configurable;
+import java.util.concurrent.ExecutorService;
 
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
@@ -71,7 +72,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * baseUri/baseUrl.
      *
      * @param url the base Url for the service.
-     * @return the current builder with the baseUrl set
+     * @return the current builder with the baseUrl set.
      */
     RestClientBuilder baseUrl(URL url);
 
@@ -100,6 +101,19 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
             throw new IllegalArgumentException(ex);
         }
     }
+
+    /**
+     * Specifies the <code>ExecutorService</code> to use when invoking
+     * asynchronous Rest Client interface methods.  By default, the executor
+     * service used is determined by the MP Rest Client implementation runtime.
+     *
+     * @param executor the executor service for the runtime to use when invoking
+     * asynchronous Rest Client interface methods - must be non-null.
+     * @return the current builder with the executorService set.
+     * @throws NullPointerException if the <code>executor</code> parameter is
+     * null.
+     */
+    RestClientBuilder executorService(ExecutorService executor);
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the

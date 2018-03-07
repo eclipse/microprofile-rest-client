@@ -46,4 +46,6 @@ include::providers.asciidoc[]
 
 include::cdi.asciidoc[]
 
+include::async.asciidoc[]
+
 include::release_notes.asciidoc[]

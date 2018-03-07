@@ -1,0 +1,88 @@
+//
+// Copyright (c) 2018 Contributors to the Eclipse Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+[[restasync]]
+== MicroProfile Rest Client Asynchronous Support
+
+It is possible for Rest Client interface methods to be declared asynchronous.  This allows the thread invoking the interface method to proceed while the RESTful request occurs on another thread.
+
+=== Asynchronous Methods
+
+A method is considered to be asynchronous if either of the following conditions are true:
+
+- The method's return type is `java.util.concurrent.Future`.
+- The method's return type is `void` but it has a parameter of type `javax.ws.rs.client.InvocationCallback`.
+
+For example, all of the following methods would be declared asynchronous:
+
+[source, java]
+----
+public interface MyAsyncClient {
+    @GET
+    @Path("/one")
+    Future<Response> get();
+
+    @POST
+    @Path("/two")
+    Future<String> post(String entity);
+
+    @PUT
+    @Path("/three")
+    void put(InvocationCallback<JSONObject> callback, String updatedEntity);
+}
+----
+
+=== ExecutorService
+
+By default, the MicroProfile Rest Client implementation can determine how to implement the asynchronous request.
+The primary requirement for the implementation is that the response from the remote server should be handled on a different thread than the thread invoking the asynchronous method.
+Providers on the outbound client request chain (such as `ClientRequestFilter`s, `MessageBodyWriter`s, `WriterInterceptor`s, etc.) may be executed on either thread.
+
+Callers may override the default implementation by providing their own `ExecutorService` via the `RestClientBuilder.executorService(ExecutorService)` method.
+The implementation must use the `ExecutorService` provided for all asynchronous methods on any interface built via the `RestClientBuilder`.
+
+=== AsyncInvocationInterceptors
+
+There may be cases where it is necessary for client application code or runtime components to be notified when control of the client request/response has flowed from one thread to another.
+This can be accomplished by registering an implementation of the AsyncInvocationInterceptorFactory provider interface.
+MP Rest Client implementations must invoke the `newInterceptor` method of each registered factory provider prior to switching thread of execution on async method requests.
+That method will return an instance of `AsyncInvocationInterceptor` - the MP Rest Client implementation must then invoke the `prepareContext` method while still executing on the thread that invoked the async method.
+After swapping threads, but before invoking further providers or returning control back to the async method caller, the MP Rest Client implementation must invoke the `applyContext` method on the new async thread that will complete the request/response.
+
+The following example shows how the AsyncInvocationInterceptorFactory provider and associated AsyncInvocationInterceptor interface could be used to propagate a `ThreadLocal` value from the originating thread to async thread:
+[source, java]
+----
+public class MyFactory implements AsyncInvocationInterceptorFactory {
+
+    public AsyncInvocationInterceptor newInterceptor() {
+         return new MyInterceptor();
+    }
+}
+
+public class MyInterceptor implements AsyncInvocationInterceptor {
+    String someValue;
+
+    public void prepareContext() {
+        someValue = SomeClass.getValueFromThreadLocal();
+    }
+    public void applyContext() {
+        SomeClass.setValueIntoThreadLocal(someValue);
+    }
+}
+
+@RegisterProvider(MyFactory.class)
+public interface MyAsyncClient {...}
+----

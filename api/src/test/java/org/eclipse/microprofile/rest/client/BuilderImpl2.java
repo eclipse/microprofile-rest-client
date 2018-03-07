@@ -19,6 +19,7 @@ package org.eclipse.microprofile.rest.client;
 import javax.annotation.Priority;
 import java.net.URI;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
 
 @Priority(2)
 public class BuilderImpl2 extends AbstractBuilder {
@@ -29,6 +30,10 @@ public class BuilderImpl2 extends AbstractBuilder {
 
     @Override
     public RestClientBuilder baseUri(URI uri) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    public RestClientBuilder executorService(ExecutorService executor) {
         throw new IllegalStateException("not implemented");
     }
 
