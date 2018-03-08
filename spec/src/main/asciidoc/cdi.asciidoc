@@ -74,13 +74,15 @@ public interface MyServiceClient {
 
 The values of the following properties will be provided via MicroProfile Config:
 
-- `com.mycompany.remoteServices.MyServiceClient/mp-rest/url`: The base URL to use for this service, the equivalent of the `baseUri` method.  This property is considered required, however implementations may have other ways to define these URLs.
+- `com.mycompany.remoteServices.MyServiceClient/mp-rest/url`: The base URL to use for this service, the equivalent of the `baseUrl` method.  This property (or */mp-rest/uri) is considered required, however implementations may have other ways to define these URLs/URIs.
+- `com.mycompany.remoteServices.MyServiceClient/mp-rest/uri`: The base URI to use for this service, the equivalent of the `baseUri` method.  This property (or */mp-rest/url) is considered required, however implementations may have other ways to define these URLs/URIs.
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/scope`: The fully qualified classname to a CDI scope to use for injection, defaults to `javax.enterprise.context.Dependent` as mentioned above.
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/providers`: A comma separated list of fully-qualified provider classnames to include in the client, the equivalent of the `register` method or the `@RegisterProvider` annotation.
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/providers/com.mycompany.MyProvider/priority` will override the priority of the provider for this interface.
 
 Implementations may support other custom properties registered in similar fashions or other ways.
 
-The `url` property must resolve to a value that can be parsed by the `URL` converter required by the MicroProfile Config spec.
+The `url` property must resolve to a value that can be parsed by the `URL` converter required by the MicroProfile Config spec. Likewise, the `uri` property must resolve to a value that can be parsed by the `URI` converter.
+If both the `url` and `uri` properties are declared, then the `uri` property will take precedence.
 
 The `providers` property is not aggregated, the value will be read from the highest property `ConfigSource`
