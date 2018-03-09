@@ -19,8 +19,8 @@
  *******************************************************************************/
 
 /**
- * This package provides SPIs for MP Rest Client implementations or system-level
- * components that provide additional functionality for MP Rest Clients.
+ * SPIs for MP Rest Client implementations or system-level components that
+ * provide additional functionality for MP Rest Clients.
  *
  */
 @org.osgi.annotation.versioning.Version("1.0.1")

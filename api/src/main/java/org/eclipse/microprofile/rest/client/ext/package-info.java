@@ -22,6 +22,7 @@
  * APIs for extending MP Rest Client functionality - such as new providers.
  * Example:
  * <pre>
+ * @RegisterProvider(UnknownWidgetExceptionMapper.class)
  * public interface MyClientService {
  *     @GET
  *     @Path("/myService/{id}")
