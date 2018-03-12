@@ -19,7 +19,19 @@
  *******************************************************************************/
 
 /**
+ * APIs for annotating MP Rest Client interfaces.
  *
+ * Example:
+ * <pre>
+ * @RegisterProvider(MyMessageBodyReader.class)
+ * @RegisterProvider(MyMessageBodyWriter.class)
+ * @RegisterProvider(MyClientRequestFilter.class)
+ * public interface MyClientService {
+ *     @GET
+ *     @Path("/myService/{id}")
+ *     Widget getWidget(@PathParam("id") String id);
+ * }
+ * </pre>
  */
 @org.osgi.annotation.versioning.Version("1.0.1")
 package org.eclipse.microprofile.rest.client.annotation;

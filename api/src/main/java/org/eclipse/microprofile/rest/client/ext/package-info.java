@@ -19,7 +19,25 @@
  *******************************************************************************/
 
 /**
+ * APIs for extending MP Rest Client functionality - such as new providers.
+ * Example:
+ * <pre>
+ * @RegisterProvider(UnknownWidgetExceptionMapper.class)
+ * public interface MyClientService {
+ *     @GET
+ *     @Path("/myService/{id}")
+ *     Widget getWidget(@PathParam("id") String id) throws UnknownWidgetException;
+ * }
+ * ...
+ * public class UnknownWidgetExceptionMapper implements ResponseExceptionMapper {
  *
+ *     @Override
+ *     UnknownWidgetException toThrowable(Response response) {
+ *         String msg = "Could not find widget with ID of " + response.getHeaderString("WidgetId");
+ *         return new UnknownWidgetException(msg)
+ *     }
+ * }
+ * </pre>
  */
 @org.osgi.annotation.versioning.Version("1.0.1")
 package org.eclipse.microprofile.rest.client.ext;

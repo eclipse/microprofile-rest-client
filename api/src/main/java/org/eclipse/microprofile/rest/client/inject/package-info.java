@@ -19,7 +19,30 @@
  *******************************************************************************/
 
 /**
+ * APIs to aid in CDI-based injection of MP Rest Client implementations.  These
+ * annotations are used both to mark an interface as registered Rest Client and
+ * also to designate that an implementation of that interface should be injected
+ * at a specific injection point.
  *
+ * Example:
+ * <pre>
+ * @RegisterProvider
+ * @Dependent
+ * public interface MyClientService {
+ *     @GET
+ *     @Path("/myService/{id}")
+ *     Widget getWidget(@PathParam("id") String id);
+ * }
+ *
+ * ...
+ * @ApplicationScoped
+ * public class MyBean {
+ *     @Inject
+ *     @RestClient
+ *     MyClientService service;
+ *     ...
+ * }
+ * </pre>
  */
 @org.osgi.annotation.versioning.Version("1.0.1")
 package org.eclipse.microprofile.rest.client.inject;
