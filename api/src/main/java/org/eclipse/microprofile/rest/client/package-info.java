@@ -23,9 +23,9 @@
  * APIs, for example:
  * <pre>
  * public interface MyClientService {
- *     @GET
- *     @Path("/myService/{id}")
- *     Widget getWidget(@PathParam("id") String id);
+ *     &#064;GET
+ *     &#064;Path("/myService/{id}")
+ *     Widget getWidget(&#064;PathParam("id") String id);
  * }
  *
  * ...
