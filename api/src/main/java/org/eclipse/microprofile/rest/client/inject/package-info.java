@@ -26,19 +26,19 @@
  *
  * Example:
  * <pre>
- * @RegisterProvider
- * @Dependent
+ * &#064;RegisterProvider
+ * &#064;Dependent
  * public interface MyClientService {
- *     @GET
- *     @Path("/myService/{id}")
- *     Widget getWidget(@PathParam("id") String id);
+ *     &#064;GET
+ *     &#064;Path("/myService/{id}")
+ *     Widget getWidget(&#064;PathParam("id") String id);
  * }
  *
  * ...
- * @ApplicationScoped
+ * &#064;ApplicationScoped
  * public class MyBean {
- *     @Inject
- *     @RestClient
+ *     &#064;Inject
+ *     &#064;RestClient
  *     MyClientService service;
  *     ...
  * }

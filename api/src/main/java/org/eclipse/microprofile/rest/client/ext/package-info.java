@@ -22,16 +22,16 @@
  * APIs for extending MP Rest Client functionality - such as new providers.
  * Example:
  * <pre>
- * @RegisterProvider(UnknownWidgetExceptionMapper.class)
+ * &#064;RegisterProvider(UnknownWidgetExceptionMapper.class)
  * public interface MyClientService {
- *     @GET
- *     @Path("/myService/{id}")
- *     Widget getWidget(@PathParam("id") String id) throws UnknownWidgetException;
+ *     &#064;GET
+ *     &#064;Path("/myService/{id}")
+ *     Widget getWidget(&#064;PathParam("id") String id) throws UnknownWidgetException;
  * }
  * ...
  * public class UnknownWidgetExceptionMapper implements ResponseExceptionMapper {
  *
- *     @Override
+ *     &#064;Override
  *     UnknownWidgetException toThrowable(Response response) {
  *         String msg = "Could not find widget with ID of " + response.getHeaderString("WidgetId");
  *         return new UnknownWidgetException(msg)

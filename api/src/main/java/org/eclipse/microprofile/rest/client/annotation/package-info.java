@@ -23,13 +23,13 @@
  *
  * Example:
  * <pre>
- * @RegisterProvider(MyMessageBodyReader.class)
- * @RegisterProvider(MyMessageBodyWriter.class)
- * @RegisterProvider(MyClientRequestFilter.class)
+ * &#064;RegisterProvider(MyMessageBodyReader.class)
+ * &#064;RegisterProvider(MyMessageBodyWriter.class)
+ * &#064;RegisterProvider(MyClientRequestFilter.class)
  * public interface MyClientService {
- *     @GET
- *     @Path("/myService/{id}")
- *     Widget getWidget(@PathParam("id") String id);
+ *     &#064;GET
+ *     &#064;Path("/myService/{id}")
+ *     Widget getWidget(&#064;PathParam("id") String id);
  * }
  * </pre>
  */
