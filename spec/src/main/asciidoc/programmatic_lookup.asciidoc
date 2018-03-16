@@ -33,4 +33,4 @@ public class SomeService {
 }
 ----
 
-Specifying the `baseUri` is the URI to the remote service.  The `proxy` method takes an interface that defines one or more API methods to be invoked, returning back an instance of that interface that can be used to perform API calls.
+Specifying the `baseUri` is the URL to the remote service.  The `build` method takes an interface that defines one or more API methods to be invoked, returning back an instance of that interface that can be used to perform API calls.
