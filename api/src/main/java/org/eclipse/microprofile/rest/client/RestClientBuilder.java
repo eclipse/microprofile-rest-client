@@ -15,10 +15,16 @@
  */
 package org.eclipse.microprofile.rest.client;
 
-import javax.ws.rs.core.Configurable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ServiceLoader;
+
+import javax.ws.rs.core.Configurable;
+
+import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 
 /**
@@ -40,7 +46,16 @@ import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 public interface RestClientBuilder extends Configurable<RestClientBuilder> {
 
     static RestClientBuilder newBuilder() {
-        return RestClientBuilderResolver.instance().newBuilder();
+        RestClientBuilder builder = RestClientBuilderResolver.instance().newBuilder();
+        AccessController.doPrivileged((PrivilegedAction<Void>)
+            () -> {
+                for(RestClientBuilderListener listener : ServiceLoader.load(RestClientBuilderListener.class)) {
+                    listener.onNewBuilder(builder);
+                }
+                return null;
+            }
+        );
+        return builder;
     }
 
     /**

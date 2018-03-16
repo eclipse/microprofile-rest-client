@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017 Contributors to the Eclipse Foundation
+// Copyright (c) 2017-2018 Contributors to the Eclipse Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -89,6 +89,8 @@ Any methods that read the response body as a stream must ensure that they reset 
 == Provider Declaration
 
 In addition to defining providers via the client definition, interfaces may use the `@RegisterProvider` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
+
+Providers may also be registered by implementing the `RestClientBuilderListener` interface.  This interface is intended as an SPI to allow global provider registration.  The implementation of this interface must be specified in a `META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener` file, following the service loader pattern.
 
 === Provider Priority
 
