@@ -16,8 +16,7 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
@@ -43,27 +42,27 @@ public class InvalidInterfaceTest extends Arquillian{
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})
-    public void testExceptionThrownWhenInterfaceHasMethodWithMultipleHTTPMethodAnnotations() throws IOException {
-        RestClientBuilder.newBuilder().baseUrl(new URL("http://localhost:8080/")).build(MultipleHTTPMethodAnnotations.class);
+    public void testExceptionThrownWhenInterfaceHasMethodWithMultipleHTTPMethodAnnotations() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MultipleHTTPMethodAnnotations.class);
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})
-    public void testExceptionThrownWhenInterfaceHasMethodWithMissingPathParamAnnotation_templateDeclaredAtTypeLevel() throws IOException {
-        RestClientBuilder.newBuilder().baseUrl(new URL("http://localhost:8080/")).build(MissingPathParam.class);
+    public void testExceptionThrownWhenInterfaceHasMethodWithMissingPathParamAnnotation_templateDeclaredAtTypeLevel() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MissingPathParam.class);
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})
-    public void testExceptionThrownWhenInterfaceHasMethodWithMissingPathParamAnnotation_templateDeclaredAtMethodLevel() throws IOException {
-        RestClientBuilder.newBuilder().baseUrl(new URL("http://localhost:8080/")).build(MissingPathParamSub.class);
+    public void testExceptionThrownWhenInterfaceHasMethodWithMissingPathParamAnnotation_templateDeclaredAtMethodLevel() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MissingPathParamSub.class);
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})
-    public void testExceptionThrownWhenInterfaceHasMethodWithPathParamAnnotationButNoURITemplate() throws IOException {
-        RestClientBuilder.newBuilder().baseUrl(new URL("http://localhost:8080/")).build(MissingUriTemplate.class);
+    public void testExceptionThrownWhenInterfaceHasMethodWithPathParamAnnotationButNoURITemplate() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MissingUriTemplate.class);
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})
-    public void testExceptionThrownWhenInterfaceHasMethodWithMismatchedPathParameter() throws IOException {
-        RestClientBuilder.newBuilder().baseUrl(new URL("http://localhost:8080/")).build(TemplateMismatch.class);
+    public void testExceptionThrownWhenInterfaceHasMethodWithMismatchedPathParameter() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(TemplateMismatch.class);
     }
 }

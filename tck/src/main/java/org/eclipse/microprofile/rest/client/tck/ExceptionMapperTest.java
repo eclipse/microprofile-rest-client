@@ -59,7 +59,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withHeader("CustomHeader", "true")
             .withBody("body is ignored in this test")));
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .register(TestResponseExceptionMapper.class)
             .build(SimpleGetApi.class);
 
@@ -82,7 +82,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withHeader("CustomHeader", "true")
             .withBody("body is ignored in this test")));
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .register(TestResponseExceptionMapper.class)
             .register(TestResponseExceptionMapperOverridePriority.class)
             .build(SimpleGetApi.class);

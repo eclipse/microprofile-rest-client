@@ -119,7 +119,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
             .register(TestParamConverterProvider.class)
             .register(TestReaderInterceptor.class)
             .register(TestWriterInterceptor.class)
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(InterfaceWithoutProvidersDefined.class);
     }
 }

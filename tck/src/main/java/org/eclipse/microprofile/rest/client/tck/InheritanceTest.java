@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 
-import java.net.URL;
+import java.net.URI;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -50,7 +50,7 @@ public class InheritanceTest extends Arquillian{
     public void canInvokeMethodOnBaseInterface() throws Exception {
         ReturnWithURLRequestFilter filter = new ReturnWithURLRequestFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        BaseClient client = builder.baseUrl(new URL("http://localhost/stub")).build(ChildClient.class);
+        BaseClient client = builder.baseUri(new URI("http://localhost/stub")).build(ChildClient.class);
         Response response = client.executeBaseGet();
         assertEquals(response.getStatus(), 200, "Unexpected response status code");
         String responseStr = response.readEntity(String.class);
@@ -63,7 +63,7 @@ public class InheritanceTest extends Arquillian{
     public void canInvokeMethodOnChildInterface() throws Exception {
         ReturnWithURLRequestFilter filter = new ReturnWithURLRequestFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        ChildClient client = builder.baseUrl(new URL("http://localhost/stub")).build(ChildClient.class);
+        ChildClient client = builder.baseUri(new URI("http://localhost/stub")).build(ChildClient.class);
         Response response = client.executeChildGet();
         assertEquals(response.getStatus(), 200, "Unexpected response status code");
         String responseStr = response.readEntity(String.class);
@@ -76,7 +76,7 @@ public class InheritanceTest extends Arquillian{
     public void canInvokeOverriddenMethodOnChildInterface() throws Exception {
         ReturnWithURLRequestFilter filter = new ReturnWithURLRequestFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        BaseClient client = builder.baseUrl(new URL("http://localhost/stub")).build(ChildClient.class);
+        BaseClient client = builder.baseUri(new URI("http://localhost/stub")).build(ChildClient.class);
         Response response = client.executeBasePost();
         assertEquals(response.getStatus(), 200, "Unexpected response status code");
         String responseStr = response.readEntity(String.class);

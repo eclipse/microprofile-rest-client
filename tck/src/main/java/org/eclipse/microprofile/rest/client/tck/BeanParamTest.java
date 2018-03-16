@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 import javax.ws.rs.core.Response;
 
-import java.net.URL;
+import java.net.URI;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -50,7 +50,7 @@ public class BeanParamTest extends Arquillian{
     public void sendsParamsSpecifiedInBeanParam() throws Exception {
         BeanParamFilter filter = new BeanParamFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        InterfaceUsingBeanParam client = builder.baseUrl(new URL("http://localhost/stub")).build(InterfaceUsingBeanParam.class);
+        InterfaceUsingBeanParam client = builder.baseUri(new URI("http://localhost/stub")).build(InterfaceUsingBeanParam.class);
 
         MyBean myBean = new MyBean("qParam", "123", "headerVal");
         Response response = client.executePut(myBean);

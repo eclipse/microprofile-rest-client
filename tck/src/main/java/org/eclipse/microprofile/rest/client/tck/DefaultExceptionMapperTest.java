@@ -61,7 +61,7 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .property("microprofile.rest.client.disable.default.mapper", true)
             .build(SimpleGetApi.class);
 
@@ -79,7 +79,7 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .build(SimpleGetApi.class);
 
         try {
@@ -103,7 +103,7 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .property("microprofile.rest.client.disable.default.mapper", false)
             .build(SimpleGetApi.class);
 
@@ -120,7 +120,7 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
+            .baseUri(getServerURI())
             .register(LowerPriorityTestResponseExceptionMapper.class)
             .build(SimpleGetApi.class);
 

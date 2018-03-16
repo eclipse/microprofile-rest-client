@@ -16,7 +16,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // Contributors:
-// John D. Ament
+// John D. Ament, Andy McCright
+
+[[release_notes_11]]
+== Release Notes for MicroProfile Rest CLient 1.1
+
+Changes since 1.0:
+
+- New `baseUri` method on `RestClientBuilder`.
+
 
 [[release_notes_10]]
 == Release Notes for MicroProfile Rest Client 1.0
@@ -54,7 +62,7 @@ public interface SimpleGetApi {
 }
 // in your client code
 SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUrl(getApplicationUrl())
+            .baseUri(getApplicationUri())
             .build(SimpleGetApi.class);
 ----
 

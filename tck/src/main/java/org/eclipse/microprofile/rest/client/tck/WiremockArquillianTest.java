@@ -23,6 +23,8 @@ import org.jboss.arquillian.testng.Arquillian;
 import org.testng.annotations.BeforeClass;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public abstract class WiremockArquillianTest extends Arquillian {
@@ -36,6 +38,15 @@ public abstract class WiremockArquillianTest extends Arquillian {
             setupWireMockConnection();
         }
         return port;
+    }
+
+    protected static URI getServerURI() {
+        try {
+            return new URI(getStringURL());
+        }
+        catch (URISyntaxException e) {
+            throw new RuntimeException("Malformed URI not expected", e);
+        }
     }
 
     protected static URL getServerURL() {

@@ -17,12 +17,18 @@
 package org.eclipse.microprofile.rest.client;
 
 import javax.annotation.Priority;
+import java.net.URI;
 import java.net.URL;
 
 @Priority(1)
 public class BuilderImpl1 extends AbstractBuilder {
     @Override
     public RestClientBuilder baseUrl(URL url) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder baseUri(URI uri) {
         throw new IllegalStateException("not implemented");
     }
 
