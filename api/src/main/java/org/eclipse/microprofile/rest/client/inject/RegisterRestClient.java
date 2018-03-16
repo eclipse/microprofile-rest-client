@@ -24,6 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Stereotype;
+
 /**
  * A marker annotation to register a rest client at runtime.  This marker must be applied to any CDI managed
  * clients.
@@ -31,5 +34,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Stereotype
+@Dependent
 public @interface RegisterRestClient {
 }
