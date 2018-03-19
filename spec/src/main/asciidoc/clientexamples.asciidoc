@@ -146,3 +146,13 @@ public interface BadInterfaceThree {
 `BadInterfaceTwo` does not declare a URI template, but the `quickCheck` method specifies a `@PathParam` annotation on a parameter.
 `BadInterfaceThree` has a mismatch.  The `@Path` annotation declares a URI template named "someOtherParam" but the `@PathParam` annotation specifies a template named "notTheSameParam".
 All three interfaces will result in a RestClientDefinitionException.
+
+Implementations must throw a RestClientDefinitionException if an asynchronous method that accepts an InvocationCallback parameter also has a non-void return type.  For example:
+[source, java]
+----
+@Path("/somePath")
+public interface BadAsyncInterface {
+    @GET
+    public Response getEntry(InvocationCallback<SomeEntry> callback);
+}
+----
