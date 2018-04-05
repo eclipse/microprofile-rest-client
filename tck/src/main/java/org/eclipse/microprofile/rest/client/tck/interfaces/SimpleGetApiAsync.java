@@ -16,7 +16,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,5 +28,5 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @RegisterRestClient
 public interface SimpleGetApiAsync {
     @GET
-    Future<Response> executeGet();
+    CompletableFuture<Response> executeGet();
 }

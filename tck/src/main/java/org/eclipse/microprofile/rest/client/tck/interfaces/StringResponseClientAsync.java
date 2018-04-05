@@ -16,7 +16,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,5 +24,5 @@ import javax.ws.rs.Path;
 @Path("/string")
 public interface StringResponseClientAsync {
     @GET
-    Future<String> get();
+    CompletableFuture<String> get();
 }

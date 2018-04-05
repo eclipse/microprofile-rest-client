@@ -21,10 +21,7 @@ It is possible for Rest Client interface methods to be declared asynchronous.  T
 
 === Asynchronous Methods
 
-A method is considered to be asynchronous if either of the following conditions are true:
-
-- The method's return type is `java.util.concurrent.Future`.
-- The method's return type is `void` but it has a parameter of type `javax.ws.rs.client.InvocationCallback`.
+A method is considered to be asynchronous if either of the method's return type is `java.util.concurrent.CompletableFuture`.
 
 For example, all of the following methods would be declared asynchronous:
 
@@ -33,15 +30,11 @@ For example, all of the following methods would be declared asynchronous:
 public interface MyAsyncClient {
     @GET
     @Path("/one")
-    Future<Response> get();
+    CompletableFuture<Response> get();
 
     @POST
     @Path("/two")
-    Future<String> post(String entity);
-
-    @PUT
-    @Path("/three")
-    void put(InvocationCallback<JSONObject> callback, String updatedEntity);
+    CompletableFuture<String> post(String entity);
 }
 ----
 

@@ -25,16 +25,24 @@ import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.client.ClientResponseFilter;
 
 public class ThreadedClientResponseFilter implements ClientResponseFilter{
-    public final static String RESPONSE_THREAD_HEADER = "Response-Thread-ID";
+    public final static String RESPONSE_THREAD_ID_HEADER = "Response-Thread-ID";
+    public final static String RESPONSE_THREAD_NAME_HEADER = "Response-Thread-Name";
     private String responseThreadId;
+    private String responseThreadName;
 
     @Override
     public void filter(ClientRequestContext clientRequestContext, ClientResponseContext clientResponseContext) throws IOException {
         responseThreadId = "" + Thread.currentThread().getId();
-        clientResponseContext.getHeaders().putSingle(RESPONSE_THREAD_HEADER, responseThreadId);
+        clientResponseContext.getHeaders().putSingle(RESPONSE_THREAD_ID_HEADER, responseThreadId);
+        responseThreadName = Thread.currentThread().getName();
+        clientResponseContext.getHeaders().putSingle(RESPONSE_THREAD_NAME_HEADER, responseThreadName);
     }
 
     public String getResponseThreadId() {
         return responseThreadId;
+    }
+
+    public String getResponseThreadName() {
+        return responseThreadName;
     }
 }

@@ -25,13 +25,13 @@ package org.eclipse.microprofile.rest.client.ext;
  * The MP Rest Client implementation runtime will invoke the <code>pre</code>
  * method on the main thread prior to returning execution back to the calling
  * method of the client interface.  The runtime will invoke the
- * <code>post</code> method on the secondary thread before the client request is
- * sent.  The <code>prepareContext</code> method should always be invoked before
- * the <code>applyContext</code> method is invoked, but due to the nature of
- * multithreading, it is possible that <code>post</code> method may be invoked
- * before the <code>prepareContext</code> method has completed.  Care should be
- * taken when implementing this interface to avoid race conditions and
- * deadlocks.
+ * <code>prepareContext</code> method on the secondary thread before the client
+ * request is sent.  The <code>prepareContext</code> method should always be
+ * invoked before the <code>applyContext</code> method is invoked, but due to
+ * the nature of multithreading, it is possible that <code>applyContext</code>
+ * method may be invoked before the <code>prepareContext</code> method has
+ * completed.  Care should be taken when implementing this interface to avoid
+ * race conditions and deadlocks.
  *
  * Note that the order in which instances of the
  * <code>AsyncInvocationInterceptor</code> are invoked are determined by the

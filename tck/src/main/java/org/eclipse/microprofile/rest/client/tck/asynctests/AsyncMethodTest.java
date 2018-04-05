@@ -28,22 +28,17 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.client.InvocationCallback;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
-import org.eclipse.microprofile.rest.client.tck.interfaces.InvocationCallbackClientAsync;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiAsync;
 import org.eclipse.microprofile.rest.client.tck.interfaces.StringResponseClientAsync;
 import org.eclipse.microprofile.rest.client.tck.providers.ThreadedClientResponseFilter;
@@ -68,7 +63,6 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .addClasses(WiremockArquillianTest.class,
                         SimpleGetApiAsync.class,
                         StringResponseClientAsync.class,
-                        InvocationCallbackClientAsync.class,
                         ThreadedClientResponseFilter.class);
     }
 
@@ -78,7 +72,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
      * does not match the thread ID of the calling thread.
      */
     @Test
-    public void testInterfaceMethodWithFutureResponseReturnIsInvokedAsynchronously() throws Exception{
+    public void testInterfaceMethodWithCompletableFutureResponseReturnIsInvokedAsynchronously() throws Exception{
         final String expectedBody = "Hello, Async Client!";
         stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
@@ -90,14 +84,14 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .baseUrl(getServerURL())
             .register(ThreadedClientResponseFilter.class)
             .build(SimpleGetApiAsync.class);
-        Future<Response> future = api.executeGet();
+        CompletableFuture<Response> future = api.executeGet();
 
         Response response = future.get();
         String body = response.readEntity(String.class);
 
         response.close();
 
-        String responseThreadId = response.getHeaderString(ThreadedClientResponseFilter.RESPONSE_THREAD_HEADER);
+        String responseThreadId = response.getHeaderString(ThreadedClientResponseFilter.RESPONSE_THREAD_ID_HEADER);
         assertNotNull(responseThreadId);
         assertNotEquals(responseThreadId, mainThreadId);
         assertEquals(body, expectedBody);
@@ -112,7 +106,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
      * of the calling thread.
      */
     @Test
-    public void testInterfaceMethodWithFutureObjectReturnIsInvokedAsynchronously() throws Exception{
+    public void testInterfaceMethodWithCompletableFutureObjectReturnIsInvokedAsynchronously() throws Exception{
         final String expectedBody = "Hello, Future Async Client!!";
         stubFor(get(urlEqualTo("/string"))
             .willReturn(aResponse()
@@ -125,7 +119,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .baseUrl(getServerURL())
             .register(filter)
             .build(StringResponseClientAsync.class);
-        Future<String> future = client.get();
+        CompletableFuture<String> future = client.get();
 
         String body = future.get();
 
@@ -133,46 +127,6 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         assertNotNull(responseThreadId);
         assertNotEquals(responseThreadId, mainThreadId);
         assertEquals(body, expectedBody);
-
-        verify(1, getRequestedFor(urlEqualTo("/string")));
-    }
-
-    /**
-     * Tests that a Rest Client interface method that specifies an
-     * <code>InvocationCallback</code> as a parameter is invoked asychronously -
-     * checking that the thread ID of the response does not match the thread ID
-     * of the calling thread.
-     */
-    @Test
-    public void testInterfaceMethodWithInvocationCallbackParameterIsInvokedAsynchronously() throws Exception{
-        final String expectedBody = "Hello, InvocationCallback Async Client!!";
-        stubFor(get(urlEqualTo("/string"))
-            .willReturn(aResponse()
-                .withBody(expectedBody)));
-
-        final String mainThreadId = "" + Thread.currentThread().getId();
-
-        ThreadedClientResponseFilter filter = new ThreadedClientResponseFilter();
-        InvocationCallbackClientAsync client = RestClientBuilder.newBuilder()
-            .baseUrl(getServerURL())
-            .register(filter)
-            .build(InvocationCallbackClientAsync.class);
-
-        client.get( new InvocationCallback<String>(){
-            @Override
-            public void completed(String body) {
-                assertEquals(body, expectedBody);
-            }
-
-            @Override
-            public void failed(Throwable th) {
-                fail("InvocationCallback was invoked with a failure", th);
-            }
-        });
-
-        String responseThreadId = filter.getResponseThreadId();
-        assertNotNull(responseThreadId);
-        assertNotEquals(responseThreadId, mainThreadId);
 
         verify(1, getRequestedFor(urlEqualTo("/string")));
     }
@@ -199,32 +153,23 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         };
         ExecutorService testExecutorService = Executors.newSingleThreadExecutor(threadFactory);
 
-        InvocationCallbackClientAsync client = RestClientBuilder.newBuilder()
+        SimpleGetApiAsync client = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
+            .register(ThreadedClientResponseFilter.class)
             .executorService(testExecutorService)
-            .build(InvocationCallbackClientAsync.class);
+            .build(SimpleGetApiAsync.class);
 
-        final Map<String,Object> responseValues = new HashMap<>();
-        final CountDownLatch latch = new CountDownLatch(1);
-        client.get( new InvocationCallback<String>(){
-            @Override
-            public void completed(String body) {
-                responseValues.put("body", body);
-                responseValues.put("threadId", Thread.currentThread().getId());
-                responseValues.put("threadName", Thread.currentThread().getName());
-                latch.countDown();
-            }
+        CompletableFuture<Response> future = client.executeGet();
 
-            @Override
-            public void failed(Throwable th) {
-                fail("InvocationCallback was invoked with a failure", th);
-            }
-        });
+        Response r = future.get();
 
-        latch.await();
-        assertEquals(responseValues.get("body"), expectedBody);
-        assertNotEquals(responseValues.get("threadId"), mainThreadId);
-        assertEquals(responseValues.get("threadName"), expectedThreadName);
+        assertEquals(r.readEntity(String.class), expectedBody);
+        assertNotEquals(
+            r.getHeaderString(ThreadedClientResponseFilter.RESPONSE_THREAD_ID_HEADER),
+            mainThreadId);
+        assertEquals(
+            r.getHeaderString(ThreadedClientResponseFilter.RESPONSE_THREAD_NAME_HEADER),
+            expectedThreadName);
 
         verify(1, getRequestedFor(urlEqualTo("/execSvc")));
     }
@@ -251,7 +196,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .register(TLAddPathClientRequestFilter.class)
             .register(aiiFactory)
             .build(SimpleGetApiAsync.class);
-        Future<Response> future = api.executeGet();
+        CompletableFuture<Response> future = api.executeGet();
 
         Response response = future.get();
         assertEquals(response.getStatus(), 200);
