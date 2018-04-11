@@ -21,9 +21,9 @@ It is possible for Rest Client interface methods to be declared asynchronous.  T
 
 === Asynchronous Methods
 
-A method is considered to be asynchronous if either of the method's return type is `java.util.concurrent.CompletableFuture`.
+A method is considered to be asynchronous if the method's return type is `java.util.concurrent.CompletableFuture`.
 
-For example, all of the following methods would be declared asynchronous:
+For example, the following methods would be declared asynchronous:
 
 [source, java]
 ----
@@ -66,7 +66,9 @@ public class MyFactory implements AsyncInvocationInterceptorFactory {
 }
 
 public class MyInterceptor implements AsyncInvocationInterceptor {
-    String someValue;
+    // This field is temporary storage to facilitate copying a ThreadLocal value
+    // from the originating thread to the new async thread.
+    private volatile String someValue;
 
     public void prepareContext() {
         someValue = SomeClass.getValueFromThreadLocal();
