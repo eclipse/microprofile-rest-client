@@ -28,6 +28,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -214,4 +215,14 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         verify(1, getRequestedFor(urlEqualTo("/asyncIntercept/" + threadLocalInt)));
     }
 
+    /**
+     * This test verifies that the <code>RestClientBuilder</code> implementation
+     * will throw an <code>IllegalArgumentException</code> when a null value is
+     * passed to the <code>executorService<code> method.
+     */
+    @Test(expectedExceptions={IllegalArgumentException.class})
+    public void testNullExecutorServiceThrowsIllegalArgumentException() {
+        RestClientBuilder.newBuilder().executorService(null);
+        fail("Passing a null ExecutorService should result in an IllegalArgumentException");
+    }
 }

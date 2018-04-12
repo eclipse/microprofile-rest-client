@@ -110,7 +110,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @param executor the executor service for the runtime to use when invoking
      * asynchronous Rest Client interface methods - must be non-null.
      * @return the current builder with the executorService set.
-     * @throws NullPointerException if the <code>executor</code> parameter is
+     * @throws IllegalArgumentException if the <code>executor</code> parameter is
      * null.
      */
     RestClientBuilder executorService(ExecutorService executor);
