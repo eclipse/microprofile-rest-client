@@ -31,7 +31,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -73,7 +73,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
      * does not match the thread ID of the calling thread.
      */
     @Test
-    public void testInterfaceMethodWithCompletableFutureResponseReturnIsInvokedAsynchronously() throws Exception{
+    public void testInterfaceMethodWithCompletionStageResponseReturnIsInvokedAsynchronously() throws Exception{
         final String expectedBody = "Hello, Async Client!";
         stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
@@ -85,9 +85,9 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .baseUrl(getServerURL())
             .register(ThreadedClientResponseFilter.class)
             .build(SimpleGetApiAsync.class);
-        CompletableFuture<Response> future = api.executeGet();
+        CompletionStage<Response> future = api.executeGet();
 
-        Response response = future.get();
+        Response response = future.toCompletableFuture().get();
         String body = response.readEntity(String.class);
 
         response.close();
@@ -107,7 +107,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
      * of the calling thread.
      */
     @Test
-    public void testInterfaceMethodWithCompletableFutureObjectReturnIsInvokedAsynchronously() throws Exception{
+    public void testInterfaceMethodWithCompletionStageObjectReturnIsInvokedAsynchronously() throws Exception{
         final String expectedBody = "Hello, Future Async Client!!";
         stubFor(get(urlEqualTo("/string"))
             .willReturn(aResponse()
@@ -120,9 +120,9 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .baseUrl(getServerURL())
             .register(filter)
             .build(StringResponseClientAsync.class);
-        CompletableFuture<String> future = client.get();
+        CompletionStage<String> future = client.get();
 
-        String body = future.get();
+        String body = future.toCompletableFuture().get();
 
         String responseThreadId = filter.getResponseThreadId();
         assertNotNull(responseThreadId);
@@ -160,9 +160,9 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .executorService(testExecutorService)
             .build(SimpleGetApiAsync.class);
 
-        CompletableFuture<Response> future = client.executeGet();
+        CompletionStage<Response> future = client.executeGet();
 
-        Response r = future.get();
+        Response r = future.toCompletableFuture().get();
 
         assertEquals(r.readEntity(String.class), expectedBody);
         assertNotEquals(
@@ -197,9 +197,9 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .register(TLAddPathClientRequestFilter.class)
             .register(aiiFactory)
             .build(SimpleGetApiAsync.class);
-        CompletableFuture<Response> future = api.executeGet();
+        CompletionStage<Response> future = api.executeGet();
 
-        Response response = future.get();
+        Response response = future.toCompletableFuture().get();
         assertEquals(response.getStatus(), 200);
         assertTrue(response.getLocation().getPath().endsWith("/" + threadLocalInt));
 

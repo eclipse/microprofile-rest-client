@@ -21,7 +21,7 @@ It is possible for Rest Client interface methods to be declared asynchronous.  T
 
 === Asynchronous Methods
 
-A method is considered to be asynchronous if the method's return type is `java.util.concurrent.CompletableFuture`.
+A method is considered to be asynchronous if the method's return type is `java.util.concurrent.CompletionStage`.
 
 For example, the following methods would be declared asynchronous:
 
@@ -30,11 +30,11 @@ For example, the following methods would be declared asynchronous:
 public interface MyAsyncClient {
     @GET
     @Path("/one")
-    CompletableFuture<Response> get();
+    CompletionStage<Response> get();
 
     @POST
     @Path("/two")
-    CompletableFuture<String> post(String entity);
+    CompletionStage<String> post(String entity);
 }
 ----
 

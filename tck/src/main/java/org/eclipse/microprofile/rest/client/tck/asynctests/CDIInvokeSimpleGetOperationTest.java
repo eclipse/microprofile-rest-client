@@ -27,7 +27,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
@@ -77,9 +77,9 @@ public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
             .willReturn(aResponse()
                 .withBody(expectedBody)));
 
-        CompletableFuture<Response> future = api.executeGet();
+        CompletionStage<Response> future = api.executeGet();
 
-        Response response = future.get();
+        Response response = future.toCompletableFuture().get();
         String body = response.readEntity(String.class);
 
         response.close();
