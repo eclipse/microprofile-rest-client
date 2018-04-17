@@ -18,8 +18,7 @@ package org.eclipse.microprofile.rest.client.tck;
 
 import static org.testng.Assert.assertEquals;
 
-//import java.net.URI;
-import java.net.URL;
+import java.net.URI;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
@@ -58,15 +57,14 @@ public class RestClientBuilderListenerTest extends Arquillian {
      * with a 500 status code, but at priority 2.  If the RestClientBuilderListener impl
      * is correctly invoked, then the request will abort with the 200; if not,
      * it will abort with the 500.
+     *
+     * @throws Exception - indicates test failure
      */
     @Test
     public void testRegistrarInvoked() throws Exception {
         SimpleGetApi client = RestClientBuilder.newBuilder()
             .register(ReturnWith500RequestFilter.class, 2)
-            // TODO: rebase after baseUri change goes in and use this line:
-            //.baseUri(new URI("http://localhost:8080/neverUsed"))
-            // instead of
-            .baseUrl(new URL("http://localhost:8080/neverUsed"))
+            .baseUri(new URI("http://localhost:8080/neverUsed"))
             .build(SimpleGetApi.class);
 
         assertEquals(200, client.executeGet().getStatus(),

@@ -68,9 +68,11 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     }
 
     /**
-     * Tests that a Rest Client interface method that returns Future<Response>
+     * Tests that a Rest Client interface method that returns CompletionStage
      * is invoked asychronously - checking that the thread ID of the response
      * does not match the thread ID of the calling thread.
+     *
+     * @throws Exception - indicates test failure
      */
     @Test
     public void testInterfaceMethodWithCompletionStageResponseReturnIsInvokedAsynchronously() throws Exception{
@@ -101,10 +103,12 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     }
 
     /**
-     * Tests that a Rest Client interface method that returns Future<X> (where X
-     * is some Object type other than Response) is invoked asychronously -
-     * checking that the thread ID of the response does not match the thread ID
-     * of the calling thread.
+     * Tests that a Rest Client interface method that returns a CompletionStage
+     * where it's parameterized type is some Object type other than Response) is
+     * invoked asychronously - checking that the thread ID of the response does
+     * not match the thread ID of the calling thread.
+     *
+     * @throws Exception - indicates test failure
      */
     @Test
     public void testInterfaceMethodWithCompletionStageObjectReturnIsInvokedAsynchronously() throws Exception{
@@ -135,6 +139,8 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     /**
      * Tests that the MP Rest Client implementation uses the specified
      * ExecutorService.
+     *
+     * @throws Exception - indicates test failure
      */
     @Test
     public void testExecutorService() throws Exception{
@@ -181,6 +187,8 @@ public class AsyncMethodTest extends WiremockArquillianTest{
      * on the calling thread.  It uses an
      * <code>AsyncInvocationInterceptorFactory</code> provider to copy the
      * ThreadLocal value from the calling thread to the async thread.
+     *
+     * @throws Exception - indicates test failure
      */
     @Test
     public void testAsyncInvocationInterceptorProvider() throws Exception{
@@ -218,7 +226,9 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     /**
      * This test verifies that the <code>RestClientBuilder</code> implementation
      * will throw an <code>IllegalArgumentException</code> when a null value is
-     * passed to the <code>executorService<code> method.
+     * passed to the <code>executorService</code> method.
+     *
+     * @throws IllegalArgumentException - expected when passing null
      */
     @Test(expectedExceptions={IllegalArgumentException.class})
     public void testNullExecutorServiceThrowsIllegalArgumentException() {
