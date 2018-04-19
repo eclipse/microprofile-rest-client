@@ -25,5 +25,5 @@ import javax.ws.rs.core.Response;
 public interface InterfaceUsingBeanParam {
     @PUT
     @Path("/beanParam")
-    Response executePut(@BeanParam MyBean bean);
+    Response executePut(@BeanParam MyBean bean, String body);
 }
