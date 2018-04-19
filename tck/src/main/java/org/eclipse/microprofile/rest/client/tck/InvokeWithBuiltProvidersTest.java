@@ -87,8 +87,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         String id = "id";
-        String expectedId = "toStringid";
-        stubFor(put(urlEqualTo("/"+expectedId))
+        stubFor(put(urlEqualTo("/"+id))
             .willReturn(aResponse()
                 .withBody(outputBody)));
 
@@ -102,7 +101,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
 
         assertEquals(body, expectedResponseBody);
 
-        verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(1, putRequestedFor(urlEqualTo("/"+id)).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
