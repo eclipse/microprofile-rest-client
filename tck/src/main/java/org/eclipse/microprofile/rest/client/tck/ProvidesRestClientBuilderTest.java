@@ -34,9 +34,12 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
 public class ProvidesRestClientBuilderTest extends Arquillian{
+
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, ProvidesRestClientBuilderTest.class.getSimpleName()+".war");
+        String simpleName = ProvidesRestClientBuilderTest.class.getSimpleName();
+        return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
+                .addClasses(SimpleGetApi.class, ReturnWithURLRequestFilter.class);
     }
 
     @Test
@@ -53,13 +56,13 @@ public class ProvidesRestClientBuilderTest extends Arquillian{
         builder = builder.baseUri(new URI("http://localhost:8080/wrong1"));
         builder = builder.baseUrl(new URL("http://localhost:8080/right1"));
         SimpleGetApi client = builder.build(SimpleGetApi.class);
-        assertEquals("GET http://localhost:8080/right1", client.executeGet().readEntity(String.class));
+        assertEquals(client.executeGet().readEntity(String.class), "GET http://localhost:8080/right1");
 
         builder = builder.baseUrl(new URL("http://localhost:8080/wrong2"));
         builder = builder.baseUri(new URI("http://localhost:8080/wrong2b"));
         builder = builder.baseUri(new URI("http://localhost:8080/right2"));
         client = builder.build(SimpleGetApi.class);
-        assertEquals("GET http://localhost:8080/right2", client.executeGet().readEntity(String.class));
+        assertEquals(client.executeGet().readEntity(String.class), "GET http://localhost:8080/right2");
     }
 
     @Test
@@ -71,7 +74,7 @@ public class ProvidesRestClientBuilderTest extends Arquillian{
             fail("Did not throw expected IllegalStateException");
         }
         catch (Throwable t) {
-            assertEquals(IllegalStateException.class, t.getClass());
+            assertEquals(t.getClass(), IllegalStateException.class);
         }
     }
 }

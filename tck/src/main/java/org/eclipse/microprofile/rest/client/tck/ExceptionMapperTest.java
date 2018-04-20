@@ -41,11 +41,15 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class ExceptionMapperTest extends WiremockArquillianTest{
+
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, ExceptionMapperTest.class.getSimpleName()+".war")
-            .addClasses(TestResponseExceptionMapper.class, TestResponseExceptionMapperOverridePriority.class)
-            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class);
+        String simpleName = ExceptionMapperTest.class.getSimpleName();
+        return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
+            .addClasses(WiremockArquillianTest.class,
+                        SimpleGetApi.class,
+                        TestResponseExceptionMapper.class,
+                        TestResponseExceptionMapperOverridePriority.class);
     }
 
     @BeforeTest
@@ -68,7 +72,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
             fail("A "+WebApplicationException.class+" should have been thrown via the registered "+TestResponseExceptionMapper.class);
         }
         catch (WebApplicationException w) {
-            assertEquals(TestResponseExceptionMapper.MESSAGE, w.getMessage(),
+            assertEquals(w.getMessage(), TestResponseExceptionMapper.MESSAGE,
                 "The message should be sourced from "+TestResponseExceptionMapper.class);
             assertTrue(TestResponseExceptionMapper.isHandlesCalled(),
                 "The handles method should have been called on "+TestResponseExceptionMapper.class);
@@ -98,7 +102,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest{
             assertFalse(TestResponseExceptionMapperOverridePriority.isThrowableCalled(),
                 "The toThrowable method should not have been called on "+TestResponseExceptionMapperOverridePriority.class);
             // both should be called on the regular mapper
-            assertEquals(TestResponseExceptionMapper.MESSAGE, w.getMessage(),
+            assertEquals(w.getMessage(), TestResponseExceptionMapper.MESSAGE,
                 "The message should be sourced from "+TestResponseExceptionMapper.class);
             assertTrue(TestResponseExceptionMapper.isHandlesCalled(),
                 "The handles method should have been called on "+TestResponseExceptionMapper.class);

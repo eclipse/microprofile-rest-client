@@ -38,11 +38,14 @@ import org.testng.annotations.Test;
  *
  */
 public class RestClientBuilderListenerTest extends Arquillian {
+
     @Deployment
     public static WebArchive createDeployment() {
-        StringAsset serviceFile = new StringAsset("org.eclipse.microprofile.rest.client.tck.spi.SimpleRestClientBuilderListenerImpl");
+        StringAsset serviceFile = new StringAsset(SimpleRestClientBuilderListenerImpl.class.getName());
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(SimpleRestClientBuilderListenerImpl.class, ReturnWith200RequestFilter.class)
+            .addClasses(SimpleGetApi.class,
+                        SimpleRestClientBuilderListenerImpl.class,
+                        ReturnWith200RequestFilter.class)
             .addAsManifestResource(serviceFile,"services/" + RestClientBuilderListener.class.getName());
         return ShrinkWrap.create(WebArchive.class, RestClientBuilderListenerTest.class.getSimpleName()+".war")
             .addAsLibrary(jar)
@@ -67,7 +70,7 @@ public class RestClientBuilderListenerTest extends Arquillian {
             .baseUri(new URI("http://localhost:8080/neverUsed"))
             .build(SimpleGetApi.class);
 
-        assertEquals(200, client.executeGet().getStatus(),
+        assertEquals(client.executeGet().getStatus(), 200,
             "The RestClientBuilderListener impl was not invoked");
     }
 }
