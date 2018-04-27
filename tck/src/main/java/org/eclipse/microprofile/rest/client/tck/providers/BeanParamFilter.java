@@ -28,10 +28,11 @@ public class BeanParamFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
+        String body = (String)clientRequestContext.getEntity();
         String query = clientRequestContext.getUri().getQuery();
         Cookie cookie = clientRequestContext.getCookies().get("cookie");
         String cookieValue = cookie==null?"null":cookie.getValue();
         String header = clientRequestContext.getHeaderString("MyHeader");
-        clientRequestContext.abortWith(Response.ok(query + " " + cookieValue + " " + header).build());
+        clientRequestContext.abortWith(Response.ok(query + " " + cookieValue + " " + header + " " + body).build());
     }
 }

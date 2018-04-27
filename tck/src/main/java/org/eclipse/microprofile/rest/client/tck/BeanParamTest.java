@@ -53,22 +53,24 @@ public class BeanParamTest extends Arquillian{
         InterfaceUsingBeanParam client = builder.baseUri(new URI("http://localhost/stub")).build(InterfaceUsingBeanParam.class);
 
         MyBean myBean = new MyBean("qParam", "123", "headerVal");
-        Response response = client.executePut(myBean);
+        Response response = client.executePut(myBean, "body");
         assertEquals(response.getStatus(), 200, "Unexpected response - filter not properly registered");
         String responseStr = response.readEntity(String.class);
         assertNotNull(responseStr, "Null entity returned from filter/server");
         assertTrue(responseStr.contains("qParam"), "QueryParam value not sent in request");
         assertTrue(responseStr.contains("123"), "CookieParam value not sent in request");
         assertTrue(responseStr.contains("headerVal"), "QueryParam value not sent in request");
+        assertTrue(responseStr.contains("body"), "Body not sent in request");
 
         myBean.setCookie("456");
-        response = client.executePut(myBean);
+        response = client.executePut(myBean, "body");
         assertEquals(response.getStatus(), 200, "Unexpected response - filter not properly registered");
         responseStr = response.readEntity(String.class);
         assertNotNull(responseStr, "Null entity returned from filter/server");
         assertTrue(responseStr.contains("qParam"), "QueryParam value not sent in second request");
         assertTrue(responseStr.contains("456"), "CookieParam value not sent in second request");
         assertTrue(responseStr.contains("headerVal"), "QueryParam value not sent in second request");
+        assertTrue(responseStr.contains("body"), "Body not sent in second request");
     }
 
 }
