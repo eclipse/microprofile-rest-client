@@ -43,6 +43,7 @@ import static org.testng.Assert.assertEquals;
  * Verifies that URI declared via MP Config takes precedence over URL.
  */
 public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
+
     @Inject
     @RestClient
     private SimpleGetApi api;
@@ -50,10 +51,10 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
         String uriPropertyName = SimpleGetApi.class.getName()+"/mp-rest/uri";
-        String uriValue = getStringURL() + "/uri";
+        String uriValue = getStringURL() + "uri";
         String urlPropertyName = SimpleGetApi.class.getName()+"/mp-rest/url";
-        String urlValue = getStringURL() + "/url";
-        String simpleName = CDIInvokeSimpleGetOperationTest.class.getSimpleName();
+        String urlValue = getStringURL() + "url";
+        String simpleName = CDIURIvsURLConfigTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(SimpleGetApi.class, WiremockArquillianTest.class)
             .addAsManifestResource(new StringAsset(

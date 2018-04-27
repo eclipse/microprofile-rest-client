@@ -39,11 +39,15 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class CallMultipleMappersTest extends WiremockArquillianTest {
+
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, CallMultipleMappersTest.class.getSimpleName()+".war")
-            .addClasses(TestResponseExceptionMapper.class, TestResponseExceptionMapperHandles.class)
-            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class);
+        String simpleName = CallMultipleMappersTest.class.getSimpleName();
+        return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
+                .addClasses(WiremockArquillianTest.class,
+                            SimpleGetApi.class,
+                            TestResponseExceptionMapper.class,
+                            TestResponseExceptionMapperHandles.class);
     }
 
     @Test
@@ -62,7 +66,7 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
             fail("A "+WebApplicationException.class+" should have been thrown via the registered "+TestResponseExceptionMapper.class);
         }
         catch (WebApplicationException w) {
-            assertEquals(TestResponseExceptionMapper.MESSAGE, w.getMessage(),
+            assertEquals(w.getMessage(), TestResponseExceptionMapper.MESSAGE,
                 "The message should be sourced from "+TestResponseExceptionMapper.class);
             assertTrue(TestResponseExceptionMapper.isHandlesCalled(),
                 "The handles method should have been called on "+TestResponseExceptionMapper.class);
