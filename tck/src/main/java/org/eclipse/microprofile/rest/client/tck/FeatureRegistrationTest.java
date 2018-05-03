@@ -30,6 +30,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
 import javax.inject.Inject;
+import static org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest.getStringURL;
 
 import static org.testng.Assert.assertTrue;
 
@@ -39,13 +40,17 @@ import static org.testng.Assert.assertTrue;
 public class FeatureRegistrationTest extends WiremockArquillianTest{
     @Deployment
     public static WebArchive createDeployment() {
-        StringAsset mpConfig = new StringAsset("org.eclipse.microprofile.rest.client.tck.interfaces.FeatureProviderClient/mp-rest/url=" +
-            "http://localhost/null");
-        JavaArchive jar = ShrinkWrap.create(JavaArchive.class).addClasses(SimpleFeature.class, InjectedSimpleFeature.class,
-            SimpleGetApi.class, FeatureProviderClient.class, WiremockArquillianTest.class)
-            .addAsManifestResource(mpConfig,"microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-        return ShrinkWrap.create(WebArchive.class, FeatureRegistrationTest.class.getSimpleName()+".war").addAsLibrary(jar);
+        StringAsset mpConfig = new StringAsset(FeatureProviderClient.class.getName() + "/mp-rest/url=" + getStringURL());
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
+                .addClasses(SimpleFeature.class,
+                        InjectedSimpleFeature.class,
+                        SimpleGetApi.class,
+                        FeatureProviderClient.class,
+                        WiremockArquillianTest.class)
+                .addAsManifestResource(mpConfig, "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        return ShrinkWrap.create(WebArchive.class, FeatureRegistrationTest.class.getSimpleName() + ".war")
+                .addAsLibrary(jar);
     }
 
     @Inject
@@ -54,7 +59,10 @@ public class FeatureRegistrationTest extends WiremockArquillianTest{
     @Test
     public void testFeatureRegistrationViaBuilder() {
         SimpleFeature.reset();
-        RestClientBuilder.newBuilder().register(SimpleFeature.class);
+        RestClientBuilder.newBuilder()
+            .register(SimpleFeature.class)
+            .baseUrl(getServerURL())
+            .build(SimpleGetApi.class);
 
         assertTrue(SimpleFeature.wasInvoked(), "The SimpleFeature should have been invoked " +
             "when building the client");

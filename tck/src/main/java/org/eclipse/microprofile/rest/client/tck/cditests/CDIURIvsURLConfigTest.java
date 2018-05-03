@@ -37,6 +37,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -59,9 +60,11 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
             .addClasses(SimpleGetApi.class, WiremockArquillianTest.class)
             .addAsManifestResource(new StringAsset(
                 String.format(uriPropertyName+"="+uriValue+"%n"+urlPropertyName+"="+urlValue)),
-                "microprofile-config.properties");
+                "microprofile-config.properties")
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar);
+            .addAsLibrary(jar)
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test

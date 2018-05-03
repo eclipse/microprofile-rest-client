@@ -44,6 +44,7 @@ import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiAsync;
 import org.eclipse.microprofile.rest.client.tck.interfaces.StringResponseClientAsync;
 import org.eclipse.microprofile.rest.client.tck.providers.ThreadedClientResponseFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TLAddPathClientRequestFilter;
+import org.eclipse.microprofile.rest.client.tck.providers.TLAsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TLAsyncInvocationInterceptorFactory;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -64,7 +65,10 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .addClasses(WiremockArquillianTest.class,
                         SimpleGetApiAsync.class,
                         StringResponseClientAsync.class,
-                        ThreadedClientResponseFilter.class);
+                        ThreadedClientResponseFilter.class,
+                        TLAsyncInvocationInterceptorFactory.class,
+                        TLAsyncInvocationInterceptor.class,
+                        TLAddPathClientRequestFilter.class);
     }
 
     /**
