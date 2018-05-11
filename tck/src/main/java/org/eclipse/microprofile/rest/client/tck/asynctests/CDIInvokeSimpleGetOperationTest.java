@@ -40,6 +40,7 @@ import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiAsync;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -65,9 +66,11 @@ public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
         String simpleName = CDIInvokeSimpleGetOperationTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(SimpleGetApiAsync.class, WiremockArquillianTest.class)
-            .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties");
+            .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar);
+            .addAsLibrary(jar)
+            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
