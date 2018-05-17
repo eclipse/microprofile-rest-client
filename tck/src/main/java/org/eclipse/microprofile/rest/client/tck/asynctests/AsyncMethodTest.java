@@ -150,7 +150,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     public void testExecutorService() throws Exception{
         final String expectedBody = "Hello, InvocationCallback Async Client!!!";
         final String expectedThreadName = "MPRestClientTCKThread";
-        stubFor(get(urlEqualTo("/execSvc"))
+        stubFor(get(urlEqualTo("/"))
             .willReturn(aResponse()
                 .withBody(expectedBody)));
 
@@ -182,7 +182,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             r.getHeaderString(ThreadedClientResponseFilter.RESPONSE_THREAD_NAME_HEADER),
             expectedThreadName);
 
-        verify(1, getRequestedFor(urlEqualTo("/execSvc")));
+        verify(1, getRequestedFor(urlEqualTo("/")));
     }
 
     /**
@@ -197,12 +197,13 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     @Test
     public void testAsyncInvocationInterceptorProvider() throws Exception{
         final String expectedBody = "Hello, Async Intercepted Client!!";
-        stubFor(get(urlEqualTo("/asyncIntercept"))
-            .willReturn(aResponse()
-                .withBody(expectedBody)));
-
-        final Integer threadLocalInt = new Integer(808);
+        final Integer threadLocalInt = 808;
         final long mainThreadId = Thread.currentThread().getId();
+
+        stubFor(get(urlEqualTo("/" + threadLocalInt))
+                .willReturn(aResponse()
+                        .withBody(expectedBody)));
+
         final TLAsyncInvocationInterceptorFactory aiiFactory = new TLAsyncInvocationInterceptorFactory(threadLocalInt);
         SimpleGetApiAsync api = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
@@ -224,7 +225,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         assertEquals(data.get("preThreadId"), mainThreadId);
         assertNotEquals(data.get("postThreadId"), mainThreadId);
 
-        verify(1, getRequestedFor(urlEqualTo("/asyncIntercept/" + threadLocalInt)));
+        verify(1, getRequestedFor(urlEqualTo("/" + threadLocalInt)));
     }
 
     /**
