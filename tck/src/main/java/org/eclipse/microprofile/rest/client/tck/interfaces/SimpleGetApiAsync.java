@@ -29,4 +29,8 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface SimpleGetApiAsync {
     @GET
     CompletionStage<Response> executeGet();
+
+    @GET
+    @Path("/execSvc")
+    CompletionStage<Response> executeGetExecSvc();
 }
