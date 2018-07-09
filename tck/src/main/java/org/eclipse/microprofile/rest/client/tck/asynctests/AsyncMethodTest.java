@@ -150,7 +150,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
     public void testExecutorService() throws Exception{
         final String expectedBody = "Hello, InvocationCallback Async Client!!!";
         final String expectedThreadName = "MPRestClientTCKThread";
-        stubFor(get(urlEqualTo("/"))
+        stubFor(get(urlEqualTo("/execSvc"))
             .willReturn(aResponse()
                 .withBody(expectedBody)));
 
@@ -170,7 +170,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .executorService(testExecutorService)
             .build(SimpleGetApiAsync.class);
 
-        CompletionStage<Response> future = client.executeGet();
+        CompletionStage<Response> future = client.executeGetExecSvc();
 
         Response r = future.toCompletableFuture().get();
 
@@ -182,7 +182,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             r.getHeaderString(ThreadedClientResponseFilter.RESPONSE_THREAD_NAME_HEADER),
             expectedThreadName);
 
-        verify(1, getRequestedFor(urlEqualTo("/")));
+        verify(1, getRequestedFor(urlEqualTo("/execSvc")));
     }
 
     /**
