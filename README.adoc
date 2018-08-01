@@ -42,7 +42,7 @@ service like this:
      Set<Review> getAllReviews( @PathParam("movieId") String movieId );
 
      @GET
-     @Path("/{movieId}/reviews/{reviewId}"
+     @Path("/{movieId}/reviews/{reviewId}")
      Review getReview( @PathParam("movieId") String movieId, @PathParam("reviewId") String reviewId );
 
      @POST
@@ -50,7 +50,7 @@ service like this:
      String submitReview( @PathParam("movieId") String movieId, Review review );
 
      @PUT
-     @Path("/{movieId}/reviews/{reviewId}"
+     @Path("/{movieId}/reviews/{reviewId}")
      Review updateReview( @PathParam("movieId") String movieId, @PathParam("reviewId") String reviewId, Review review );
  }
 ```
