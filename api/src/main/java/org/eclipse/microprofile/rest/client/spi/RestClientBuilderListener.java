@@ -38,6 +38,8 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
  * Note that the <code>onNewBuilder</code> method will be called when the
  * RestClientBuilder is constructed, not when it's <code>build</code> method is
  * invoked.  This allows the caller to override global providers if they desire.
+ *
+ * @since 1.1
  */
 public interface RestClientBuilderListener {
 
