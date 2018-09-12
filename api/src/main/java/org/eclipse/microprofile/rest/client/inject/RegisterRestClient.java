@@ -30,6 +30,9 @@ import javax.enterprise.inject.Stereotype;
 /**
  * A marker annotation to register a rest client at runtime.  This marker must be applied to any CDI managed
  * clients.
+ *
+ * Note that the annotated interface indicates a service-centric view.  Thus users would invoke methods on
+ * this interface as if it were running in the same VM as the remote service.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
