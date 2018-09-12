@@ -78,6 +78,8 @@ public class PutUser {
 
 All built in HTTP methods are supported by the client API.  Likewise, all base parameter types (query, cookie, matrix, path, form and bean) are supported.  If you only need to inspect the body, you can provide a POJO can be processed by the underlying `MessageBodyReader` or `MessageBodyWriter`.  Otherwise, you can receive the entire `Response` object for parsing the body and header information from the server invocation.
 
+Users may specify the media (MIME) type of the outbound request using the `@Consumes` annotation (this determine the `Content-Type` HTTP header), and the expected media type(s) of the response by using the `@Produces` annotation (the `Accept` HTTP header).  This indicates that the client interface expects that the remote _service_ consumes/produces the specified types.
+
 === Invalid Client Interface Examples
 
 Invalid client interfaces will result in a RestClientDefinitionException (which may be wrapped in a `DefinitionException` if using CDI).  Invalid interfaces can include:
