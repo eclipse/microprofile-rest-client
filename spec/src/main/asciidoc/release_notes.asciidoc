@@ -19,10 +19,13 @@
 // John D. Ament, Andy McCright
 
 [[release_notes_11]]
-== Release Notes for MicroProfile Rest CLient 1.1
+== Release Notes for MicroProfile Rest Client 1.1
 
 Changes since 1.0:
 
+- Asynchronous method support when Rest Client interfaces return `CompletionStage`.
+- New SPI interface, `RestClientBuilderListener` for intercepting new clients.
+- `@RegisterRestClient` is now considered a bean-defining annotation.
 - New `baseUri` method on `RestClientBuilder`.
 
 

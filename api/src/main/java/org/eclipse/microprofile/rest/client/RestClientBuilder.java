@@ -112,6 +112,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @return the current builder with the executorService set.
      * @throws IllegalArgumentException if the <code>executor</code> parameter is
      * null.
+     * @since 1.1
      */
     RestClientBuilder executorService(ExecutorService executor);
 
