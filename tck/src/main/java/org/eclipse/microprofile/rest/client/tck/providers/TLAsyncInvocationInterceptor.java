@@ -45,4 +45,10 @@ public class TLAsyncInvocationInterceptor implements AsyncInvocationInterceptor 
         }
         TLAsyncInvocationInterceptorFactory.setTlInt(tlValue);
     }
+
+    @Override
+    public void removeContext() {
+        factory.getData().put("removeThreadId", Thread.currentThread().getId());
+        TLAsyncInvocationInterceptorFactory.setTlInt(1);
+    }
 }
