@@ -54,6 +54,7 @@ This can be accomplished by registering an implementation of the AsyncInvocation
 MP Rest Client implementations must invoke the `newInterceptor` method of each registered factory provider prior to switching thread of execution on async method requests.
 That method will return an instance of `AsyncInvocationInterceptor` - the MP Rest Client implementation must then invoke the `prepareContext` method while still executing on the thread that invoked the async method.
 After swapping threads, but before invoking further providers or returning control back to the async method caller, the MP Rest Client implementation must invoke the `applyContext` method on the new async thread that will complete the request/response.
+The implementation must then invoke all inbound response providers (filters, interceptors, MessageBodyReaders, etc.) and then must invoke the `AsyncInvocationInterceptor`'s `removeContext` method.  This allows the provider to remove any contexts from the thread before returning control back to the user.
 
 The following example shows how the AsyncInvocationInterceptorFactory provider and associated AsyncInvocationInterceptor interface could be used to propagate a `ThreadLocal` value from the originating thread to async thread:
 [source, java]
@@ -75,6 +76,9 @@ public class MyInterceptor implements AsyncInvocationInterceptor {
     }
     public void applyContext() {
         SomeClass.setValueIntoThreadLocal(someValue);
+    }
+    public void removeContext() {
+        SomeClass.setValueIntoThreadLocal(null);
     }
 }
 

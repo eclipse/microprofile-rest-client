@@ -36,6 +36,8 @@ package org.eclipse.microprofile.rest.client.ext;
  * Note that the order in which instances of the
  * <code>AsyncInvocationInterceptor</code> are invoked are determined by the
  * priority of the <code>AsyncInvocationInterceptorFactory</code> provider.
+ *
+ * @since 1.1
  */
 public interface AsyncInvocationInterceptor {
 
@@ -52,4 +54,14 @@ public interface AsyncInvocationInterceptor {
      * wait for the response) prior to sending the request.
      */
     void applyContext();
+
+    /**
+     * This method will be invoked by the MP Rest Client runtime on the "async"
+     * thread (i.e. the thread used to actually invoke the remote service and
+     * wait for the response) after all providers on the inbound response flow
+     * have been invoked.
+     *
+     * @since 1.2
+     */
+     void removeContext();
 }

@@ -38,6 +38,7 @@ package org.eclipse.microprofile.rest.client.ext;
  * Implementations of this or the <code>AsyncInvocationInterceptor</code>
  * interface should not rely on the order of other providers, as this could
  * change between different implementations of the MP Rest Client.
+ * @since 1.1
  */
 public interface AsyncInvocationInterceptorFactory {
 
@@ -48,6 +49,8 @@ public interface AsyncInvocationInterceptorFactory {
      * <code>prepareContext</code> and <code>applyContext</code> methods of the
      * returned interceptor when performing an asynchronous method invocation.
      * Null return values will be ignored.
+     *
+     * @return Non-null instance of <code>AsyncInvocationInterceptor</code>
      */
     AsyncInvocationInterceptor newInterceptor();
 }

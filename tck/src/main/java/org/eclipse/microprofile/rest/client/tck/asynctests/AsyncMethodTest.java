@@ -46,6 +46,7 @@ import org.eclipse.microprofile.rest.client.tck.providers.ThreadedClientResponse
 import org.eclipse.microprofile.rest.client.tck.providers.TLAddPathClientRequestFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TLAsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TLAsyncInvocationInterceptorFactory;
+import org.eclipse.microprofile.rest.client.tck.providers.TLClientResponseFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -68,7 +69,8 @@ public class AsyncMethodTest extends WiremockArquillianTest{
                         ThreadedClientResponseFilter.class,
                         TLAsyncInvocationInterceptorFactory.class,
                         TLAsyncInvocationInterceptor.class,
-                        TLAddPathClientRequestFilter.class);
+                        TLAddPathClientRequestFilter.class,
+                        TLClientResponseFilter.class);
     }
 
     /**
@@ -205,16 +207,21 @@ public class AsyncMethodTest extends WiremockArquillianTest{
                         .withBody(expectedBody)));
 
         final TLAsyncInvocationInterceptorFactory aiiFactory = new TLAsyncInvocationInterceptorFactory(threadLocalInt);
+        final TLClientResponseFilter responseFilter = new TLClientResponseFilter();
         SimpleGetApiAsync api = RestClientBuilder.newBuilder()
             .baseUrl(getServerURL())
             .register(TLAddPathClientRequestFilter.class)
             .register(aiiFactory)
+            .register(responseFilter)
             .build(SimpleGetApiAsync.class);
         CompletionStage<Response> future = api.executeGet();
 
         Response response = future.toCompletableFuture().get();
         assertEquals(response.getStatus(), 200);
-        assertTrue(response.getLocation().getPath().endsWith("/" + threadLocalInt));
+        String sentUri = response.getHeaderString("Sent-URI");
+        assertTrue(sentUri.endsWith("/" + threadLocalInt));
+        assertEquals((long) TLAsyncInvocationInterceptorFactory.getTlInt(), 1L);
+        assertEquals((long) responseFilter.getThreadLocalIntDuringResponse(), (long) threadLocalInt);
 
         String body = response.readEntity(String.class);
 
@@ -224,6 +231,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         Map<String,Object> data = aiiFactory.getData();
         assertEquals(data.get("preThreadId"), mainThreadId);
         assertNotEquals(data.get("postThreadId"), mainThreadId);
+        assertEquals(data.get("removeThreadId"), data.get("postThreadId"));
 
         verify(1, getRequestedFor(urlEqualTo("/" + threadLocalInt)));
     }
