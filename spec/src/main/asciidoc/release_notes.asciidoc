@@ -23,6 +23,7 @@
 
 Changes since 1.1:
 
+- New SPI interface, `RestClientListener` interface for intercepting new client instances.
 - New `removeContext` method for `AsyncInvocationInterceptor` interface.
 
 [[release_notes_11]]
@@ -31,7 +32,7 @@ Changes since 1.1:
 Changes since 1.0:
 
 - Asynchronous method support when Rest Client interfaces return `CompletionStage`.
-- New SPI interface, `RestClientBuilderListener` for intercepting new clients.
+- New SPI interface, `RestClientBuilderListener` for intercepting new client builders.
 - `@RegisterRestClient` is now considered a bean-defining annotation.
 - New `baseUri` method on `RestClientBuilder`.
 
