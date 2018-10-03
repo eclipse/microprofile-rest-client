@@ -23,6 +23,7 @@
 
 Changes since 1.1:
 
+- `ClientRequestContext` should have a property named `org.eclipse.microprofile.rest.client.invokedMethod` containing the Rest Client `Method` currently being invoked.
 - New SPI interface, `RestClientListener` interface for intercepting new client instances.
 - New `removeContext` method for `AsyncInvocationInterceptor` interface.
 

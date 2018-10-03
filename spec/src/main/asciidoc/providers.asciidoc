@@ -27,6 +27,8 @@ Filters of type `ClientResponseFilter` are invoked in order when a response is r
 
 Filters of type `ClientRequestFilter` are invoked in order when a request is made to a remote service.
 
+Both the `ClientRequestFilter` and `ClientResponseFilter` interfaces contains methods that pass an instance of `ClientRequestContext`.  The Rest Client implementation must provide a property via that `ClientRequestContext` called `org.eclipse.microprofile.rest.client.invokedMethod` - the value of this property should be the `java.lang.reflect.Method` object representing the Rest Client interface method currently being invoked.
+
 === MessageBodyReader
 
 The `MessageBodyReader` interface defined by JAX-RS allows the entity to be read from the API response after invocation.
