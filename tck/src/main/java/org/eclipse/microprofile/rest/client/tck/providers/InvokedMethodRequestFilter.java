@@ -1,0 +1,50 @@
+/*
+ * Copyright 2018 Contributors to the Eclipse Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied.
+ *
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.eclipse.microprofile.rest.client.tck.providers;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import javax.ws.rs.Path;
+import javax.ws.rs.POST;
+import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.Response;
+
+
+public class InvokedMethodRequestFilter implements ClientRequestFilter {
+
+    @Override
+    public void filter(ClientRequestContext ctx) throws IOException {
+        try {
+            Method m = (Method) ctx.getProperty("org.eclipse.microprofile.rest.client.invokedMethod");
+
+            Path path = m.getAnnotation(Path.class);
+            ctx.abortWith(Response.ok("OK")
+                                  .header("ReturnType", m.getReturnType().getName())
+                                  .header("POST", m.getAnnotation(POST.class) == null ? "null" : "POST")
+                                  .header("Path", path == null ? "null" : path.value())
+                                  .build());
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
+            ctx.abortWith(Response.serverError().build());
+        }
+    }
+}
