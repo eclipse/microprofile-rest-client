@@ -68,6 +68,7 @@ public class RestClientListenerTest extends Arquillian {
     public void testRestClientListenerInvoked() throws Exception {
         SimpleGetApi client = RestClientBuilder.newBuilder()
             .register(ReturnWith200RequestFilter.class, 2)
+            .property("microprofile.rest.client.disable.default.mapper",true)
             .baseUri(new URI("http://localhost:8080/neverUsed"))
             .build(SimpleGetApi.class);
 
