@@ -20,6 +20,7 @@ import javax.annotation.Priority;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Priority(2)
 public class BuilderImpl2 extends AbstractBuilder {
@@ -34,6 +35,16 @@ public class BuilderImpl2 extends AbstractBuilder {
     }
 
     public RestClientBuilder executorService(ExecutorService executor) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder connectTimeout(long timeout, TimeUnit unit) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder readTimeout(long timeout, TimeUnit unit) {
         throw new IllegalStateException("not implemented");
     }
 
