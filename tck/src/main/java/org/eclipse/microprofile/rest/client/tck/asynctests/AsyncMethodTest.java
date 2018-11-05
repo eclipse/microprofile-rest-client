@@ -220,7 +220,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         assertEquals(response.getStatus(), 200);
         String sentUri = response.getHeaderString("Sent-URI");
         assertTrue(sentUri.endsWith("/" + threadLocalInt));
-        assertEquals((long) TLAsyncInvocationInterceptorFactory.getTlInt(), 1L);
+        assertEquals((long) TLAsyncInvocationInterceptorFactory.getTlInt(), 808L);
         assertEquals((long) responseFilter.getThreadLocalIntDuringResponse(), (long) threadLocalInt);
 
         String body = response.readEntity(String.class);
@@ -232,6 +232,8 @@ public class AsyncMethodTest extends WiremockArquillianTest{
         assertEquals(data.get("preThreadId"), mainThreadId);
         assertNotEquals(data.get("postThreadId"), mainThreadId);
         assertEquals(data.get("removeThreadId"), data.get("postThreadId"));
+        assertEquals(data.get("AsyncThreadLocalPre"), 808);
+        assertEquals(data.get("AsyncThreadLocalPost"), 0);
 
         verify(1, getRequestedFor(urlEqualTo("/" + threadLocalInt)));
     }
