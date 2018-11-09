@@ -20,6 +20,8 @@ package org.eclipse.microprofile.rest.client.tck.cditests;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
+import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURI;
+import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURI2;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -49,17 +51,32 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
     @RestClient
     private SimpleGetApi api;
 
+    @Inject
+    @RestClient
+    private ClientWithURI clientWithURI;
+
+    @Inject
+    @RestClient
+    private ClientWithURI2 clientWithURI2;
+
     @Deployment
     public static WebArchive createDeployment() {
         String uriPropertyName = SimpleGetApi.class.getName()+"/mp-rest/uri";
         String uriValue = getStringURL() + "uri";
         String urlPropertyName = SimpleGetApi.class.getName()+"/mp-rest/url";
         String urlValue = getStringURL() + "url";
+        String overridePropName = ClientWithURI2.class.getName()+"/mp-rest/uri";
+        String overridePropValue = "http://localhost:9876/someOtherBaseUri";
         String simpleName = CDIURIvsURLConfigTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class)
+            .addClasses(ClientWithURI.class,
+                        ClientWithURI2.class,
+                        SimpleGetApi.class,
+                        WiremockArquillianTest.class)
             .addAsManifestResource(new StringAsset(
-                String.format(uriPropertyName+"="+uriValue+"%n"+urlPropertyName+"="+urlValue)),
+                String.format(uriPropertyName+"="+uriValue+"%n"+
+                              urlPropertyName+"="+urlValue+"%n"+
+                              overridePropName+"="+overridePropValue)),
                 "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
@@ -87,5 +104,15 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
         assertEquals(body, expectedBody);
 
         verify(1, getRequestedFor(urlEqualTo("/uri")));
+    }
+
+    @Test
+    public void testBaseUriInRegisterRestClientAnnotation() throws Exception {
+        assertEquals(clientWithURI.get(), "http://localhost:5017/myBaseUri/hello");
+    }
+
+    @Test
+    public void testMPConfigURIOverridesBaseUriInRegisterRestClientAnnotation() throws Exception {
+        assertEquals(clientWithURI2.get(), "http://localhost:9876/someOtherBaseUri/hi");
     }
 }

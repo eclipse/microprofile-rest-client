@@ -40,4 +40,5 @@ import javax.enterprise.inject.Stereotype;
 @Stereotype
 @Dependent
 public @interface RegisterRestClient {
+    String baseUri() default "";
 }
