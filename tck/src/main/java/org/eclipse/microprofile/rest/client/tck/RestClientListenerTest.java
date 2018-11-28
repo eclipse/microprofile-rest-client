@@ -45,11 +45,12 @@ public class RestClientListenerTest extends Arquillian {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
             .addClasses(SimpleGetApi.class,
                         SimpleRestClientListenerImpl.class,
+                        ReturnWith200RequestFilter.class,
                         ReturnWith500RequestFilter.class)
             .addAsManifestResource(serviceFile,"services/" + RestClientListener.class.getName());
         return ShrinkWrap.create(WebArchive.class, RestClientListenerTest.class.getSimpleName()+".war")
             .addAsLibrary(jar)
-            .addClasses(RestClientListenerTest.class, ReturnWith500RequestFilter.class);
+            .addClasses(RestClientListenerTest.class);
     }
 
     /**
@@ -68,7 +69,7 @@ public class RestClientListenerTest extends Arquillian {
     public void testRestClientListenerInvoked() throws Exception {
         SimpleGetApi client = RestClientBuilder.newBuilder()
             .register(ReturnWith200RequestFilter.class, 2)
-            .property("microprofile.rest.client.disable.default.mapper",true)
+            .property("microprofile.rest.client.disable.default.mapper", true)
             .baseUri(new URI("http://localhost:8080/neverUsed"))
             .build(SimpleGetApi.class);
 
