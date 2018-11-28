@@ -48,11 +48,13 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.TEXT_PLAIN)
 @RegisterRestClient
-public interface InterfaceWithProvidersDefined {
+public interface InterfaceWithProvidersDefined extends InterfaceBase {
     @POST
+    @Override
     Response executePost(String body);
 
     @PUT
     @Path("/{id}")
+    @Override
     Response executePut(@PathParam("id") String id, String body);
 }

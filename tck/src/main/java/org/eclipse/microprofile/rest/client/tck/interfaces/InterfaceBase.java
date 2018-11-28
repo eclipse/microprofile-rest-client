@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2018 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,11 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+public interface InterfaceBase {
 
-@Path("/")
-@Produces(MediaType.TEXT_PLAIN)
-@Consumes(MediaType.TEXT_PLAIN)
-@RegisterRestClient
-public interface InterfaceWithoutProvidersDefined extends InterfaceBase {
-
-    @POST
-    @Override
     Response executePost(String body);
 
-    @PUT
-    @Path("/{id}")
-    @Override
-    Response executePut(@PathParam("id") String id, String body);
+    Response executePut(String id, String body);
 }
