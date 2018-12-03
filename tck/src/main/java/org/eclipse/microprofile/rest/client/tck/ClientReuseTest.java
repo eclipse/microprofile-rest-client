@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2018 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,11 @@ public class ClientReuseTest extends WiremockArquillianTest {
 
     @Test
     public void shouldReuseClientAfterFailure() throws Throwable {
-       callWithTimeout(this::testReuseClientAfterFailure, 20, TimeUnit.SECONDS);
+        stubReturning(1, "{\"content\": true}");
+        stubReturning(2, "Not a json");
+        stubReturning(3, "{\"content\": true}");
+        
+        callWithTimeout(this::testReuseClientAfterFailure, 20, TimeUnit.SECONDS);
     }
 
     private Void testReuseClientAfterFailure() {
@@ -65,27 +69,21 @@ public class ClientReuseTest extends WiremockArquillianTest {
                 .baseUri(getServerURI())
                 .build(JsonPClient.class);
 
-        performSuccessfulRequest(client);
+        // expect a successful invocation
+        assertTrue(client.get("1").getBoolean("content"));
 
-        performFailingRequest(client);
+        // expect a failing invocation
+        expectFailure(() -> client.get("2"));
 
-        performSuccessfulRequest(client);
+        // expect a successful invocation
+        assertTrue(client.get("3").getBoolean("content"));
+        
         return null;
     }
 
-    private void performSuccessfulRequest(JsonPClient client) {
-        stubReturning("{\"content\": true}");
-        assertTrue(client.get("1").getBoolean("content"));
-    }
-
-    private void performFailingRequest(JsonPClient client) {
-        stubReturning("Not a json");
-        expectFailure(() -> client.get("1"));
-    }
-
-    private void stubReturning(String text) {
+    private void stubReturning(int id, String text) {
         stubFor(
-            get(urlEqualTo("/1"))
+            get(urlEqualTo("/" + id))
                 .willReturn(
                     aResponse().withBody(text).withHeader("Content-Type", "application/json")
                 )
