@@ -23,6 +23,7 @@
 
 Changes since 1.1:
 
+- Clarification on built-in JSON-B/JSON-P entity providers.
 - New `baseUri` property added to `@RegisterRestClient` annotation.
 - New `connectTimeout` and `readTimeout` methods on `RestClientBuilder` - and corresponding MP Config properties.
 - `ClientRequestContext` should have a property named `org.eclipse.microprofile.rest.client.invokedMethod` containing the Rest Client `Method` currently being invoked.

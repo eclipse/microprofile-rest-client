@@ -108,15 +108,17 @@ If the type of provider registered is a `Feature`, then the priority set by that
 
 Implementations may provide any number of providers registered automatically, but the following providers must be registered by the runtime.
 
-=== JSON-P Provider
+=== JSON-P and JSON-B Providers
+
+Implementations of the MicroProfile Rest Client should behave similar to JAX-RS implementations with regard to built-in JSON-P and JSON-B providers. Implementations must provide a built-in JSON-P entity provider. If the implementation supports JSON-B, then it must also provide a built-in JSON-B entity provider. Note that the JSON-B provider should take precedence over the JSON-P provider if both exist.
 
 When an interface is registered that contains:
 
 - `@Produces("*/json")` or
 - `@Consumes("*/json")` or
-- a method that declares input or output of type `javax.json.JsonValue` or any subclass therein
+- a method that declares input or output of type `javax.json.JsonValue` or any subclass therein (JSON-P only)
 
-Then a JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the JAX-RS 2.0 specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
+Then a JSON-B or JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the JAX-RS 2.1 specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
 
 === Default Message Body Readers and Writers
 
