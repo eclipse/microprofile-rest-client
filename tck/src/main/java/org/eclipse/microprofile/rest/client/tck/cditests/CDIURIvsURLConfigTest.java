@@ -108,11 +108,11 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
 
     @Test
     public void testBaseUriInRegisterRestClientAnnotation() throws Exception {
-        assertEquals(clientWithURI.get(), "http://localhost:5017/myBaseUri/hello");
+        assertEquals(clientWithURI.get(), "GET http://localhost:5017/myBaseUri/hello");
     }
 
     @Test
     public void testMPConfigURIOverridesBaseUriInRegisterRestClientAnnotation() throws Exception {
-        assertEquals(clientWithURI2.get(), "http://localhost:9876/someOtherBaseUri/hi");
+        assertEquals(clientWithURI2.get(), "GET http://localhost:9876/someOtherBaseUri/hi");
     }
 }
