@@ -20,10 +20,14 @@ package org.eclipse.microprofile.rest.client.tck.cditests;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
+import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceBase;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithProvidersDefined;
+import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithoutProvidersDefined;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientRequestFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientResponseFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestMessageBodyReader;
+import org.eclipse.microprofile.rest.client.tck.providers.TestMessageBodyWriter;
+import org.eclipse.microprofile.rest.client.tck.providers.TestParamConverterProvider;
 import org.eclipse.microprofile.rest.client.tck.providers.TestReaderInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TestWriterInterceptor;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -49,30 +53,65 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 
 /**
- * Verifies via CDI injection that you can use a programmatic interface.  Verifies that the interface includes registered providers.
+ * Verifies via CDI injection that you can use a programmatic interface.
+ * Verifies that the interface includes registered providers.
+ * Also verifies that providers registered via MicroProfile Config are honored.
  */
 public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     @Inject
     @RestClient
-    private InterfaceWithProvidersDefined api;
+    private InterfaceWithProvidersDefined clientProvidersViaAnnotation;
+
+    @Inject
+    @RestClient
+    private InterfaceWithoutProvidersDefined clientProvidersViaMPConfig;
 
     @Deployment
     public static WebArchive createDeployment() {
-        String propertyName = InterfaceWithProvidersDefined.class.getName()+"/mp-rest/url";
-        String value = getStringURL();
+        String urlPropName1 = InterfaceWithProvidersDefined.class.getName() + "/mp-rest/url";
+        String urlPropName2 = InterfaceWithoutProvidersDefined.class.getName() + "/mp-rest/url";
+        String urlValue = getStringURL();
         String simpleName = CDIInvokeWithRegisteredProvidersTest.class.getSimpleName();
+        String providersPropName = InterfaceWithoutProvidersDefined.class.getName() + "/mp-rest/providers";
+        String providersValue = TestClientRequestFilter.class.getName() + "," +
+                                TestClientResponseFilter.class.getName() + "," +
+                                TestMessageBodyReader.class.getName() + "," +
+                                TestMessageBodyWriter.class.getName() + "," +
+                                TestParamConverterProvider.class.getName() + "," +
+                                TestReaderInterceptor.class.getName() + "," +
+                                TestWriterInterceptor.class.getName();
+        String propsFile = String.format(urlPropName1+"="+urlValue+"%n" +
+                                         urlPropName2+"="+urlValue+"%n" +
+                                         providersPropName+"="+providersValue);
+        System.out.println("ANDY propsFile: " + propsFile);
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(InterfaceWithProvidersDefined.class, WiremockArquillianTest.class)
+            .addClasses(InterfaceWithProvidersDefined.class,
+                        InterfaceWithoutProvidersDefined.class,
+                        InterfaceBase.class,
+                        WiremockArquillianTest.class)
             .addPackage(TestClientResponseFilter.class.getPackage())
-            .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
+            .addAsManifestResource(new StringAsset(propsFile), "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
             .addAsLibrary(jar)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
+    //@BeforeTest
+    //public void resetWiremock() {
+    //    setupServer();
+    //}
     @Test
-    public void testInvokesPostOperation() throws Exception{
+    public void testInvokesPostOperation_viaAnnotation() throws Exception {
+        testInvokesPostOperation(clientProvidersViaAnnotation);
+    }
+
+    @Test
+    public void testInvokesPostOperation_viaMPConfig() throws Exception {
+        testInvokesPostOperation(clientProvidersViaMPConfig);
+    }
+
+    private void testInvokesPostOperation(InterfaceBase api) throws Exception{
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
@@ -89,7 +128,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
 
         assertEquals(body, expectedResponseBody);
 
-        verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
@@ -98,7 +137,16 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     }
 
     @Test
-    public void testInvokesPutOperation() throws Exception {
+    public void testInvokesPutOperation_viaAnnotation() throws Exception {
+        testInvokesPutOperation(clientProvidersViaAnnotation);
+    }
+
+    @Test
+    public void testInvokesPutOperation_viaMPConfig() throws Exception {
+        testInvokesPutOperation(clientProvidersViaMPConfig);
+    }
+
+    private void testInvokesPutOperation(InterfaceBase api) throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
@@ -117,7 +165,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
 
         assertEquals(body, expectedResponseBody);
 
-        verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
 
         assertEquals(TestClientResponseFilter.getAndResetValue(),1);
         assertEquals(TestClientRequestFilter.getAndResetValue(),1);
