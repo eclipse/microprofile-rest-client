@@ -19,6 +19,7 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceBase;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithoutProvidersDefined;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientRequestFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientResponseFilter;
@@ -50,7 +51,7 @@ public class InvokeWithBuiltProvidersTest extends WiremockArquillianTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, InvokeWithBuiltProvidersTest.class.getSimpleName()+".war")
-            .addClasses(InterfaceWithoutProvidersDefined.class, WiremockArquillianTest.class)
+            .addClasses(InterfaceWithoutProvidersDefined.class, WiremockArquillianTest.class, InterfaceBase.class)
             .addPackage(TestClientResponseFilter.class.getPackage());
     }
 
