@@ -1,0 +1,50 @@
+//
+// Copyright (c) 2018 Contributors to the Eclipse Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+[[integration]]
+== Integration with other MicroProfile technologies
+
+The MicroProfile Rest Client can be used as a standalone technology. That means that an implementation could work without CDI, MicroProfile Config, etc.
+This section documents how the MicroProfile Rest Client should interact when it is executed in an environment that provides other MicroProfile technologies.
+
+=== CDI
+
+Integration with CDI is already built-in to the Rest Client specification, and is documented in the <<cdi.asciidoc#restcdi>> section.
+
+If CDI is available, the MP Rest Client implementation must ensure that CDI business method interceptors are invoked when the appropriate interceptor binding is applied to the client interface or method.
+
+=== MicroProfile Config
+
+MP Rest Client uses MP Config in order to declaratively configure the client behavior. The remote URI, client providers and priority,
+connect and read timeouts, etc. can all be configured using MP Config. See <<cdi.asciidoc#mpconfig>> for more details.
+
+=== MicroProfile Fault Tolerance
+
+MP Rest Client implementations must ensure that MP Fault Tolerance annotations on client interfaces are honored. In general, these annotations are treated as
+CDI interceptor bindings.
+
+MP Rest Client should ensure that the behavior of most Fault Tolerance annotations should follow the behavior outlined in the MP Fault Tolerance specification.
+This includes the `@Asynchronous`, `@Bulkhead`, `@CircuitBreaker`, `@Fallback` and `@Retry` annotations.
+
+The `@Timeout` annotation presents a problem since some parts of the MP Rest Client request are non-blocking and non-interruptible. Implementations should override
+the default connect and read timeouts and use the timeout value specified in the `@Timeout` annotation instead. This will ensure that the actual time spent in
+blocking/non-interruptible operations should be less than or equal to the time specified in the annotation, allowing the MP Fault Tolerance implementation to
+interrupt the request and the throw the appropriate `TimeoutException`.
+
+=== Other MicroProfile Technologies
+
+Client requests can be automatically traced when using MP OpenTracing.  Likewise, requests can be measured using MP Metrics.
+Configuration and usage of these technologies should be defined in their respective specification documents.

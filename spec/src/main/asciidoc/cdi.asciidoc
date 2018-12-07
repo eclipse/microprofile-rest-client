@@ -57,6 +57,7 @@ The qualifier is used to differentiate use cases of the interface that are manag
 
 Interfaces are assumed to have a scope of `@Dependent` unless there is another scope defined on the interface.  Implementations are expected to support all of the built in scopes for a bean.  Support for custom registered scopes should work, but is not guaranteed.
 
+[[mpconfig]]
 === Support for MicroProfile Config
 
 For CDI defined interfaces, it is possible to use MicroProfile Config properties to define additional behaviors or override values specified in the `@RegisterRestClient` annotation of the rest interface.  Assuming this interface:
