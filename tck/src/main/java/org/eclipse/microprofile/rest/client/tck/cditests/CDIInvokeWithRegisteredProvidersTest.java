@@ -83,7 +83,6 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
         String propsFile = String.format(urlPropName1+"="+urlValue+"%n" +
                                          urlPropName2+"="+urlValue+"%n" +
                                          providersPropName+"="+providersValue);
-        System.out.println("ANDY propsFile: " + propsFile);
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(InterfaceWithProvidersDefined.class,
                         InterfaceWithoutProvidersDefined.class,
