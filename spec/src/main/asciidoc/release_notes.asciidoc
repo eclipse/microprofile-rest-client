@@ -23,6 +23,7 @@
 
 Changes since 1.1:
 
+- New `@ClientHeaderParam` API for defining HTTP headers without modifying the client interface method signature.
 - New section documenting the <<integration.asciidoc#integration>>.
 - Clarification on built-in JSON-B/JSON-P entity providers.
 - New `baseUri` property added to `@RegisterRestClient` annotation.

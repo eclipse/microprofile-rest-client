@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017 Contributors to the Eclipse Foundation
+// Copyright (c) 2017-2018 Contributors to the Eclipse Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,6 +79,49 @@ public class PutUser {
 All built in HTTP methods are supported by the client API.  Likewise, all base parameter types (query, cookie, matrix, path, form and bean) are supported.  If you only need to inspect the body, you can provide a POJO can be processed by the underlying `MessageBodyReader` or `MessageBodyWriter`.  Otherwise, you can receive the entire `Response` object for parsing the body and header information from the server invocation.
 
 Users may specify the media (MIME) type of the outbound request using the `@Consumes` annotation (this determine the `Content-Type` HTTP header), and the expected media type(s) of the response by using the `@Produces` annotation (the `Accept` HTTP header).  This indicates that the client interface expects that the remote _service_ consumes/produces the specified types.
+
+=== Specifying Additional Client Headers
+
+While it is always possible to add a `@HeaderParam`-annotated method argument to specify headers, some times that does not make sense within the context of the application. For example, you may want to specify a username/password in the `Authorization` header to a secure remote service, but you may not want to have a `String authHeader` parameter in the client interface method.
+The `@ClientHeaderParam` annotation can allow users to specify HTTP headers that should be sent without altering the client interface method signature. The annotation contains three attributes: `name`, `value`. and `required`.  The name attribute is used to specify the header name. The value attribute is used to specify the value of the header. The value can be specified explicitly
+or it can reference a default method on the client interface that would compute the value of the header - in this latter case, the compute method name must be surrounded by curly braces. The compute method must be a default method on the interface, must return a `String` and must either contain no arguments or contain a single `String` argument - the implementation will use this
+`String` argument to pass the name of the header. The required attribute determines what should happen in the event that the compute method throws an exception. If the required attribute is set to true (default), then the client request will fail if the compute method throws an exception.  If it is set to false, then the client request will continue, but without sending the HTTP header.
+
+Note that if a `@ClientHeaderParam` annotation on a method specifies the same header name as an annotation on the client interface, the annotation on the method will take precedence. Likewise, if the same header name is used in a `@HeaderParam` annotation on a client interface method parameter or in a bean class when a `@BeanParam` annotation is on a client interface method
+parameter, the value of the `@HeaderParam` annotation takes precedence over any value specified in the `@ClientHeaderParam`.
+
+Here are a few examples:
+
+[source, java]
+----
+@Path("/somePath")
+public interface MyClient {
+
+    @POST
+    @ClientHeaderParam(name="X-Http-Method-Override", value="PUT")
+    Response sentPUTviaPOST(MyEntity entity);
+
+    @POST
+    @ClientHeaderParam(name="X-Request-ID", value="{generateRequestId}")
+    Response postWithRequestId(MyEntity entity);
+
+    @GET
+    @ClientHeaderParam(name="CustomHeader", value="{generateCustomHeader}",
+                       required=false)
+    Response getWithoutCustomHeader();
+
+    default String generateRequestId() {
+        return UUID.randomUUID().toString();
+    }
+
+    default String generateCustomHeader(String headerName) {
+        if ("CustomHeader".equals(headerName)) {
+            throw UnsupportedOperationException();
+        }
+        return "SomeValue";
+    }
+}
+----
 
 === Invalid Client Interface Examples
 
