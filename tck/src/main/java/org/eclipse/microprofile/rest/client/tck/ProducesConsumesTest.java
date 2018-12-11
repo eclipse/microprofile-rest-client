@@ -36,8 +36,16 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+/**
+ * Tests that MP Rest Client's <code>@Produces</code> annotation affects the value transmitted in
+ * the <code>Accept</code> header, and that it's <code>@Consumes</code> annotation affects the
+ * value transmitted in the <code>Content-Type</code> header.  Note that this is opposite of
+ * what you would expect for JAX-RS resources.
+ */
 public class ProducesConsumesTest extends Arquillian {
     private final static Logger LOG = Logger.getLogger(ProducesConsumesTest.class.getName());
+    public static final String XML_PAYLOAD = "<some><wrapped>value</wrapped></some>";
+    public static final String JSON_PAYLOAD = "{\"some\": \"value\"}";
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -45,14 +53,8 @@ public class ProducesConsumesTest extends Arquillian {
             .addClasses(ProducesConsumesClient.class, ProducesConsumesFilter.class);
     }
 
-    /**
-     * Tests that MP Rest Client's <code>@Produces</code> annotation affects the value transmitted in
-     * the <code>Accept</code> header, and that it's <code>@Consumes</code> annotation affects the
-     * value transmitted in the <code>Content-Type</code> header.  Note that this is opposite of
-     * what you would expect for JAX-RS resources.
-     */
     @Test
-    public void testProducesConsumesAnnotationOnClientInterface() throws Exception {
+    public void testProducesConsumesAnnotationOnMethod() {
         final String m = "testProducesConsumesAnnotationOnClientInterface";
         ProducesConsumesClient client = RestClientBuilder.newBuilder()
                                             .baseUri(URI.create("http://localhost:8080/null"))
@@ -60,7 +62,7 @@ public class ProducesConsumesTest extends Arquillian {
                                             .build(ProducesConsumesClient.class);
 
         LOG.info(m + " @Produce(application/json) @Consume(application/xml)");
-        Response r = client.produceJSONConsumeXML();
+        Response r = client.produceJSONConsumeXML(XML_PAYLOAD);
         String acceptHeader = r.getHeaderString("Sent-Accept");
         LOG.info(m + "Sent-Accept: " + acceptHeader);
         String contentTypeHeader = r.getHeaderString("Sent-ContentType");
@@ -69,12 +71,30 @@ public class ProducesConsumesTest extends Arquillian {
         assertEquals(contentTypeHeader, MediaType.APPLICATION_XML);
 
         LOG.info(m + " @Produce(application/xml) @Consume(application/json)");
-        r = client.produceXMLConsumeJSON();
+        r = client.produceXMLConsumeJSON(JSON_PAYLOAD);
         acceptHeader = r.getHeaderString("Sent-Accept");
         LOG.info(m + "Sent-Accept: " + acceptHeader);
         contentTypeHeader = r.getHeaderString("Sent-ContentType");
         LOG.info(m + "Sent-ContentType: " + contentTypeHeader);
         assertEquals(acceptHeader, MediaType.APPLICATION_XML);
         assertEquals(contentTypeHeader, MediaType.APPLICATION_JSON);
+    }
+
+    @Test
+    public void testProducesConsumesAnnotationOnInterface() {
+        final String m = "testProducesConsumesAnnotationOnInterface";
+        ProducesConsumesClient client = RestClientBuilder.newBuilder()
+                                            .baseUri(URI.create("http://localhost:8080/null"))
+                                            .register(ProducesConsumesFilter.class)
+                                            .build(ProducesConsumesClient.class);
+
+        LOG.info(m + " @Produce(text/html) @Consume(text/plain)");
+        Response r = client.produceHtmlConsumeText("1", "whatever");
+        String acceptHeader = r.getHeaderString("Sent-Accept");
+        LOG.info(m + "Sent-Accept: " + acceptHeader);
+        String contentTypeHeader = r.getHeaderString("Sent-ContentType");
+        LOG.info(m + "Sent-ContentType: " + contentTypeHeader);
+        assertEquals(acceptHeader, MediaType.TEXT_HTML);
+        assertEquals(contentTypeHeader, MediaType.TEXT_PLAIN);
     }
 }
