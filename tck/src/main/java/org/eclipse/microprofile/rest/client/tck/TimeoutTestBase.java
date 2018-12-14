@@ -63,7 +63,7 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         finally {
             long elapsedTime = System.nanoTime() - startTime;
             long elapsedSecs = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-            checkTimeElapsed(5, 15, elapsedSecs);
+            checkTimeElapsed(elapsedSecs);
         }
     }
 
@@ -86,9 +86,9 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         finally {
             long elapsedTime = System.nanoTime() - startTime;
             long elapsedSecs = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-            checkTimeElapsed(5, 15, elapsedSecs);
+            checkTimeElapsed(elapsedSecs);
         }
     }
 
-    protected abstract void checkTimeElapsed(long min, long max, long elapsed);
+    protected abstract void checkTimeElapsed(long elapsed);
 }

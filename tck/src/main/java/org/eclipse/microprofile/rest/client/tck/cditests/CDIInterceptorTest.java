@@ -26,6 +26,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURIAndInterceptor;
 import org.eclipse.microprofile.rest.client.tck.interfaces.Loggable;
 import org.eclipse.microprofile.rest.client.tck.interfaces.LoggableInterceptor;
+import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -50,7 +51,8 @@ public class CDIInterceptorTest extends Arquillian {
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(ClientWithURIAndInterceptor.class,
                         Loggable.class,
-                        LoggableInterceptor.class)
+                        LoggableInterceptor.class,
+                        ReturnWithURLRequestFilter.class)
             .addAsManifestResource(new StringAsset(
                 "<beans xmlns=\"http://java.sun.com/xml/ns/javaee\"" +
                 "       xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
