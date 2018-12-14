@@ -23,6 +23,7 @@ import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURI;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURI2;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
+import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -72,7 +73,8 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
             .addClasses(ClientWithURI.class,
                         ClientWithURI2.class,
                         SimpleGetApi.class,
-                        WiremockArquillianTest.class)
+                        WiremockArquillianTest.class,
+                        ReturnWithURLRequestFilter.class)
             .addAsManifestResource(new StringAsset(
                 String.format(uriPropertyName+"="+uriValue+"%n"+
                               urlPropertyName+"="+urlValue+"%n"+

@@ -45,7 +45,7 @@ public class TimeoutViaMPConfigTest extends TimeoutTestBase {
     }
 
     @Override
-    protected void checkTimeElapsed(long min, long max, long elapsed) {
+    protected void checkTimeElapsed(long elapsed) {
         assertTrue(elapsed >= 7);
         // allow an extra 10 seconds cushion for slower test machines
         assertTrue(elapsed < 17);
