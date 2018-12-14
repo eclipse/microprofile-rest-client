@@ -41,14 +41,9 @@ public class LoggableInterceptor {
     public Object logInvocation(InvocationContext ctx) throws Exception {
         Method m = ctx.getMethod();
         invocationMessage = m.getDeclaringClass().getName() + "." + m.getName();
-        System.out.println("Invoking " + invocationMessage);
-        try {
-            Object returnVal = ctx.proceed();
-            invocationMessage += " " + returnVal;
-            return returnVal;
-        }
-        finally {
-            System.out.println("Invoked " + invocationMessage);
-        }
+
+        Object returnVal = ctx.proceed();
+        invocationMessage += " " + returnVal;
+        return returnVal;
     }
 }
