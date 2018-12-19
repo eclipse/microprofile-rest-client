@@ -16,13 +16,15 @@
  * limitations under the License.
  */
 
-package org.eclipse.microprofile.rest.client.tck;
+package org.eclipse.microprofile.rest.client.tck.timeout;
 
 import static org.testng.Assert.assertTrue;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -31,12 +33,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class TimeoutTest extends TimeoutTestBase {
 
-    private static final int UNUSED_PORT =
-        AccessController.doPrivileged((PrivilegedAction<Integer>) () -> {
-            return Integer.getInteger(
-                "org.eclipse.microprofile.rest.client.tck.unusedPort", 23);
-        });
-
     @Deployment
     public static Archive<?> createDeployment() {
         String simpleName = TimeoutTest.class.getSimpleName();
@@ -44,6 +40,22 @@ public class TimeoutTest extends TimeoutTestBase {
                          .addClasses(WiremockArquillianTest.class,
                                      TimeoutTestBase.class,
                                      SimpleGetApi.class);
+    }
+
+    @Override
+    protected SimpleGetApi getClientWithReadTimeout() {
+        return RestClientBuilder.newBuilder()
+            .baseUri(WiremockArquillianTest.getServerURI())
+            .readTimeout(5, TimeUnit.SECONDS)
+            .build(SimpleGetApi.class);
+    }
+
+    @Override
+    protected SimpleGetApi getClientWithConnectTimeout() {
+        return RestClientBuilder.newBuilder()
+            .baseUri(URI.create(UNUSED_URL))
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .build(SimpleGetApi.class);
     }
 
     @Override

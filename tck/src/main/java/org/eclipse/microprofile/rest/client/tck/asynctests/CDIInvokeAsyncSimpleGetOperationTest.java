@@ -51,7 +51,7 @@ import org.testng.annotations.Test;
  * This test is the same as the {@link org.eclipse.microprofile.rest.client.tck.cditests.CDIInvokeSimpleGetOperationTest}
  * but uses async methods.
  */
-public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
+public class CDIInvokeAsyncSimpleGetOperationTest extends WiremockArquillianTest{
     @Inject
     @RestClient
     private SimpleGetApiAsync api;
@@ -63,7 +63,7 @@ public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
     public static WebArchive createDeployment() {
         String propertyName = SimpleGetApiAsync.class.getName()+"/mp-rest/url";
         String value = getStringURL();
-        String simpleName = CDIInvokeSimpleGetOperationTest.class.getSimpleName();
+        String simpleName = CDIInvokeAsyncSimpleGetOperationTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(SimpleGetApiAsync.class, WiremockArquillianTest.class)
             .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
