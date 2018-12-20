@@ -16,32 +16,52 @@
  * limitations under the License.
  */
 
-package org.eclipse.microprofile.rest.client.tck;
+package org.eclipse.microprofile.rest.client.tck.timeout;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+
+import javax.inject.Inject;
 
 import static org.testng.Assert.assertTrue;
 
 public class TimeoutViaMPConfigTest extends TimeoutTestBase {
 
+    @Inject
+    @RestClient
+    private SimpleGetApi api;
+
     @Deployment
     public static Archive<?> createDeployment() {
         String clientName = SimpleGetApi.class.getName();
-        String timeoutProps = clientName + "/mp-rest/connectTimeout=7000" +
-                              System.lineSeparator() +
-                              clientName + "/mp-rest/readTimeout=7000";
+        String timeoutProps =
+                clientName + "/mp-rest/uri=" + UNUSED_URL + System.lineSeparator() +
+                clientName + "/mp-rest/connectTimeout=7000" + System.lineSeparator() +
+                clientName + "/mp-rest/readTimeout=7000";
         StringAsset mpConfig = new StringAsset(timeoutProps);
         return ShrinkWrap.create(WebArchive.class, TimeoutViaMPConfigTest.class.getSimpleName()+".war")
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties")
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addClasses(SimpleGetApi.class,
-                        TimeoutTest.class,
                         TimeoutTestBase.class,
                         WiremockArquillianTest.class);
+    }
+
+    @Override
+    protected SimpleGetApi getClientWithReadTimeout() {
+        return api;
+    }
+
+    @Override
+    protected SimpleGetApi getClientWithConnectTimeout() {
+        return api;
     }
 
     @Override

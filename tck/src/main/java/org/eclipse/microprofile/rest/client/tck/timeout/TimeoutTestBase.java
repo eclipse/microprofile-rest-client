@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.eclipse.microprofile.rest.client.tck;
+package org.eclipse.microprofile.rest.client.tck.timeout;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -27,11 +27,10 @@ import static org.testng.Assert.fail;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.concurrent.TimeUnit;
-import java.net.URI;
 
 import javax.ws.rs.ProcessingException;
 
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.testng.annotations.Test;
 
@@ -41,23 +40,19 @@ import org.testng.annotations.Test;
 
 public abstract class TimeoutTestBase extends WiremockArquillianTest {
 
-    private static final String UNUSED_URL =
-        AccessController.doPrivileged((PrivilegedAction<String>) () -> {
-            return System.getProperty(
+    protected static final String UNUSED_URL =
+        AccessController.doPrivileged((PrivilegedAction<String>) () ->
+            System.getProperty(
                 "org.eclipse.microprofile.rest.client.tck.unusedURL",
-                "http://microprofile.io:1234/null");
-        });
+                "http://microprofile.io:1234/null")
+        );
 
     @Test(expectedExceptions={ProcessingException.class})
     public void testConnectTimeout() throws Exception {
 
-        SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUri(URI.create(UNUSED_URL))
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .build(SimpleGetApi.class);
         long startTime = System.nanoTime();
         try {
-            simpleGetApi.executeGet();
+            getClientWithConnectTimeout().executeGet();
             fail("A ProcessingException should have been thrown to indicate a timeout");
         }
         finally {
@@ -73,14 +68,9 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse()
                                         .withStatus(200)
                                         .withFixedDelay(30000)));
-        SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .readTimeout(5, TimeUnit.SECONDS)
-            .build(SimpleGetApi.class);
-
         long startTime = System.nanoTime();
         try {
-            simpleGetApi.executeGet();
+            getClientWithReadTimeout().executeGet();
             fail("A ProcessingException should have been thrown due to a read timeout");
         }
         finally {
@@ -89,6 +79,10 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
             checkTimeElapsed(elapsedSecs);
         }
     }
+
+    protected abstract SimpleGetApi getClientWithReadTimeout();
+    protected abstract SimpleGetApi getClientWithConnectTimeout();
+
 
     protected abstract void checkTimeElapsed(long elapsed);
 }
