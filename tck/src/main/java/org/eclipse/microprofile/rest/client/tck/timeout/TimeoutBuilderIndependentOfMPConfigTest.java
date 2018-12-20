@@ -37,9 +37,9 @@ public class TimeoutBuilderIndependentOfMPConfigTest extends TimeoutTestBase {
     @Deployment
     public static Archive<?> createDeployment() {
         String clientName = SimpleGetApi.class.getName();
-        String timeoutProps = clientName + "/mp-rest/connectTimeout=7000" +
+        String timeoutProps = clientName + "/mp-rest/connectTimeout=15000" +
                               System.lineSeparator() +
-                              clientName + "/mp-rest/readTimeout=7000";
+                              clientName + "/mp-rest/readTimeout=15000";
         StringAsset mpConfig = new StringAsset(timeoutProps);
         return ShrinkWrap.create(WebArchive.class, TimeoutBuilderIndependentOfMPConfigTest.class.getSimpleName()+".war")
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties")
