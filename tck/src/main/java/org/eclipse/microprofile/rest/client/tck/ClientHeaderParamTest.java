@@ -27,7 +27,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.fail;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeaderParamClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllClientHeadersFilter;
@@ -60,13 +62,22 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
     }
     }
 
-    private static void stub(String expectedHeaderName, String expectedHeaderValue) {
+    private static void stub(String expectedHeaderName, String... expectedHeaderValue) {
+        String expectedIncomingHeader = Arrays.stream(expectedHeaderValue)
+                                              .collect(Collectors.joining(","));
+        String outputBody = expectedIncomingHeader.replace(',', '-');
         stubFor(
+            get(urlEqualTo("/"))
+                .withHeader(expectedHeaderName, equalTo(expectedIncomingHeader))
+                .willReturn(
+                    aResponse().withStatus(200)
+                               .withBody(outputBody)));
+        /*stubFor(
             get(urlEqualTo("/"))
                 .withHeader(expectedHeaderName, equalTo(expectedHeaderValue))
                 .willReturn(
                     aResponse().withStatus(200)
-                               .withBody(expectedHeaderValue)));
+                               .withBody(expectedHeaderValue)));*/
     }
     @BeforeTest
     public void resetWiremock() {
@@ -162,5 +173,19 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
         assertEquals(headers.get("OverrideableExplicit"), "overrideableInterfaceExplicit");
         assertEquals(headers.get("InterfaceHeaderComputed"), "interfaceComputed");
         assertEquals(headers.get("MethodHeaderExplicit"), "SomeValue");
+    }
+
+    @Test
+    public void testMultivaluedHeaderSentWhenInvokingComputeMethodFromSeparateClass() {
+        stub("MultiValueInvokedFromAnotherClass", "value1", "value2");
+        assertEquals(client().methodComputeMultiValuedHeaderFromOtherClass(),
+                     "value1-value2");
+    }
+
+    @Test
+    public void testMultivaluedHeaderInterfaceExplicit() {
+        stub("InterfaceMultiValuedHeaderExplicit", "abc", "xyz");
+        assertEquals(client().methodComputeMultiValuedHeaderFromOtherClass(),
+                     "abc-xyz");
     }
 }

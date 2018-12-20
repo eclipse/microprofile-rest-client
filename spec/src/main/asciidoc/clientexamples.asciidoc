@@ -83,12 +83,13 @@ Users may specify the media (MIME) type of the outbound request using the `@Cons
 === Specifying Additional Client Headers
 
 While it is always possible to add a `@HeaderParam`-annotated method argument to specify headers, some times that does not make sense within the context of the application. For example, you may want to specify a username/password in the `Authorization` header to a secure remote service, but you may not want to have a `String authHeader` parameter in the client interface method.
-The `@ClientHeaderParam` annotation can allow users to specify HTTP headers that should be sent without altering the client interface method signature. The annotation contains three attributes: `name`, `value`. and `required`.  The name attribute is used to specify the header name. The value attribute is used to specify the value of the header. The value can be specified explicitly
-or it can reference a default method on the client interface that would compute the value of the header - in this latter case, the compute method name must be surrounded by curly braces. The compute method must be a default method on the interface, must return a `String` and must either contain no arguments or contain a single `String` argument - the implementation will use this
-`String` argument to pass the name of the header. The required attribute determines what should happen in the event that the compute method throws an exception. If the required attribute is set to true (default), then the client request will fail if the compute method throws an exception.  If it is set to false, then the client request will continue, but without sending the HTTP header.
+The `@ClientHeaderParam` annotation can allow users to specify HTTP headers that should be sent without altering the client interface method signature. The annotation contains three attributes: `name`, `value`. and `required`.  The name attribute is used to specify the header name. The value attribute is used to specify the value(s) of the header. The value can be specified explicitly
+or it can reference a method that would compute the value of the header - in this latter case, the compute method name must be surrounded by curly braces. The compute method must be either a default method on the interface or a public static method that is accessible to the interface, must return a `String` or `String[]` and must either contain no arguments or contain a single `String`
+argument - the implementation will use this `String` argument to pass the name of the header. When specifying a compute method as the value attribute, only one method may be specified - if more than one string is specified as the value attribute, and one of the strings is a compute method (surrounded by curly braces), then the implementation will throw a RestClientDefinitionException.
+The required attribute determines what should happen in the event that the compute method throws an exception. **Note: If the required attribute is set to true (default), then the client request will fail if the compute method throws an exception.**  If it is set to false, then the client request will continue, but without sending the HTTP header.
 
 Note that if a `@ClientHeaderParam` annotation on a method specifies the same header name as an annotation on the client interface, the annotation on the method will take precedence. Likewise, if the same header name is used in a `@HeaderParam` annotation on a client interface method parameter or in a bean class when a `@BeanParam` annotation is on a client interface method
-parameter, the value of the `@HeaderParam` annotation takes precedence over any value specified in the `@ClientHeaderParam`.
+parameter, the value of the `@HeaderParam` annotation takes precedence over any value specified in the `@ClientHeaderParam`. It is invalid for the same header name to be specified in two different `@ClientHeaderParam` annotations on the same target - in this case, the implementation will throw a `RestClientDefinitionException.`
 
 Here are a few examples:
 
@@ -106,20 +107,31 @@ public interface MyClient {
     Response postWithRequestId(MyEntity entity);
 
     @GET
-    @ClientHeaderParam(name="CustomHeader", value="{generateCustomHeader}",
+    @ClientHeaderParam(name="CustomHeader",
+                       value="{some.pkg.MyHeaderGenerator.generateCustomHeader}",
                        required=false)
     Response getWithoutCustomHeader();
 
     default String generateRequestId() {
         return UUID.randomUUID().toString();
     }
+}
 
-    default String generateCustomHeader(String headerName) {
+public class MyHeaderGenerator {
+    public static String generateCustomHeader(String headerName) {
         if ("CustomHeader".equals(headerName)) {
             throw UnsupportedOperationException();
         }
         return "SomeValue";
     }
+}
+
+@Path("/someOtherPath")
+@ClientHeaderParam(name="CustomHeader", value="value1")
+@ClientHeaderParam(name="CustomHeader", value="{generateCustomHeader}")
+// will throw a RestClientDefinitionException at build time
+public interface MyInvalidClient {
+...
 }
 ----
 
@@ -191,3 +203,5 @@ public interface BadInterfaceThree {
 `BadInterfaceTwo` does not declare a URI template, but the `quickCheck` method specifies a `@PathParam` annotation on a parameter.
 `BadInterfaceThree` has a mismatch.  The `@Path` annotation declares a URI template named "someOtherParam" but the `@PathParam` annotation specifies a template named "notTheSameParam".
 All three interfaces will result in a RestClientDefinitionException.
+
+As previously mentioned, specifying the same header name in multiple `@ClientHeaderParam` annotations on the same target will result in a RestClientDefinitionException. Likewise, specifying multiple compute methods in the `@ClientHeaderParam` value attribute will result in a RestClientDefinitionException.

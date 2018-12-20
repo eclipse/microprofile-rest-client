@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2018 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 @ClientHeaderParam(name="InterfaceHeaderComputed", value="{computeForInterface}")
 @ClientHeaderParam(name="OverrideableComputed", value="{computeForInterface2}")
 @ClientHeaderParam(name="OptionalInterfaceHeader", value="{fail}", required=false)
+@ClientHeaderParam(name="InterfaceMultiValuedHeaderExplicit", value={"abc", "xyz"})
 @Path("/")
 public interface ClientHeaderParamClient {
     @GET
@@ -78,6 +79,10 @@ public interface ClientHeaderParamClient {
     @ClientHeaderParam(name="WillCauseFailure", value="{fail}")
     String methodRequiredComputeMethodFails();
 
+    @GET
+    @ClientHeaderParam(name="MultiValueInvokedFromAnotherClass",
+                       value="{org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator.generateHeader}")
+    String methodComputeMultiValuedHeaderFromOtherClass();
 
     default String computeForInterface() {
         return "interfaceComputed";

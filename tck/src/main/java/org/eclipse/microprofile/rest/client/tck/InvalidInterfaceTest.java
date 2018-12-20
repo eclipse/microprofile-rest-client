@@ -25,7 +25,11 @@ import org.eclipse.microprofile.rest.client.tck.interfaces.MissingHeaderComputeM
 import org.eclipse.microprofile.rest.client.tck.interfaces.MissingPathParam;
 import org.eclipse.microprofile.rest.client.tck.interfaces.MissingPathParamSub;
 import org.eclipse.microprofile.rest.client.tck.interfaces.MissingUriTemplate;
+import org.eclipse.microprofile.rest.client.tck.interfaces.MultipleHeadersOnSameInterface;
+import org.eclipse.microprofile.rest.client.tck.interfaces.MultipleHeadersOnSameMethod;
 import org.eclipse.microprofile.rest.client.tck.interfaces.MultipleHTTPMethodAnnotations;
+import org.eclipse.microprofile.rest.client.tck.interfaces.MultiValueClientHeaderWithComputeMethodOnInterface;
+import org.eclipse.microprofile.rest.client.tck.interfaces.MultiValueClientHeaderWithComputeMethodOnMethod;
 import org.eclipse.microprofile.rest.client.tck.interfaces.TemplateMismatch;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
@@ -41,7 +45,9 @@ public class InvalidInterfaceTest extends Arquillian{
                          .addClasses(MissingPathParam.class, MissingPathParamSub.class,
                                      MissingUriTemplate.class, MultipleHTTPMethodAnnotations.class,
                                      TemplateMismatch.class, MissingHeaderComputeMethod.class,
-                                     InvalidComputeMethodSignature.class);
+                                     InvalidComputeMethodSignature.class, MultipleHeadersOnSameMethod.class,
+                                     MultipleHeadersOnSameInterface.class, MultiValueClientHeaderWithComputeMethodOnInterface.class,
+                                     MultiValueClientHeaderWithComputeMethodOnMethod.class);
     }
 
     @Test(expectedExceptions={RestClientDefinitionException.class})
@@ -77,5 +83,25 @@ public class InvalidInterfaceTest extends Arquillian{
     @Test(expectedExceptions={RestClientDefinitionException.class})
     public void testExceptionThrownWhenClientHeaderParamComputeValueSpecifiesMethodWithInvalidSignature() throws Exception {
         RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(InvalidComputeMethodSignature.class);
+    }
+
+    @Test(expectedExceptions={RestClientDefinitionException.class})
+    public void testExceptionThrownWhenMultipleClientHeaderParamsSpecifySameHeaderOnMethod() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MultipleHeadersOnSameMethod.class);
+    }
+
+    @Test(expectedExceptions={RestClientDefinitionException.class})
+    public void testExceptionThrownWhenMultipleClientHeaderParamsSpecifySameHeaderOnInterface() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MultipleHeadersOnSameInterface.class);
+    }
+
+    @Test(expectedExceptions={RestClientDefinitionException.class})
+    public void testExceptionThrownWhenMultipleHeaderValuesSpecifiedIncludeComputeMethodOnInterface() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MultiValueClientHeaderWithComputeMethodOnInterface.class);
+    }
+
+    @Test(expectedExceptions={RestClientDefinitionException.class})
+    public void testExceptionThrownWhenMultipleHeaderValuesSpecifiedIncludeComputeMethodOnMethod() throws Exception {
+        RestClientBuilder.newBuilder().baseUri(new URI("http://localhost:8080/")).build(MultiValueClientHeaderWithComputeMethodOnMethod.class);
     }
 }

@@ -31,12 +31,12 @@ import java.lang.annotation.Target;
  * for both the type and the method, only the header value specified in the annotation on the method will be sent.
  * <p>
  * The value of the header to send can be specified explicitly by using the <code>value</code> attribute.
- * The value can also be computed via a default method on the client interface that returns a String value.  This method must be specified in the
- * <code>value</code> attribute but wrapped in curly-braces.
- * The default method's signature must either contain no arguments or a single <code>String</code> argument. The String argument is the name of the
- * header.
+ * The value can also be computed via a default method on the client interface or a public static method on a different class.  The compute method
+ * must return a String or String[] (indicating a multivalued header) value.  This method must be specified in the <code>value</code> attribute but
+ * wrapped in curly-braces. The compute method's signature must either contain no arguments or a single <code>String</code> argument. The String
+ * argument is the name of the header.
  * <p>
- * Here is an example using both approaches:
+ * Here is an example that explicitly defines a header value and computes a value:
  * <pre>
  * public interface MyClient {
  *
@@ -82,9 +82,9 @@ public @interface ClientHeaderParam {
     String name();
 
     /**
-     * @return the value of the HTTP header - or the method to invoke to get the value (surrounded by curly braces).
+     * @return the values of the HTTP header - or the method to invoke to get the value (surrounded by curly braces).
      */
-    String value();
+    String[] value();
 
     /**
      * @return whether to abort the request if the method to compute the header value throws an exception (true; default) or just skip this header
