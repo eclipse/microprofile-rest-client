@@ -41,7 +41,7 @@ public class TestMessageBodyWriter implements MessageBodyWriter<String> {
     @Override
     public void writeTo(String s, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType,
                         MultivaluedMap<String, Object> multivaluedMap, OutputStream outputStream) throws IOException, WebApplicationException {
-        outputStream.write("this is the replaced writer ".getBytes());
-        outputStream.write(s.getBytes());
+        outputStream.write("this is the replaced writer ".getBytes("UTF-8"));
+        outputStream.write(s.getBytes("UTF-8"));
     }
 }
