@@ -44,6 +44,12 @@ the default connect and read timeouts and use the timeout value specified in the
 blocking/non-interruptible operations should be less than or equal to the time specified in the annotation, allowing the MP Fault Tolerance implementation to
 interrupt the request and the throw the appropriate `TimeoutException`.
 
+=== JAX-RS
+
+When a client interface is executed from within a JAX-RS context (resource or provider class), it is possible to propagate HTTP headers using the `DefaultClientHeadersFactoryImpl` by adding the
+`@RegisterClientHeaders` annotation to the interface with no value. To specify which headers to propagate from the inbound JAX-RS request to the outbound MP Rest Client request, users must use a
+comma-separated list of headers in the MicroProfile Config property, `org.eclipse.microprofile.rest.client.propagateHeaders`.
+
 === Other MicroProfile Technologies
 
 Client requests can be automatically traced when using MP OpenTracing.  Likewise, requests can be measured using MP Metrics.
