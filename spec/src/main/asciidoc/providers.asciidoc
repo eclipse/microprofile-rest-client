@@ -90,7 +90,7 @@ Any methods that read the response body as a stream must ensure that they reset 
 
 == Provider Declaration
 
-In addition to defining providers via the client definition, interfaces may use the `@RegisterProvider` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`
+In addition to defining providers via the client definition, interfaces may use the `@RegisterProvider` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`.
 
 Providers may also be registered by implementing the `RestClientBuilderListener` or `RestClientListener` interfaces.  These interfaces are intended as SPIs to allow global provider registration.  The implementation of these interface must be specified in a `META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener` or `META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientListener` file, respectively, following the `ServiceLoader` pattern.
 

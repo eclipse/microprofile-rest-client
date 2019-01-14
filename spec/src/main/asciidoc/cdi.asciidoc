@@ -48,7 +48,8 @@ Likewise, a user can perform programmatic look up of the interface.  Here is one
 @ApplicationScoped
 public class MyService {
     public void execute() {
-        MyServiceClient client = CDI.current().select(MyServiceClient.class, RestClient.LITERAL).get();
+        MyServiceClient client = CDI.current().select(MyServiceClient.class,
+                                                      RestClient.LITERAL).get();
     }
 }
 ----
@@ -88,4 +89,4 @@ Implementations may support other custom properties registered in similar fashio
 The `url` property must resolve to a value that can be parsed by the `URL` converter required by the MicroProfile Config spec. Likewise, the `uri` property must resolve to a value that can be parsed by the `URI` converter.
 If both the `url` and `uri` properties are declared, then the `uri` property will take precedence.
 
-The `providers` property is not aggregated, the value will be read from the highest property `ConfigSource`
+The `providers` property is not aggregated, the value will be read from the highest property `ConfigSource`.

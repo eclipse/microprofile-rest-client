@@ -42,7 +42,7 @@ public interface MyAsyncClient {
 
 By default, the MicroProfile Rest Client implementation can determine how to implement the asynchronous request.
 The primary requirement for the implementation is that the response from the remote server should be handled on a different thread than the thread invoking the asynchronous method.
-Providers on the outbound client request chain (such as `ClientRequestFilter`s, `MessageBodyWriter`s, `WriterInterceptor`s, etc.) may be executed on either thread.
+Providers on the outbound client request chain (such as providers of type `ClientRequestFilter`, `MessageBodyWriter`, `WriterInterceptor`, etc.) may be executed on either thread.
 
 Callers may override the default implementation by providing their own `ExecutorService` via the `RestClientBuilder.executorService(ExecutorService)` method.
 The implementation must use the `ExecutorService` provided for all asynchronous methods on any interface built via the `RestClientBuilder`.
@@ -54,9 +54,9 @@ This can be accomplished by registering an implementation of the AsyncInvocation
 MP Rest Client implementations must invoke the `newInterceptor` method of each registered factory provider prior to switching thread of execution on async method requests.
 That method will return an instance of `AsyncInvocationInterceptor` - the MP Rest Client implementation must then invoke the `prepareContext` method while still executing on the thread that invoked the async method.
 After swapping threads, but before invoking further providers or returning control back to the async method caller, the MP Rest Client implementation must invoke the `applyContext` method on the new async thread that will complete the request/response.
-The implementation must then invoke all inbound response providers (filters, interceptors, MessageBodyReaders, etc.) and then must invoke the `AsyncInvocationInterceptor`'s `removeContext` method.  This allows the provider to remove any contexts from the thread before returning control back to the user.
+The implementation must then invoke all inbound response providers (filters, interceptors, MessageBodyReaders, etc.) and then must invoke the `removeContext` method on the `AsyncInvocationInterceptor`.  This allows the provider to remove any contexts from the thread before returning control back to the user.
 
-The following example shows how the AsyncInvocationInterceptorFactory provider and associated AsyncInvocationInterceptor interface could be used to propagate a `ThreadLocal` value from the originating thread to async thread:
+The following example shows how the `AsyncInvocationInterceptorFactory` provider and associated `AsyncInvocationInterceptor` interface could be used to propagate a `ThreadLocal` value from the originating thread to async thread:
 [source, java]
 ----
 public class MyFactory implements AsyncInvocationInterceptorFactory {
