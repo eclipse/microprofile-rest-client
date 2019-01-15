@@ -48,7 +48,9 @@ interrupt the request and the throw the appropriate `TimeoutException`.
 
 When a client interface is executed from within a JAX-RS context (resource or provider class), it is possible to propagate HTTP headers using the `DefaultClientHeadersFactoryImpl` by adding the
 `@RegisterClientHeaders` annotation to the interface with no value. To specify which headers to propagate from the inbound JAX-RS request to the outbound MP Rest Client request, users must use a
-comma-separated list of headers in the MicroProfile Config property, `org.eclipse.microprofile.rest.client.propagateHeaders`.
+comma-separated list of headers in the following MicroProfile Config property:
+
+`org.eclipse.microprofile.rest.client.propagateHeaders`.
 
 === Other MicroProfile Technologies
 

@@ -111,7 +111,8 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * infinity, and negative values are not allowed.
      * </p>
      * <p>
-     * If the &quot;<em>fully.qualified.InterfaceName</em>/mp-rest/connectTimeout@quot;
+     * If the client instance is injected via CDI and the
+     * &quot;<em>fully.qualified.InterfaceName</em>/mp-rest/connectTimeout&quot;
      * property is set via MicroProfile Config, that property's value will
      * override, the value specified to this method.
      * </p>
@@ -136,7 +137,8 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * client interface method will throw a <code>javax.ws.rs.ProcessingException</code>.
      * </p>
      * <p>
-     * If the &quot;<em>fully.qualified.InterfaceName</em>/mp-rest/readTimeout@quot;
+     * If the client instance is injected via CDI and the
+     * &quot;<em>fully.qualified.InterfaceName</em>/mp-rest/readTimeout&quot;
      * property is set via MicroProfile Config, that property's value will
      * override, the value specified to this method.
      * </p>
