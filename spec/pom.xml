@@ -28,7 +28,7 @@
     <name>MicroProfile Rest Client Specification</name>
     <description>Typesafe Rest Client APIs for MicroProfile :: Specification</description>
     <properties>
-        <asciidoctor-maven.version>1.5.5</asciidoctor-maven.version>
+        <asciidoctor-maven.version>1.5.6</asciidoctor-maven.version>
         <asciidoctorj-pdf.version>1.5.0-alpha.15</asciidoctorj-pdf.version>
         <license>Apache License v 2.0</license>
         <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
@@ -59,6 +59,7 @@
                         </goals>
                         <configuration>
                             <backend>pdf</backend>
+                            <outputFile>${project.build.directory}/generated-docs/microprofile-rest-client-${project.version}.pdf</outputFile>
                             <attributes>
                                 <revnumber>${project.version}</revnumber>
                                 <revremark>${revremark}</revremark>
@@ -74,6 +75,7 @@
                         </goals>
                         <configuration>
                             <backend>html5</backend>
+                            <outputFile>${project.build.directory}/generated-docs/microprofile-rest-client-${project.version}.html</outputFile>
                             <attributes>
                                 <revnumber>${project.version}</revnumber>
                                 <revremark>${revremark}</revremark>
