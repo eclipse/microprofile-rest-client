@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  *
  * @since 1.2
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ClientHeaderParams {
