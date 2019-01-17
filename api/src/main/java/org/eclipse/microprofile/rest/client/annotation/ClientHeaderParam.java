@@ -82,7 +82,7 @@ public @interface ClientHeaderParam {
     String name();
 
     /**
-     * @return the values of the HTTP header - or the method to invoke to get the value (surrounded by curly braces).
+     * @return the value(s) of the HTTP header - or the method to invoke to get the value (surrounded by curly braces).
      */
     String[] value();
 

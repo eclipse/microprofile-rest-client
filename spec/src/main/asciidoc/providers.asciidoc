@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-[[programmatic_lookup]]
+[[providers]]
 == MicroProfile Rest Client Provider Registration
 
 The RestClientBuilder interface extends the `Configurable` interface from JAX-RS, allowing a user to register custom providers while its being built.  The behavior of the providers supported is defined by the JAX-RS Client API specification.  Below is a list of provider types expected to be supported by an implementation:
