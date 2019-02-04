@@ -19,7 +19,7 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -28,9 +28,11 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.fail;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeaderParamClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllClientHeadersFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -40,12 +42,18 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import javax.json.JsonObject;
+
 public class ClientHeaderParamTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientHeaderParamTest.class.getSimpleName()+".war")
-            .addClasses(ClientHeaderParamClient.class, ReturnWithAllClientHeadersFilter.class,
-                        WiremockArquillianTest.class);
+            .addClasses(
+                ClientHeaderParamClient.class,
+                ReturnWithAllClientHeadersFilter.class,
+                HeaderGenerator.class,
+                WiremockArquillianTest.class
+            );
     }
 
     private static ClientHeaderParamClient client(Class<?>... providers) {
@@ -66,9 +74,14 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
         String expectedIncomingHeader = Arrays.stream(expectedHeaderValue)
                                               .collect(Collectors.joining(","));
         String outputBody = expectedIncomingHeader.replace(',', '-');
+        MappingBuilder mappingBuilder = get(urlEqualTo("/"));
+
+        // headers can be sent either in a single line with comma-separated values o in multiple lines
+        // this should match both cases:
+        Arrays.stream(expectedHeaderValue)
+            .forEach(val -> mappingBuilder.withHeader(expectedHeaderName, containing(val)));
         stubFor(
-            get(urlEqualTo("/"))
-                .withHeader(expectedHeaderName, equalTo(expectedIncomingHeader))
+            mappingBuilder
                 .willReturn(
                     aResponse().withStatus(200)
                                .withBody(outputBody)));
@@ -163,16 +176,16 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
 
     @Test
     public void testHeaderNotSentWhenExceptionThrownAndRequiredIsFalse() {
-        Map<String, String> headers = client(ReturnWithAllClientHeadersFilter.class)
+        JsonObject headers = client(ReturnWithAllClientHeadersFilter.class)
             .methodOptionalMethodHeaderNotSentWhenComputeThrowsException();
 
         assertFalse(headers.containsKey("OptionalInterfaceHeader"));
         assertFalse(headers.containsKey("OptionalMethodHeader"));
 
         //sanity check that the filter did return _some_ headers
-        assertEquals(headers.get("OverrideableExplicit"), "overrideableInterfaceExplicit");
-        assertEquals(headers.get("InterfaceHeaderComputed"), "interfaceComputed");
-        assertEquals(headers.get("MethodHeaderExplicit"), "SomeValue");
+        assertEquals(headers.getString("OverrideableExplicit"), "overrideableInterfaceExplicit");
+        assertEquals(headers.getString("InterfaceHeaderComputed"), "interfaceComputed");
+        assertEquals(headers.getString("MethodHeaderExplicit"), "SomeValue");
     }
 
     @Test

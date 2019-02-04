@@ -22,7 +22,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 import java.net.URI;
-import java.util.Map;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
 import org.eclipse.microprofile.rest.client.tck.ext.CustomClientHeadersFactory;
@@ -34,11 +33,15 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import javax.json.JsonObject;
+
 public class ClientHeadersFactoryTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientHeadersFactoryTest.class.getSimpleName()+".war")
-            .addClasses(ClientHeadersFactoryClient.class, ReturnWithAllClientHeadersFilter.class);
+            .addClasses(ClientHeadersFactoryClient.class,
+                CustomClientHeadersFactory.class,
+                ReturnWithAllClientHeadersFilter.class);
     }
 
     private static ClientHeadersFactoryClient client(Class<?>... providers) {
@@ -61,7 +64,7 @@ public class ClientHeadersFactoryTest extends Arquillian {
         CustomClientHeadersFactory.isOutgoingHeadersMapNull = true;
         CustomClientHeadersFactory.passedInOutgoingHeaders.clear();
 
-        Map<String, String> headers = client(ReturnWithAllClientHeadersFilter.class).delete("argValue");
+        JsonObject headers = client(ReturnWithAllClientHeadersFilter.class).delete("argValue");
 
         assertFalse(CustomClientHeadersFactory.isIncomingHeadersMapNull);
         assertFalse(CustomClientHeadersFactory.isOutgoingHeadersMapNull);
@@ -70,9 +73,9 @@ public class ClientHeadersFactoryTest extends Arquillian {
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("ArgHeader"), "argValue");
 
 
-        assertEquals(headers.get("IntfHeader"), "intfValueModified");
-        assertEquals(headers.get("MethodHeader"), "methodValueModified");
-        assertEquals(headers.get("ArgHeader"), "argValueModified");
-        assertEquals(headers.get("FactoryHeader"), "factoryValue");
+        assertEquals(headers.getString("IntfHeader"), "intfValueModified");
+        assertEquals(headers.getString("MethodHeader"), "methodValueModified");
+        assertEquals(headers.getString("ArgHeader"), "argValueModified");
+        assertEquals(headers.getString("FactoryHeader"), "factoryValue");
     }
 }
