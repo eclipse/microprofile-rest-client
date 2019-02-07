@@ -19,7 +19,7 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -30,6 +30,8 @@ import static org.testng.Assert.fail;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeaderParamClient;
@@ -71,18 +73,17 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
         String expectedIncomingHeader = Arrays.stream(expectedHeaderValue)
                                               .collect(Collectors.joining(","));
         String outputBody = expectedIncomingHeader.replace(',', '-');
+        MappingBuilder mappingBuilder = get(urlEqualTo("/"));
+
+        // headers can be sent either in a single line with comma-separated values or in multiple lines
+        // this should match both cases:
+        Arrays.stream(expectedHeaderValue)
+            .forEach(val -> mappingBuilder.withHeader(expectedHeaderName, containing(val)));
         stubFor(
-            get(urlEqualTo("/"))
-                .withHeader(expectedHeaderName, equalTo(expectedIncomingHeader))
+            mappingBuilder
                 .willReturn(
                     aResponse().withStatus(200)
                                .withBody(outputBody)));
-        /*stubFor(
-            get(urlEqualTo("/"))
-                .withHeader(expectedHeaderName, equalTo(expectedHeaderValue))
-                .willReturn(
-                    aResponse().withStatus(200)
-                               .withBody(expectedHeaderValue)));*/
     }
     @BeforeTest
     public void resetWiremock() {
