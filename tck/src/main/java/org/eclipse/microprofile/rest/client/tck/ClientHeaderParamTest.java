@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeaderParamClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllClientHeadersFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -44,8 +45,12 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientHeaderParamTest.class.getSimpleName()+".war")
-            .addClasses(ClientHeaderParamClient.class, ReturnWithAllClientHeadersFilter.class,
-                        WiremockArquillianTest.class);
+            .addClasses(
+                ClientHeaderParamClient.class,
+                ReturnWithAllClientHeadersFilter.class,
+                HeaderGenerator.class,
+                WiremockArquillianTest.class
+            );
     }
 
     private static ClientHeaderParamClient client(Class<?>... providers) {
