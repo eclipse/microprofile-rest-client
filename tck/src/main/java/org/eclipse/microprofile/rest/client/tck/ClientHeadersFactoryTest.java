@@ -38,7 +38,9 @@ public class ClientHeadersFactoryTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientHeadersFactoryTest.class.getSimpleName()+".war")
-            .addClasses(ClientHeadersFactoryClient.class, ReturnWithAllClientHeadersFilter.class);
+            .addClasses(ClientHeadersFactoryClient.class,
+                CustomClientHeadersFactory.class,
+                ReturnWithAllClientHeadersFilter.class);
     }
 
     private static ClientHeadersFactoryClient client(Class<?>... providers) {
