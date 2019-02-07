@@ -18,8 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import java.util.Map;
-
+import javax.json.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -73,7 +72,7 @@ public interface ClientHeaderParamClient {
     @GET
     @ClientHeaderParam(name="OptionalMethodHeader", value="{fail}", required=false)
     @ClientHeaderParam(name="MethodHeaderExplicit", value="SomeValue")
-    Map<String, String> methodOptionalMethodHeaderNotSentWhenComputeThrowsException();
+    JsonObject methodOptionalMethodHeaderNotSentWhenComputeThrowsException();
 
     @GET
     @ClientHeaderParam(name="WillCauseFailure", value="{fail}")
