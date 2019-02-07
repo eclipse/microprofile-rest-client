@@ -40,6 +40,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import javax.json.JsonObject;
+
 public class ClientHeaderParamTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
@@ -163,16 +165,16 @@ public class ClientHeaderParamTest extends WiremockArquillianTest {
 
     @Test
     public void testHeaderNotSentWhenExceptionThrownAndRequiredIsFalse() {
-        Map<String, String> headers = client(ReturnWithAllClientHeadersFilter.class)
+        JsonObject headers = client(ReturnWithAllClientHeadersFilter.class)
             .methodOptionalMethodHeaderNotSentWhenComputeThrowsException();
 
         assertFalse(headers.containsKey("OptionalInterfaceHeader"));
         assertFalse(headers.containsKey("OptionalMethodHeader"));
 
         //sanity check that the filter did return _some_ headers
-        assertEquals(headers.get("OverrideableExplicit"), "overrideableInterfaceExplicit");
-        assertEquals(headers.get("InterfaceHeaderComputed"), "interfaceComputed");
-        assertEquals(headers.get("MethodHeaderExplicit"), "SomeValue");
+        assertEquals(headers.getString("OverrideableExplicit"), "overrideableInterfaceExplicit");
+        assertEquals(headers.getString("InterfaceHeaderComputed"), "interfaceComputed");
+        assertEquals(headers.getString("MethodHeaderExplicit"), "SomeValue");
     }
 
     @Test

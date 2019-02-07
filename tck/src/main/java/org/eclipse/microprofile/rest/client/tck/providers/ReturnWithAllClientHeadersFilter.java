@@ -18,16 +18,15 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 
 public class ReturnWithAllClientHeadersFilter implements ClientRequestFilter {
@@ -37,12 +36,12 @@ public class ReturnWithAllClientHeadersFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
-        Map<String,String> allClientHeaders = new HashMap<>();
+        JsonObjectBuilder allClientHeaders = Json.createObjectBuilder();
         MultivaluedMap<String,String> clientHeaders = headers.getRequestHeaders();
         for (String headerName : clientHeaders.keySet()) {
-            allClientHeaders.put(headerName, clientHeaders.getFirst(headerName));
+            allClientHeaders.add(headerName, clientHeaders.getFirst(headerName));
         }
-        clientRequestContext.abortWith(Response.ok(allClientHeaders).build());
+        clientRequestContext.abortWith(Response.ok(allClientHeaders.build()).build());
 
     }
 }

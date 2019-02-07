@@ -18,8 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import java.util.Map;
-
+import javax.json.JsonObject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -35,5 +34,5 @@ import org.eclipse.microprofile.rest.client.tck.ext.CustomClientHeadersFactory;
 public interface ClientHeadersFactoryClient {
     @DELETE
     @ClientHeaderParam(name="MethodHeader", value="methodValue")
-    Map<String, String> delete(@HeaderParam("ArgHeader") String argHeader);
+    JsonObject delete(@HeaderParam("ArgHeader") String argHeader);
 }
