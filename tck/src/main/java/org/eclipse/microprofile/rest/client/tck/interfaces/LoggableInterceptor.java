@@ -20,11 +20,14 @@ package org.eclipse.microprofile.rest.client.tck.interfaces;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.Priority;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-@Loggable @Interceptor
+@Loggable
+@Interceptor
+@Priority(Interceptor.Priority.APPLICATION)
 public class LoggableInterceptor {
 
     private static String invocationMessage;
