@@ -28,8 +28,9 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.fail;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.json.JsonObject;
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
@@ -42,8 +43,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import javax.json.JsonObject;
 
 public class ClientHeaderParamTest extends WiremockArquillianTest {
     @Deployment

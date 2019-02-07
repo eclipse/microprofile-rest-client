@@ -22,6 +22,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 import java.net.URI;
+
+import javax.json.JsonObject;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
 import org.eclipse.microprofile.rest.client.tck.ext.CustomClientHeadersFactory;
@@ -32,8 +35,6 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
-
-import javax.json.JsonObject;
 
 public class ClientHeadersFactoryTest extends Arquillian {
     @Deployment
