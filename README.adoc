@@ -16,10 +16,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+image:https://badges.gitter.im/eclipse/microprofile-rest-client.svg[link="https://gitter.im/eclipse/microprofile-rest-client?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
 
 # Rest Client for MicroProfile
 
-image:https://badges.gitter.im/eclipse/microprofile-rest-client.svg[link="https://gitter.im/eclipse/microprofile-rest-client?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+'''
+== How to contribute
+
+Do you want to contribute to this project? Here is what you can do:
+
+* Fork the repository, make changes, then do a pull request.
+** Remember to https://help.github.com/articles/signing-commits/[sign your commits]
+** Make sure you have signed the https://www.eclipse.org/legal/ECA.php[Eclipse Contributor Agreement]
+* https://github.com/eclipse/microprofile-rest-client/issues[Create or fix an issue].
+* https://gitter.im/eclipse/microprofile-rest-client[Join us on Gitter to discuss this project].
+* Join our https://calendar.google.com/calendar/embed?src=gbnbc373ga40n0tvbl88nkc3r4%40group.calendar.google.com[weekly meeting] on Wednesdays at https://www.timeanddate.com/time/map/[15h30 GMT]. 
+** https://docs.google.com/document/d/1dVwBZMJQfpO3XEzM9Ja6-zw-SQMhTDywCNrf5dzfuio/edit[Minutes and Agenda].
+** https://ibm.webex.com/join/andymc[Meeting room].
+* Join the discussions on the https://groups.google.com/forum/#!forum/microprofile[MicroProfile Google Group]
+* https://microprofile.io/blog/[Contribute a blog post].
+
+'''
 
 == Rationale
 
