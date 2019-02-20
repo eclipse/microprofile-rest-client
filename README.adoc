@@ -26,7 +26,7 @@ image:https://badges.gitter.im/eclipse/microprofile-rest-client.svg[link="https:
 Do you want to contribute to this project? Here is what you can do:
 
 * Fork the repository, make changes, then do a pull request.
-* https://github.com/eclipse/microprofile-rest-client/issues[Create or fix an issues].
+* https://github.com/eclipse/microprofile-rest-client/issues[Create or fix an issue].
 * https://gitter.im/eclipse/microprofile-rest-client[Join us on Gitter to discuss this project].
 * Join our https://calendar.google.com/calendar/embed?src=gbnbc373ga40n0tvbl88nkc3r4%40group.calendar.google.com[weekly meeting] on Wednesdays at https://www.timeanddate.com/time/map/[15h30 GMT]. 
 ** https://docs.google.com/document/d/1dVwBZMJQfpO3XEzM9Ja6-zw-SQMhTDywCNrf5dzfuio/edit[Minutes and Agenda].
