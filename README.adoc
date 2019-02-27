@@ -78,7 +78,7 @@ The following Implementations are available
 
 * Apache CXF (http://cxf.apache.org/download.html)
 * OpenLiberty (https://openliberty.io/blog/2018/01/31/mpRestClient.html)
-* wildfly-swarm (https://github.com/wildfly-swarm/wildfly-swarm/tree/master/fractions/microprofile/microprofile-restclient)
+* Thorntail (https://github.com/thorntail/thorntail/tree/master/fractions/microprofile/microprofile-restclient)
 
 == Contributing
 
