@@ -92,9 +92,9 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
             .willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
                 .withBody("{" +
-                             "\"objectName\": \"myObject\"};" +
-                             "\"quantity\": 17;" +
-                             "\"date\": \"2018-12-04\";" +
+                             "\"objectName\": \"myObject\"," +
+                             "\"quantity\": \"17\"," +
+                             "\"date\": \"2018-12-04\"" +
                           "}")
                     ));
 
