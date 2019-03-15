@@ -22,8 +22,6 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -31,15 +29,12 @@ import java.io.IOException;
 
 public class ReturnWithAllClientHeadersFilter implements ClientRequestFilter {
 
-    @Context
-    HttpHeaders headers;
-
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
         JsonObjectBuilder allClientHeaders = Json.createObjectBuilder();
-        MultivaluedMap<String,String> clientHeaders = headers.getRequestHeaders();
+        MultivaluedMap<String, Object> clientHeaders = clientRequestContext.getHeaders();
         for (String headerName : clientHeaders.keySet()) {
-            allClientHeaders.add(headerName, clientHeaders.getFirst(headerName));
+            allClientHeaders.add(headerName, clientHeaders.getFirst(headerName).toString());
         }
         clientRequestContext.abortWith(Response.ok(allClientHeaders.build()).build());
 
