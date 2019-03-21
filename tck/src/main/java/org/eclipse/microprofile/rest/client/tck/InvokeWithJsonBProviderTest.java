@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018-2019 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.SkipException;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -56,15 +55,6 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties");
     }
 
-    private static void assumeJsonbApiExists() throws SkipException {
-        try {
-            Class.forName("javax.json.bind.annotation.JsonbProperty");
-        }
-        catch (Throwable t) {
-            throw new SkipException("Skipping since JSON-B APIs were not found.");
-        }
-    }
-
     @RestClient
     @Inject
     private JsonBClient cdiJsonBClient;
@@ -80,7 +70,6 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
 
     @Test
     public void testGetExecutesForBothClients() throws Exception {
-        assumeJsonbApiExists();
         testGet(builtJsonBClient, BUILT);
         testGet(cdiJsonBClient, CDI);
     }
@@ -92,9 +81,9 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
             .willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
                 .withBody("{" +
-                             "\"objectName\": \"myObject\"};" +
-                             "\"quantity\": 17;" +
-                             "\"date\": \"2018-12-04\";" +
+                             "\"objectName\": \"myObject\"," +
+                             "\"quantity\": \"17\"," +
+                             "\"date\": \"2018-12-04\"" +
                           "}")
                     ));
 
@@ -103,7 +92,6 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
         assertEquals(obj.getQty(), 17);
         assertEquals(obj.getIgnoredField(), "CTOR");
         assertEquals(obj.getDate(), new SimpleDateFormat("yyyy.MM.dd").parse("2018-12-04"));
-
     }
 
 }
