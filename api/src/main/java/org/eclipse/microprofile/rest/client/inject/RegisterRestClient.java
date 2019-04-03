@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017-2019 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,4 +41,5 @@ import javax.enterprise.inject.Stereotype;
 @Dependent
 public @interface RegisterRestClient {
     String baseUri() default "";
+    String configKey() default "";
 }

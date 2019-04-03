@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017-2019 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.eclipse.microprofile.rest.client.tck.cditests;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.eclipse.microprofile.rest.client.tck.interfaces.ConfigKeyClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
@@ -53,10 +54,12 @@ public class HasConversationScopeTest extends Arquillian {
         String url = SimpleGetApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String url2 = MyConversationScopedApi.class.getName() + "/mp-rest/url=http://localhost:8080";
         String scope = SimpleGetApi.class.getName() + "/mp-rest/scope=" + ConversationScoped.class.getName();
+        String configKeyScope = "myConfigKey/mp-rest/scope=" + ConversationScoped.class.getName();
         String simpleName = HasConversationScopeTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApi.class, MyConversationScopedApi.class)
-            .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + url2), "microprofile-config.properties")
+            .addClasses(SimpleGetApi.class, MyConversationScopedApi.class, ConfigKeyClient.class)
+            .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + url2 + "\n" + configKeyScope),
+                                   "microprofile-config.properties")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
             .addAsLibrary(jar)
@@ -66,6 +69,13 @@ public class HasConversationScopeTest extends Arquillian {
     @Test
     public void testHasConversationScoped() {
         Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class, RestClient.LITERAL);
+        Bean<?> resolved = beanManager.resolve(beans);
+        assertEquals(resolved.getScope(), ConversationScoped.class);
+    }
+
+    @Test
+    public void testHasConversationScopedFromConfigKey() {
+        Set<Bean<?>> beans = beanManager.getBeans(ConfigKeyClient.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), ConversationScoped.class);
     }

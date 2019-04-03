@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017-2019 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceBase;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithProvidersDefined;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithoutProvidersDefined;
+import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithoutProvidersDefinedWithConfigKey;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientRequestFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestClientResponseFilter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestMessageBodyReader;
@@ -66,10 +67,15 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     @RestClient
     private InterfaceWithoutProvidersDefined clientProvidersViaMPConfig;
 
+    @Inject
+    @RestClient
+    private InterfaceWithoutProvidersDefinedWithConfigKey clientProvidersViaConfigKey;
+
     @Deployment
     public static WebArchive createDeployment() {
         String urlPropName1 = InterfaceWithProvidersDefined.class.getName() + "/mp-rest/url";
         String urlPropName2 = InterfaceWithoutProvidersDefined.class.getName() + "/mp-rest/url";
+        String urlPropName3 = "theKey/mp-rest/url";
         String urlValue = getStringURL();
         String simpleName = CDIInvokeWithRegisteredProvidersTest.class.getSimpleName();
         String providersPropName = InterfaceWithoutProvidersDefined.class.getName() + "/mp-rest/providers";
@@ -80,12 +86,16 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
                                 TestParamConverterProvider.class.getName() + "," +
                                 TestReaderInterceptor.class.getName() + "," +
                                 TestWriterInterceptor.class.getName();
+        String providersConfigKeyPropName = "theKey/mp-rest/providers";
         String propsFile = String.format(urlPropName1+"="+urlValue+"%n" +
                                          urlPropName2+"="+urlValue+"%n" +
-                                         providersPropName+"="+providersValue);
+                                         urlPropName3+"="+urlValue+"%n" +
+                                         providersPropName+"="+providersValue+"%n" +
+                                         providersConfigKeyPropName+"="+providersValue);
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(InterfaceWithProvidersDefined.class,
                         InterfaceWithoutProvidersDefined.class,
+                        InterfaceWithoutProvidersDefinedWithConfigKey.class,
                         InterfaceBase.class,
                         WiremockArquillianTest.class)
             .addPackage(TestClientResponseFilter.class.getPackage())
@@ -96,10 +106,7 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    //@BeforeTest
-    //public void resetWiremock() {
-    //    setupServer();
-    //}
+
     @Test
     public void testInvokesPostOperation_viaAnnotation() throws Exception {
         testInvokesPostOperation(clientProvidersViaAnnotation);
@@ -108,6 +115,11 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     @Test
     public void testInvokesPostOperation_viaMPConfig() throws Exception {
         testInvokesPostOperation(clientProvidersViaMPConfig);
+    }
+
+    @Test
+    public void testInvokesPostOperation_viaMPConfigWithConfigKey() throws Exception {
+        testInvokesPostOperation(clientProvidersViaConfigKey);
     }
 
     private void testInvokesPostOperation(InterfaceBase api) throws Exception{
@@ -143,6 +155,11 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     @Test
     public void testInvokesPutOperation_viaMPConfig() throws Exception {
         testInvokesPutOperation(clientProvidersViaMPConfig);
+    }
+
+    @Test
+    public void testInvokesPutOperation_viaMPConfigWithConfigKey() throws Exception {
+        testInvokesPutOperation(clientProvidersViaConfigKey);
     }
 
     private void testInvokesPutOperation(InterfaceBase api) throws Exception {
