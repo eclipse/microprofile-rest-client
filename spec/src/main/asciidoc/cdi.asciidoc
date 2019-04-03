@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2018 Contributors to the Eclipse Foundation
+// Copyright (c) 2017-2019 Contributors to the Eclipse Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ For CDI defined interfaces, it is possible to use MicroProfile Config properties
 ----
 package com.mycompany.remoteServices;
 
+@RegisterRestClient
 public interface MyServiceClient {
     @GET
     @Path("/greet")
@@ -90,3 +91,32 @@ The `url` property must resolve to a value that can be parsed by the `URL` conve
 If both the `url` and `uri` properties are declared, then the `uri` property will take precedence.
 
 The `providers` property is not aggregated, the value will be read from the highest property `ConfigSource`.
+
+=== Configuration Keys
+
+It is possible to simplify configuration of client interfaces by using configuration keys. Config keys are specified in the `@RegisterRestClient` annotation and can be used in place of the fully-qualified classname in MP Config. For example, if we modify the previous example to be:
+
+[source, java]
+----
+package com.mycompany.remoteServices;
+
+@RegisterRestClient(configKey="myClient")
+public interface MyServiceClient {
+    @GET
+    @Path("/greet")
+    Response greet();
+}
+----
+
+Then config properties can be specified like:
+- `myClient/mp-rest/url`
+- `myClient/mp-rest/uri`
+- `myClient/mp-rest/scope`
+- `myClient/mp-rest/providers`
+- `myClient/mp-rest/providers/com.mycompany.MyProvider/priority`
+- `myClient/mp-rest/connectTimeout`
+- `myClient/mp-rest/readTimeout`
+
+Multiple client interfaces may have the same configKey value, which would allow many interfaces to be configured with a single MP Config property.
+
+If the same property exists for the same interface specified by both the configKey and the fully-qualified classname, the property specified by the fully-qualified classname takes precedence.
