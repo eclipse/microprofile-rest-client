@@ -46,6 +46,8 @@ include::providers.asciidoc[]
 
 include::cdi.asciidoc[]
 
+include::lifecycle.asciidoc[]
+
 include::async.asciidoc[]
 
 include::integration.asciidoc[]

@@ -23,6 +23,7 @@
 
 Changes since 1.2:
 
+- Allow client proxies to be cast to `Closeable`/`AutoCloseable`.
 - Simpler configuration using configKeys.
 - Defined `application/json` to be the default MediaType if none is specified in `@Produces`/`@Consumes`.
 
