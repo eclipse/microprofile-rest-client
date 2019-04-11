@@ -20,6 +20,7 @@ import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.util.Optional;
 
 /**
  * Converts an JAX-RS Response object into an Exception.
@@ -57,10 +58,8 @@ public interface ResponseExceptionMapper<T extends Throwable> {
      * @return the priority of this mapper
      */
     default int getPriority() {
-        Priority priority = getClass().getAnnotation(Priority.class);
-        if(priority == null) {
-            return DEFAULT_PRIORITY;
-        }
-        return priority.value();
+        return Optional.ofNullable(getClass().getAnnotation(Priority.class))
+            .map(Priority::value)
+            .orElse(DEFAULT_PRIORITY);
     }
 }
