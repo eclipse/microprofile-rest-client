@@ -18,16 +18,6 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.reset;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.testng.Assert.assertEquals;
-
-import java.text.SimpleDateFormat;
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonBClient;
@@ -40,6 +30,16 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import javax.inject.Inject;
+import java.time.LocalDate;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.reset;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.testng.Assert.assertEquals;
 
 
 public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
@@ -92,9 +92,9 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
             .willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
                 .withBody("{" +
-                             "\"objectName\": \"myObject\"};" +
-                             "\"quantity\": 17;" +
-                             "\"date\": \"2018-12-04\";" +
+                             "\"objectName\": \"myObject\"," +
+                             "\"quantity\": 17," +
+                             "\"date\": \"2018-12-04\"" +
                           "}")
                     ));
 
@@ -102,7 +102,7 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
         assertEquals(obj.getName(), "myObject");
         assertEquals(obj.getQty(), 17);
         assertEquals(obj.getIgnoredField(), "CTOR");
-        assertEquals(obj.getDate(), new SimpleDateFormat("yyyy.MM.dd").parse("2018-12-04"));
+        assertEquals(obj.getDate(), LocalDate.of(2018,12,04));
 
     }
 
