@@ -39,5 +39,5 @@
  * }
  * </pre>
  */
-@org.osgi.annotation.versioning.Version("1.0.1")
+@org.osgi.annotation.versioning.Version("1.1")
 package org.eclipse.microprofile.rest.client.ext;
