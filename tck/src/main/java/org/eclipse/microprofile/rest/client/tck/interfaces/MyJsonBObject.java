@@ -16,8 +16,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import java.util.Date;
-import javax.json.bind.annotation.JsonbDateFormat;
+import java.time.LocalDate;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 
@@ -31,8 +30,7 @@ public class MyJsonBObject {
     @JsonbTransient
     private String ignoredField;
 
-    @JsonbDateFormat("yyyy-MM-dd")
-    private Date date;
+    private LocalDate date;
 
     public MyJsonBObject() {
         ignoredField = "CTOR";
@@ -40,6 +38,10 @@ public class MyJsonBObject {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @JsonbProperty("quantity")
@@ -56,7 +58,17 @@ public class MyJsonBObject {
         return ignoredField;
     }
 
-    public Date getDate() {
+    public void setIgnoredField(String value) {
+        // not providing a setter is enough for field to be ignored.
+        // To verify @JsonbTransient, a setter must be present.
+        this.ignoredField = value;
+    }
+
+    public LocalDate getDate() {
         return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }
