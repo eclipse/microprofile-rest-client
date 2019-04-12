@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -27,6 +28,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+@Produces(MediaType.TEXT_PLAIN)
 public class TestMessageBodyWriter implements MessageBodyWriter<String> {
     @Override
     public boolean isWriteable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
