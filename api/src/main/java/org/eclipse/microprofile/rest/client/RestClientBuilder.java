@@ -19,10 +19,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.security.AccessController;
+import java.security.KeyStore;
 import java.security.PrivilegedAction;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.Configurable;
 import java.util.concurrent.ExecutorService;
 
@@ -164,6 +167,43 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @since 1.1
      */
     RestClientBuilder executorService(ExecutorService executor);
+
+    /**
+     * Specifies the SSL context to use when creating secured transport connections to server endpoints
+     * from web targets created by the client instance that is using this SSL context.
+     *
+     * @param sslContext the ssl context
+     * @return the current builder with ssl context set
+     */
+    RestClientBuilder sslContext(SSLContext sslContext);
+
+
+    /**
+     * Set the client-side trust store.
+     *
+     * @param trustStore key store
+     * @return the current builder with the trust store set
+     */
+    RestClientBuilder trustStore(KeyStore trustStore);
+
+    /**
+     * Set the client-side key store.
+     *
+     * @param keyStore key store
+     * @param keystorePassword
+     * @return the current builder with the key store set
+     */
+    RestClientBuilder keyStore(KeyStore keyStore, String keystorePassword);
+
+    /**
+     * Set the hostname verifier to verify the endpoint's hostname
+     *
+     * @param hostnameVerifier the hostname verifier
+     * @return the current builder with hostname verifier set
+     */
+    RestClientBuilder hostnameVerifier(HostnameVerifier hostnameVerifier);
+
+
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the
