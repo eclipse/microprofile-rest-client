@@ -17,7 +17,7 @@
 [[restasync]]
 == MicroProfile Rest Client Asynchronous Support
 
-It is possible for Rest Client interface methods to be declared asynchronous.  This allows the thread invoking the interface method to proceed while the RESTful request occurs on another thread.
+It is possible for Rest Client interface methods to be declared asynchronous.  This allows the implementation to utilize non blocking behavior in handling the request.
 
 === Asynchronous Methods
 
@@ -41,22 +41,22 @@ public interface MyAsyncClient {
 === ExecutorService
 
 By default, the MicroProfile Rest Client implementation can determine how to implement the asynchronous request.
-The primary requirement for the implementation is that the response from the remote server should be handled on a different thread than the thread invoking the asynchronous method.
-Providers on the outbound client request chain (such as providers of type `ClientRequestFilter`, `MessageBodyWriter`, `WriterInterceptor`, etc.) may be executed on either thread.
+The primary requirement for the implementation is that the response from the remote server should be handled asynchronously from the invoking method.
 
 Callers may override the default implementation by providing their own `ExecutorService` via the `RestClientBuilder.executorService(ExecutorService)` method.
 The implementation must use the `ExecutorService` provided for all asynchronous methods on any interface built via the `RestClientBuilder`.
 
 === AsyncInvocationInterceptors
 
-There may be cases where it is necessary for client application code or runtime components to be notified when control of the client request/response has flowed from one thread to another.
+There may be cases where it is necessary for client application code or runtime components to be notified when control of the client request/response is being invoked asynchronously.
 This can be accomplished by registering an implementation of the AsyncInvocationInterceptorFactory provider interface.
-MP Rest Client implementations must invoke the `newInterceptor` method of each registered factory provider prior to switching thread of execution on async method requests.
+MP Rest Client implementations must invoke the `newInterceptor` method of each registered factory provider prior to commencing execution on async method requests.
 That method will return an instance of `AsyncInvocationInterceptor` - the MP Rest Client implementation must then invoke the `prepareContext` method while still executing on the thread that invoked the async method.
-After swapping threads, but before invoking further providers or returning control back to the async method caller, the MP Rest Client implementation must invoke the `applyContext` method on the new async thread that will complete the request/response.
-The implementation must then invoke all inbound response providers (filters, interceptors, MessageBodyReaders, etc.) and then must invoke the `removeContext` method on the `AsyncInvocationInterceptor`.  This allows the provider to remove any contexts from the thread before returning control back to the user.
+After commencing asynchronous processing, but before invoking further providers or returning control back to the async method caller, the MP Rest Client implementation must invoke the `applyContext` method.
+The implementation must then invoke all inbound response providers (filters, interceptors, MessageBodyReaders, etc.) and then must invoke the `removeContext` method on the `AsyncInvocationInterceptor`.
+This allows the provider to remove any contexts before returning control back to the user.
 
-The following example shows how the `AsyncInvocationInterceptorFactory` provider and associated `AsyncInvocationInterceptor` interface could be used to propagate a `ThreadLocal` value from the originating thread to async thread:
+The following example shows how the `AsyncInvocationInterceptorFactory` provider and associated `AsyncInvocationInterceptor` interface could be used to propagate a `ThreadLocal` value:
 [source, java]
 ----
 public class MyFactory implements AsyncInvocationInterceptorFactory {
@@ -68,7 +68,6 @@ public class MyFactory implements AsyncInvocationInterceptorFactory {
 
 public class MyInterceptor implements AsyncInvocationInterceptor {
     // This field is temporary storage to facilitate copying a ThreadLocal value
-    // from the originating thread to the new async thread.
     private volatile String someValue;
 
     public void prepareContext() {
