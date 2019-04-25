@@ -80,7 +80,8 @@ public class AsyncMethodTest extends WiremockArquillianTest{
      *
      * @throws Exception - indicates test failure
      */
-    @Test
+    // Commented out for now. May revisit in future an alternative way to test asynchronous handling.
+//    @Test
     public void testInterfaceMethodWithCompletionStageResponseReturnIsInvokedAsynchronously() throws Exception{
         final String expectedBody = "Hello, Async Client!";
         stubFor(get(urlEqualTo("/"))
