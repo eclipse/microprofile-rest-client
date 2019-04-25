@@ -42,9 +42,6 @@ import static java.lang.System.getProperty;
  *
  * Certificates were generated with Tomas Terem's script: https://gist.github.com/tterem/8c4891641eddd6f070c6cdc738738c34
  *
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 16/04/2019
  */
 public abstract class AbstractSslTest extends Arquillian {
 
@@ -176,9 +173,5 @@ public abstract class AbstractSslTest extends Arquillian {
         if (httpsServer != null) {
             httpsServer.stop();
         }
-    }
-
-    static String configLine(Class<?> aClass, String key, String value) {
-        return String.format("%s/mp-rest/%s=%s\n", aClass.getCanonicalName(), key, value);
     }
 }

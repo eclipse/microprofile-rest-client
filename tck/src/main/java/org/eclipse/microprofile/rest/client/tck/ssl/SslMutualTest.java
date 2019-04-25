@@ -33,14 +33,9 @@ import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
 import java.security.KeyStore;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
 import static org.junit.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
 
-/**
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 16/04/2019
- */
 public class SslMutualTest extends AbstractSslTest {
 
     @Inject
@@ -104,16 +99,14 @@ public class SslMutualTest extends AbstractSslTest {
         return webArchive;
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithNoClientSignature() throws Exception {
         KeyStore trustStore = getKeyStore(clientTruststore);
-        assertThrows(ProcessingException.class, () ->
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .trustStore(trustStore)
-                .build(JsonPClient.class)
-                .get("1")
-        );
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .trustStore(trustStore)
+            .build(JsonPClient.class)
+            .get("1");
     }
 
     @Test
@@ -128,25 +121,21 @@ public class SslMutualTest extends AbstractSslTest {
         assertEquals("bar", client.get("1").getString("foo"));
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithInvalidClientSignature() throws Exception {
         KeyStore trustStore = getKeyStore(clientTruststore);
         KeyStore wrongKeyStore = getKeyStore(serverKeystore);
-        assertThrows(ProcessingException.class, () ->
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .trustStore(trustStore)
-                .keyStore(wrongKeyStore, PASSWORD)
-                .build(JsonPClient.class)
-                .get("1")
-        );
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .trustStore(trustStore)
+            .keyStore(wrongKeyStore, PASSWORD)
+            .build(JsonPClient.class)
+            .get("1");
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithNoClientSignatureCDI() {
-        assertThrows(ProcessingException.class, () ->
-            clientWithNoSslStores.get("1")
-        );
+        clientWithNoSslStores.get("1");
     }
 
     @Test
@@ -159,11 +148,9 @@ public class SslMutualTest extends AbstractSslTest {
         assertEquals("bar", clientWithKeystoreFromClasspathAndTruststore.get("1").getString("foo"));
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithInvalidClientSignatureCDI() {
-        assertThrows(ProcessingException.class, () ->
-            clientWithNonMatchingKeyStore.get("1")
-        );
+        clientWithNonMatchingKeyStore.get("1");
     }
 
 

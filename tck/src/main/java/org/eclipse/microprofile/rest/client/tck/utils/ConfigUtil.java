@@ -15,11 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.eclipse.microprofile.rest.client.tck.interfaces.ssl;
+package org.eclipse.microprofile.rest.client.tck.utils;
 
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
+public class ConfigUtil {
 
-@RegisterRestClient
-public interface ClientWithKeystoreFromClasspathAndTruststore extends JsonPClient {
+    /**
+     * Create a MicroProfile Config property entry
+     *
+     * @param aClass rest client interface class
+     * @param key configuration key, e.g. url
+     * @param value property value
+     * @return an MP Config line, e.g. com.example.MyClient/mp-rest/url=http://example.com
+     */
+    public static String configLine(Class<?> aClass, String key, String value) {
+        return String.format("%s/mp-rest/%s=%s%s", aClass.getCanonicalName(), key, value, System.lineSeparator());
+    }
+
+    private ConfigUtil() {
+    }
 }

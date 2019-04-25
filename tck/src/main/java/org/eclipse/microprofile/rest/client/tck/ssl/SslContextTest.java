@@ -27,19 +27,11 @@ import org.testng.annotations.Test;
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.ProcessingException;
 
-import static org.testng.Assert.assertThrows;
 
-
-/**
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 16/04/2019
- */
 public class SslContextTest extends AbstractSslTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        // @formatter:off
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
             .addClasses(JsonPClient.class, HttpsServer.class, AbstractSslTest.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -66,13 +58,11 @@ public class SslContextTest extends AbstractSslTest {
             .get("1");
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailedMutualSslWithoutSslContext() {
-        assertThrows(ProcessingException.class, () ->
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .build(JsonPClient.class)
-                .get("1")
-        );
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .build(JsonPClient.class)
+            .get("1");
     }
 }

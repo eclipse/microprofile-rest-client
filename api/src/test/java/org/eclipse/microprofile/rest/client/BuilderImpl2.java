@@ -54,7 +54,7 @@ public class BuilderImpl2 extends AbstractBuilder {
 
     @Override
     public RestClientBuilder keyStore(KeyStore keyStore, String keystorePassword) {
-        return null;
+        throw new IllegalStateException("not implemented");
     }
 
     @Override

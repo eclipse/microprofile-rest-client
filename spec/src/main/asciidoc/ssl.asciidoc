@@ -88,4 +88,4 @@ Defaults to "JKS"
 
 === SSL Context
 For the programmatically created client, it is also possible to
-configure the SSL by setting the `SSLContext` using the `RestClientBuilder#sslContext` method.
+configure SSL by setting the `SSLContext` using the `RestClientBuilder#sslContext` method.

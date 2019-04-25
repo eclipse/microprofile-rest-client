@@ -20,11 +20,6 @@ package org.eclipse.microprofile.rest.client.tck.interfaces.ssl;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
 
-/**
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 18/04/2019
- */
 @RegisterRestClient
 public interface ClientWithKeystoreAndTruststore extends JsonPClient {
 }

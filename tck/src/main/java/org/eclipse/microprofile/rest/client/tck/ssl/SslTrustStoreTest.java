@@ -33,14 +33,9 @@ import javax.ws.rs.ProcessingException;
 import java.io.File;
 import java.security.KeyStore;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
 import static org.junit.Assert.assertEquals;
-import static org.testng.Assert.assertThrows;
 
-/**
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 3/25/19
- */
 public class SslTrustStoreTest extends AbstractSslTest {
 
     @Inject
@@ -91,13 +86,12 @@ public class SslTrustStoreTest extends AbstractSslTest {
         return String.format("file:%s", file.getAbsolutePath());
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithSelfSignedKeystore() {
-        assertThrows(ProcessingException.class, () ->
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .build(JsonPClient.class)
-                .get("1"));
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .build(JsonPClient.class)
+            .get("1");
     }
 
     @Test
@@ -112,23 +106,20 @@ public class SslTrustStoreTest extends AbstractSslTest {
     }
 
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithNonMatchingKeystore() throws Exception {
         KeyStore ks = getKeyStore(anotherTruststore);
 
-        assertThrows(ProcessingException.class, () ->
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .trustStore(ks)
-                .build(JsonPClient.class)
-                .get("1")
-        );
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .trustStore(ks)
+            .build(JsonPClient.class)
+            .get("1");
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithSelfSignedKeystoreCDI() {
-        assertThrows(ProcessingException.class, () ->
-            clientWithNoSslStores.get("1"));
+        clientWithNoSslStores.get("1");
     }
 
     @Test
@@ -141,10 +132,8 @@ public class SslTrustStoreTest extends AbstractSslTest {
         assertEquals("bar", clientWithTruststoreFromClasspath.get("1").getString("foo"));
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithNonMatchingKeystoreCDI() {
-        assertThrows(ProcessingException.class, () ->
-            clientWithNonMatchingTruststore.get("1")
-        );
+        clientWithNonMatchingTruststore.get("1");
     }
 }

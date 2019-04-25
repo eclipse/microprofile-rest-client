@@ -20,11 +20,6 @@ package org.eclipse.microprofile.rest.client.tck.interfaces.ssl;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
-/**
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 18/04/2019
- */
 public class ConfigurableHostnameVerifier implements HostnameVerifier {
 
     private static SSLSession sslSession;

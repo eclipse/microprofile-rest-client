@@ -32,15 +32,10 @@ import javax.net.ssl.SSLSession;
 import javax.ws.rs.ProcessingException;
 import java.security.KeyStore;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
 import static org.junit.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
 
-/**
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 16/04/2019
- */
 public class SslHostnameVerifierTest extends AbstractSslTest {
 
     @Deployment
@@ -73,28 +68,25 @@ public class SslHostnameVerifierTest extends AbstractSslTest {
     @Inject
     private JsonPClient clientWithHostnameVerifier;
 
-    @Test
-    public void shouldFailWithoutHostnameAndNoVerifier() {
-        assertThrows(ProcessingException.class, () -> {
-            KeyStore trustStore = getKeyStore(clientWrongHostnameTruststore);
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .trustStore(trustStore)
-                .build(JsonPClient.class)
-                .get("1");
-        });
+    @Test(expectedExceptions = ProcessingException.class)
+    public void shouldFailWithoutHostnameAndNoVerifier() throws Exception {
+        KeyStore trustStore = getKeyStore(clientWrongHostnameTruststore);
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .trustStore(trustStore)
+            .build(JsonPClient.class)
+            .get("1");
     }
-    @Test
-    public void shouldFailWithRejectingHostnameVerifier() {
-        assertThrows(ProcessingException.class, () -> {
-            KeyStore trustStore = getKeyStore(clientWrongHostnameTruststore);
-            RestClientBuilder.newBuilder()
-                .baseUri(BASE_URI)
-                .trustStore(trustStore)
-                .hostnameVerifier((s, sslSession) -> false)
-                .build(JsonPClient.class)
-                .get("1");
-        });
+
+    @Test(expectedExceptions = ProcessingException.class)
+    public void shouldFailWithRejectingHostnameVerifier() throws Exception {
+        KeyStore trustStore = getKeyStore(clientWrongHostnameTruststore);
+        RestClientBuilder.newBuilder()
+            .baseUri(BASE_URI)
+            .trustStore(trustStore)
+            .hostnameVerifier((s, sslSession) -> false)
+            .build(JsonPClient.class)
+            .get("1");
     }
 
     @Test
@@ -121,10 +113,10 @@ public class SslHostnameVerifierTest extends AbstractSslTest {
         assertEquals("bar", client.get("1").getString("foo"));
     }
 
-    @Test
+    @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithRejectingHostnameVerifierCDI() {
         ConfigurableHostnameVerifier.setAccepting(false);
-        assertThrows(ProcessingException.class, () -> clientWithHostnameVerifier.get("1"));
+        clientWithHostnameVerifier.get("1");
     }
 
     @Test

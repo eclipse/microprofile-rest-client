@@ -174,6 +174,9 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      *
      * @param sslContext the ssl context
      * @return the current builder with ssl context set
+     * @throws NullPointerException if the <code>sslContext</code> parameter is
+     * null.
+     * @since 1.3
      */
     RestClientBuilder sslContext(SSLContext sslContext);
 
@@ -183,6 +186,9 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      *
      * @param trustStore key store
      * @return the current builder with the trust store set
+     * @throws NullPointerException if the <code>trustStore</code> parameter is
+     * null.
+     * @since 1.3
      */
     RestClientBuilder trustStore(KeyStore trustStore);
 
@@ -192,6 +198,9 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @param keyStore key store
      * @param keystorePassword
      * @return the current builder with the key store set
+     * @throws NullPointerException if the <code>keyStore</code> parameter is
+     * null.
+     * @since 1.3
      */
     RestClientBuilder keyStore(KeyStore keyStore, String keystorePassword);
 
@@ -200,6 +209,9 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      *
      * @param hostnameVerifier the hostname verifier
      * @return the current builder with hostname verifier set
+     * @throws NullPointerException if the <code>hostnameVerifier</code> parameter is
+     * null.
+     * @since 1.3
      */
     RestClientBuilder hostnameVerifier(HostnameVerifier hostnameVerifier);
 

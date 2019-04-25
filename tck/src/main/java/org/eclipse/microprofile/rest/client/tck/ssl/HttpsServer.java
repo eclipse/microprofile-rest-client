@@ -37,9 +37,6 @@ import java.io.PrintWriter;
  *
  * Use {@link #keyStore(String, String)} and {@link #trustStore(String, String)} to set, appropriately, the server key store and trust store
  *
- * @author Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
- * <br>
- * Date: 3/28/19
  */
 public class HttpsServer {
     private static final String CONTENT_TYPE = "Content-Type";
