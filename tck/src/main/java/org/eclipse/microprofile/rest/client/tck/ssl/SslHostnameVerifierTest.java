@@ -55,9 +55,10 @@ public class SslHostnameVerifierTest extends AbstractSslTest {
                 HttpsServer.class,
                 AbstractSslTest.class,
                 ConfigurableHostnameVerifier.class)
-            .addAsManifestResource(new StringAsset(config), "microprofile-config.properties")
-            .addAsManifestResource(
-                new ClassLoaderAsset("ssl/" + clientWrongHostnameTruststoreFromClasspath), clientWrongHostnameTruststoreFromClasspath
+            .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
+            .addAsWebInfResource(
+                new ClassLoaderAsset("ssl/" + clientWrongHostnameTruststoreFromClasspath),
+                "classes/META-INF/" + clientWrongHostnameTruststoreFromClasspath
             )
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 

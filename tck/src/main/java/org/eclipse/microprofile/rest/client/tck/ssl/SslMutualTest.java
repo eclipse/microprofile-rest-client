@@ -92,8 +92,8 @@ public class SslMutualTest extends AbstractSslTest {
             .addClasses(JsonPClient.class, ClientWithTruststore.class, ClientWithNonMatchingStore.class,
                 ClientWithKeystoreAndTruststore.class, ClientWithKeystoreFromClasspathAndTruststore.class,
                 HttpsServer.class, AbstractSslTest.class)
-            .addAsManifestResource(new StringAsset(config), "microprofile-config.properties")
-            .addAsManifestResource(new ClassLoaderAsset("ssl/" + clientKeystoreFromClasspath), clientKeystoreFromClasspath)
+            .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
+            .addAsWebInfResource(new ClassLoaderAsset("ssl/" + clientKeystoreFromClasspath), "classes/META-INF/" + clientKeystoreFromClasspath)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return webArchive;
