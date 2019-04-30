@@ -75,8 +75,8 @@ public class SslTrustStoreTest extends AbstractSslTest {
                 JsonPClientWithTruststoreFromClasspath.class,
                 HttpsServer.class,
                 AbstractSslTest.class)
-            .addAsManifestResource(new StringAsset(config), "microprofile-config.properties")
-            .addAsManifestResource(new ClassLoaderAsset("ssl/" + clientTruststoreFromClasspath), clientTruststoreFromClasspath)
+            .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
+            .addAsWebInfResource(new ClassLoaderAsset("ssl/" + clientTruststoreFromClasspath), "classes/META-INF/" + clientTruststoreFromClasspath)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return webArchive;
