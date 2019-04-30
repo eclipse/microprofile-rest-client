@@ -32,7 +32,7 @@ public class SslContextTest extends AbstractSslTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, SslContextTest.class.getSimpleName() + ".war")
             .addClasses(JsonPClient.class, HttpsServer.class, AbstractSslTest.class)
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
