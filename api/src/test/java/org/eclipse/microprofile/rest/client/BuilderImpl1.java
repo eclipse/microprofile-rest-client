@@ -17,8 +17,11 @@
 package org.eclipse.microprofile.rest.client;
 
 import javax.annotation.Priority;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.net.URL;
+import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +38,26 @@ public class BuilderImpl1 extends AbstractBuilder {
     }
 
     public RestClientBuilder executorService(ExecutorService executor) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder sslContext(SSLContext sslContext) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder trustStore(KeyStore trustStore) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder keyStore(KeyStore keyStore, String keystorePassword) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder hostnameVerifier(HostnameVerifier verifier) {
         throw new IllegalStateException("not implemented");
     }
 

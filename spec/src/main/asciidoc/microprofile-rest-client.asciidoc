@@ -50,6 +50,8 @@ include::lifecycle.asciidoc[]
 
 include::async.asciidoc[]
 
+include::ssl.asciidoc[]
+
 include::integration.asciidoc[]
 
 include::release_notes.asciidoc[]

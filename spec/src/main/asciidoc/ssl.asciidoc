@@ -1,0 +1,91 @@
+//
+// Copyright (c) 2019 Contributors to the Eclipse Foundation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+[[ssl]]
+== MicroProfile Rest Client SSL Support
+
+MicroProfile Rest Client provides a uniform way to configure
+SSL for the client.
+
+=== Trust store
+By default, a MicroProfile Rest Client implementation uses the
+JVM trust store.
+MicroProfile Rest Client provides a way to specify a
+custom trust store.
+
+For clients created programmatically, the trust store should be read to
+a `KeyStore` object and specified as follows:
+
+[source, java]
+----
+KeyStore trustStore = readTrustStore();
+RestClientBuilder.newBuilder()
+    .trustStore(trustStore)
+
+----
+
+
+For CDI injected clients, the trust store can be specified
+with MicroProfile Config properties:
+
+- `myClient/mp-rest/trustStore` to set the trust store location.
+Can point to either a classpath resource (e.g. `classpath:/client-truststore.jks`)
+or a file (e.g. `file:/home/user/client-truststore.jks`)
+- `myClient/mp-rest/trustStorePassword` to set the
+password for the keystore
+- `myClient/mp-rest/trustStoreType` to set the type of the trust store.
+Defaults to "JKS"
+
+=== Hostname verification
+A custom `HostnameVerifier` can be used to determine if
+an SSL connection that fails on a URL's hostname and a server's
+identification hostname mismatch should be allowed.
+
+To specify a hostname verifier for a programmatically created client,
+use:
+[source, java]
+----
+RestClientBuilder.newBuilder()
+    .hostnameVerifier(verifier)
+
+----
+
+For CDI, the verifier can be specified by setting the
+`myClient/mp-rest/hostnameVerifier` MicroProfile Config property
+to the class name of the verifier. The class must have a
+public no-argument constructor.
+
+=== Key store
+Client key stores are useful for two-way SSL connections.
+
+The programmatic API provides a `keystore` method for specifying the client
+key store. The method accepts a `KeyStore` object.
+
+For the CDI usage, the keystore can be specified with MicroProfile Config
+properties similar to the trust store properties:
+
+- `myClient/mp-rest/keyStore` to set the key store location.
+Can point to either a classpath resource (e.g. `classpath:/client-keystore.jks`)
+or a file (e.g. `file:/home/user/client-keystore.jks`)
+- `myClient/mp-rest/keyStorePassword` to set the
+password for the keystore
+- `myClient/mp-rest/keyStoreType` to set the type of the key store.
+Defaults to "JKS"
+
+
+=== SSL Context
+For the programmatically created client, it is also possible to
+configure SSL by setting the `SSLContext` using the `RestClientBuilder#sslContext` method.
