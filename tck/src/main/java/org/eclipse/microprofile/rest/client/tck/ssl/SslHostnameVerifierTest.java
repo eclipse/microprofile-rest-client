@@ -49,7 +49,7 @@ public class SslHostnameVerifierTest extends AbstractSslTest {
         // @formatter:on
 
 
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, SslHostnameVerifierTest.class.getSimpleName() + ".war")
             .addClasses(
                 JsonPClient.class,
                 HttpsServer.class,

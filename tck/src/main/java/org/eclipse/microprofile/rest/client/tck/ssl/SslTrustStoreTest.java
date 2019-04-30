@@ -52,7 +52,7 @@ public class SslTrustStoreTest extends AbstractSslTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class);
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, SslTrustStoreTest.class.getSimpleName() + ".war");
         initializeTest(webArchive, server -> server.keyStore(serverKeystore.getAbsolutePath(), PASSWORD));
 
         // @formatter:off

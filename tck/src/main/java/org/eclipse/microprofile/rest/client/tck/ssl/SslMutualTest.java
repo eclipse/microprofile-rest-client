@@ -55,7 +55,7 @@ public class SslMutualTest extends AbstractSslTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class);
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, SslMutualTest.class.getSimpleName() + ".war");
 
         initializeTest(webArchive,
             server ->
