@@ -44,5 +44,5 @@
  * }
  * </pre>
  */
-@org.osgi.annotation.versioning.Version("1.1")
+@org.osgi.annotation.versioning.Version("1.2")
 package org.eclipse.microprofile.rest.client.inject;
