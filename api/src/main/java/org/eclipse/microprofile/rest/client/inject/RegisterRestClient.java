@@ -40,6 +40,20 @@ import javax.enterprise.inject.Stereotype;
 @Stereotype
 @Dependent
 public @interface RegisterRestClient {
+    /**
+     * Sets the base URI for the rest client interface. This value will be used for the URI unless it is
+     * overridden by MicroProfile Config.
+     * 
+     * @since 1.2
+     */
     String baseUri() default "";
+
+    /**
+     * Associates the annotated rest client interface with this configuration key. By specifying a non-empty value,
+     * this interface can be configured more simply using the configuration key rather than the fully-qualified class
+     * name of the interface.
+     *
+     * @since 1.3
+     */
     String configKey() default "";
 }

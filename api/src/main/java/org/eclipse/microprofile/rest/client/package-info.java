@@ -37,5 +37,5 @@
  * </pre>
  * @since 1.0
  */
-@org.osgi.annotation.versioning.Version("1.2")
+@org.osgi.annotation.versioning.Version("1.3")
 package org.eclipse.microprofile.rest.client;

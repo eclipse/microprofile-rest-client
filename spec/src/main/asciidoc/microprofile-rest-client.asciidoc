@@ -18,8 +18,8 @@
 //
 
 = Rest Client for MicroProfile
-:authors: John D. Ament, Andy McCright, Ken Finnigan
-:email: john.d.ament@gmail.com, j.andrew.mccright@gmail.com, ken@kenfinnigan.me
+:authors: John D. Ament, Andy McCright, Ken Finnigan, Michal Szynkiewicz
+:email: john.d.ament@gmail.com, j.andrew.mccright@gmail.com, ken@kenfinnigan.me, michal.l.szynkiewicz@gmail.com
 :version-label!:
 :sectanchors:
 :doctype: book
