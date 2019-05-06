@@ -23,7 +23,7 @@ When closed, a client instance is expected to throw an `IllegalStateException` w
 
 When a client instance is closed, the implementation is expected to clean up any underlying resources.
 
-A client instance can be closed  by casting the instance to a `Closeable` or `AutoCloseable` and invoking the the `close()` method (or auto-invoked if using in a try-with-resources block).
+A client instance can be closed by casting the instance to a `Closeable` or `AutoCloseable` and invoking the the `close()` method (or auto-invoked if using in a try-with-resources block).
 For example:
 
 [source, java]
@@ -41,5 +41,29 @@ MyServiceClient client = RestClientBuilder.newBuilder()
      .build(MyServiceClient.class);
 String response1 = client.greet(); // works
 ((Closeable)client).close();
+String response2 = client.greet(); // throws IllegalStateException
+----
+
+Likewise, if the client interface extends `java.lang.AutoCloseable` or `java.io.Closeable`, the client can be closed by simply calling the inherited `close()` method.
+For example:
+
+[source, java]
+----
+public interface MyServiceClient extends AutoCloseable {
+    @GET
+    @Path("/greet")
+    String greet();
+}
+
+...
+
+MyServiceClient client = RestClientBuilder.newBuilder()
+     .baseUri(apiUri)
+     .build(MyServiceClient.class);
+String response1;
+try (MyServiceClient c = client) {
+    response1 = c.greet(); // works
+} // client is auto-closed
+
 String response2 = client.greet(); // throws IllegalStateException
 ----
