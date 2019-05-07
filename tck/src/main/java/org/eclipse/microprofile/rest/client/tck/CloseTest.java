@@ -22,6 +22,8 @@ import java.net.URI;
 import java.io.Closeable;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.interfaces.AutoCloseableClient;
+import org.eclipse.microprofile.rest.client.tck.interfaces.CloseableClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.StringClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWith200RequestFilter;
 
@@ -39,7 +41,8 @@ public class CloseTest extends Arquillian{
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, CloseTest.class.getSimpleName()+".war")
-            .addClasses(ReturnWith200RequestFilter.class, StringClient.class);
+            .addClasses(ReturnWith200RequestFilter.class, StringClient.class,
+                        AutoCloseableClient.class, CloseableClient.class);
     }
 
     @Test(expectedExceptions={IllegalStateException.class})
@@ -76,5 +79,42 @@ public class CloseTest extends Arquillian{
         }
 
         client.getHeaderValue("IllegalStateException expected");
+    }
+
+    @Test(expectedExceptions={IllegalStateException.class})
+    public void expectIllegalStateExceptionAfterCloseOnInterfaceThatExtendsAutoCloseable() throws Exception {
+        RestClientBuilder builder = RestClientBuilder.newBuilder().register(ReturnWith200RequestFilter.class);
+        AutoCloseableClient client = builder.baseUri(new URI("http://localhost/stub")).build(AutoCloseableClient.class);
+        try (AutoCloseableClient c = client) {
+            // ensure client works correctly before closing
+            assertEquals(client.executeGet(), "OK");
+        }
+        catch(Throwable t) {
+            fail("Initial (unclosed) request threw unexpected exception", t);
+        }
+
+        client.executeGet(); // IllegalStateException expected
+    }
+
+    @Test(expectedExceptions={IllegalStateException.class})
+    public void expectIllegalStateExceptionAfterCloseOnInterfaceThatExtendsCloseable() throws Exception {
+        RestClientBuilder builder = RestClientBuilder.newBuilder().register(ReturnWith200RequestFilter.class);
+        CloseableClient client = builder.baseUri(new URI("http://localhost/stub")).build(CloseableClient.class);
+        try {
+            // ensure client works correctly before closing
+            assertEquals(client.executeGet(), "OK");
+        }
+        catch(Throwable t) {
+            fail("Initial (unclosed) request threw unexpected exception", t);
+        }
+
+        try {
+            client.close();
+        }
+        catch (Throwable t) {
+            fail("Caught unexpected exception closing client", t);
+        }
+
+        client.executeGet(); // IllegalStateException expected
     }
 }
