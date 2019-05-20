@@ -110,7 +110,7 @@ Implementations may provide any number of providers registered automatically, bu
 
 === JSON-P and JSON-B Providers
 
-Implementations of the MicroProfile Rest Client should behave similar to JAX-RS implementations with regard to built-in JSON-P and JSON-B providers. Implementations must provide built-in JSON-P and JSON-B entity providers. Note that the JSON-B provider should take precedence over the JSON-P provider unless the client interface method's entity parameter or return type is a JSON-P object type (`javax.json.JsonObject`, `javax.json.JsonArray`, etc.).
+Implementations of the MicroProfile Rest Client should behave similar to JAX-RS implementations with regard to built-in JSON-P and JSON-B providers. Implementations must provide a built-in JSON-P entity provider. If the implementation supports JSON-B, then it must also provide a built-in JSON-B entity provider. Note that the JSON-B provider should take precedence over the JSON-P provider unless the client interface method's entity parameter or return type is a JSON-P object type (`javax.json.JsonObject`, `javax.json.JsonArray`, etc.).
 
 When an interface is registered that contains:
 

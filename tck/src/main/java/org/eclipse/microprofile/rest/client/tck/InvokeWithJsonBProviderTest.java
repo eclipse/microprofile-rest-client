@@ -55,6 +55,15 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties");
     }
 
+    private static void assumeJsonbApiExists() throws SkipException {
+        try {
+            Class.forName("javax.json.bind.annotation.JsonbProperty");
+        }
+        catch (Throwable t) {
+            throw new SkipException("Skipping since JSON-B APIs were not found.");
+        }
+    }
+
     @RestClient
     @Inject
     private JsonBClient cdiJsonBClient;
@@ -70,6 +79,7 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
 
     @Test
     public void testGetExecutesForBothClients() throws Exception {
+        assumeJsonbApiExists();
         testGet(builtJsonBClient, BUILT);
         testGet(cdiJsonBClient, CDI);
     }
