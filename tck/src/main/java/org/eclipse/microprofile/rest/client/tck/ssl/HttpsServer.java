@@ -57,6 +57,7 @@ public class HttpsServer {
         sslContextFactory.setTrustStorePath(keystore);
         sslContextFactory.setTrustStorePassword(keyStorePassword);
         sslContextFactory.setNeedClientAuth(true);
+        sslContextFactory.setEndpointIdentificationAlgorithm(null);
         return this;
     }
 
