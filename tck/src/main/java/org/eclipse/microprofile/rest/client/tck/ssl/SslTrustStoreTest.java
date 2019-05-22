@@ -30,7 +30,6 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
-import java.io.File;
 import java.security.KeyStore;
 
 import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
@@ -80,10 +79,6 @@ public class SslTrustStoreTest extends AbstractSslTest {
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return webArchive;
-    }
-
-    private static String filePath(File file) {
-        return String.format("file:%s", file.getAbsolutePath());
     }
 
     @Test(expectedExceptions = ProcessingException.class)
