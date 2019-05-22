@@ -163,6 +163,10 @@ public abstract class AbstractSslTest extends Arquillian {
         }
     }
 
+    static String filePath(File file) {
+        return file.toURI().toString();
+    }
+
     @BeforeClass
     public static void initHttpsServer() {
         initializeCertificateLocations();
