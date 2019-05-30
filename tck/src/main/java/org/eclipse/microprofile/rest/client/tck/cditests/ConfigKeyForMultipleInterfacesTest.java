@@ -20,6 +20,7 @@ package org.eclipse.microprofile.rest.client.tck.cditests;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ConfigKeyClient;
+import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiWithConfigKey;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -59,6 +60,7 @@ public class ConfigKeyForMultipleInterfacesTest extends Arquillian {
                                   ReturnWithURLRequestFilter.class.getName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(ConfigKeyClient.class,
+                        SimpleGetApi.class,
                         SimpleGetApiWithConfigKey.class,
                         ReturnWithURLRequestFilter.class)
             .addAsManifestResource(new StringAsset(
