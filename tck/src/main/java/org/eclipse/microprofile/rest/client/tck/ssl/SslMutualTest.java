@@ -66,25 +66,25 @@ public class SslMutualTest extends AbstractSslTest {
         // @formatter:off
         String config =
             configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
-            configLine(ClientWithTruststore.class, "trustStore", clientTruststore.getAbsolutePath()) +
+            configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
             configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
 
-            configLine(ClientWithKeystoreAndTruststore.class, "trustStore", clientTruststore.getAbsolutePath()) +
+            configLine(ClientWithKeystoreAndTruststore.class, "trustStore", filePath(clientTruststore)) +
             configLine(ClientWithKeystoreAndTruststore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithKeystoreAndTruststore.class, "keyStore", clientKeystore.getAbsolutePath()) +
+            configLine(ClientWithKeystoreAndTruststore.class, "keyStore", filePath(clientKeystore)) +
             configLine(ClientWithKeystoreAndTruststore.class, "keyStorePassword", PASSWORD) +
             configLine(ClientWithKeystoreAndTruststore.class, "uri", BASE_URI_STRING) +
 
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStore", clientTruststore.getAbsolutePath()) +
+            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStore", filePath(clientTruststore)) +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStore", "classpath:/META-INF/" + clientKeystoreFromClasspath) +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStorePassword", PASSWORD) +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "uri", BASE_URI_STRING) +
 
-            configLine(ClientWithNonMatchingStore.class, "trustStore", clientTruststore.getAbsolutePath()) +
+            configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(clientTruststore)) +
             configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithNonMatchingStore.class, "keyStore", serverKeystore.getAbsolutePath()) +
+            configLine(ClientWithNonMatchingStore.class, "keyStore", filePath(serverKeystore)) +
             configLine(ClientWithNonMatchingStore.class, "keyStorePassword", PASSWORD) +
             configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
         // @formatter:on
