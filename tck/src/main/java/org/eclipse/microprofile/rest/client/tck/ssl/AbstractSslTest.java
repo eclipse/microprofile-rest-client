@@ -70,7 +70,7 @@ public abstract class AbstractSslTest extends Arquillian {
 
 
     public static KeyStore getKeyStore(File keystoreFile) throws Exception {
-        KeyStore keystore = KeyStore.getInstance("JKS");
+        KeyStore keystore = KeyStore.getInstance("pkcs12");
         try (FileInputStream input = new FileInputStream(keystoreFile)) {
             keystore.load(input, PASSWORD.toCharArray());
         }

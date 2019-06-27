@@ -49,7 +49,7 @@ public class SslContextTest extends AbstractSslTest {
     public void shouldSucceedMutualSslWithValidSslContext() throws Exception {
         SSLContext sslContext = SSLContextBuilder.create()
             .loadKeyMaterial(getKeyStore(clientKeystore), PASSWORD.toCharArray())
-            .loadTrustMaterial(clientTruststore, PASSWORD.toCharArray())
+            .loadTrustMaterial(getKeyStore(clientTruststore), null)
             .build();
         RestClientBuilder.newBuilder()
             .baseUri(BASE_URI)

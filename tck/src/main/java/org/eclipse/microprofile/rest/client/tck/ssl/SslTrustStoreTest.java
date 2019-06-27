@@ -58,12 +58,15 @@ public class SslTrustStoreTest extends AbstractSslTest {
         String config =
             configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
             configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
+            configLine(ClientWithTruststore.class, "trustStoreType", "pkcs12") +
             configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
             configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStore", "classpath:/META-INF/" + clientTruststoreFromClasspath) +
+            configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStoreType", "pkcs12") +
             configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStorePassword", PASSWORD) +
             configLine(JsonPClientWithTruststoreFromClasspath.class, "uri", BASE_URI_STRING) +
             configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(anotherTruststore)) +
+            configLine(ClientWithNonMatchingStore.class, "trustStoreType", "pkcs12") +
             configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
         // @formatter:on
