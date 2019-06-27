@@ -45,6 +45,7 @@ public class SslHostnameVerifierTest extends AbstractSslTest {
             configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
             configLine(JsonPClient.class, "hostnameVerifier", ConfigurableHostnameVerifier.class.getCanonicalName()) +
             configLine(JsonPClient.class, "trustStore", "classpath:/META-INF/" + clientWrongHostnameTruststoreFromClasspath) +
+            configLine(JsonPClient.class, "trustStoreType", "pkcs12") +
             configLine(JsonPClient.class, "trustStorePassword", PASSWORD);
         // @formatter:on
 
