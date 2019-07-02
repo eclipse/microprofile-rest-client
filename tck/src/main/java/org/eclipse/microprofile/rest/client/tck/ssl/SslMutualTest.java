@@ -67,24 +67,31 @@ public class SslMutualTest extends AbstractSslTest {
         String config =
             configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
             configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
+            configLine(ClientWithTruststore.class, "trustStoreType", "pkcs12") +
             configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
 
             configLine(ClientWithKeystoreAndTruststore.class, "trustStore", filePath(clientTruststore)) +
+            configLine(ClientWithKeystoreAndTruststore.class, "trustStoreType", "pkcs12") +
             configLine(ClientWithKeystoreAndTruststore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithKeystoreAndTruststore.class, "keyStore", filePath(clientKeystore)) +
+            configLine(ClientWithKeystoreAndTruststore.class, "keyStoreType", "pkcs12") +
             configLine(ClientWithKeystoreAndTruststore.class, "keyStorePassword", PASSWORD) +
             configLine(ClientWithKeystoreAndTruststore.class, "uri", BASE_URI_STRING) +
 
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStore", filePath(clientTruststore)) +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStorePassword", PASSWORD) +
+            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStoreType", "pkcs12") +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStore", "classpath:/META-INF/" + clientKeystoreFromClasspath) +
+            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStoreType", "pkcs12") +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStorePassword", PASSWORD) +
             configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "uri", BASE_URI_STRING) +
 
             configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(clientTruststore)) +
+            configLine(ClientWithNonMatchingStore.class, "trustStoreType", "pkcs12") +
             configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
             configLine(ClientWithNonMatchingStore.class, "keyStore", filePath(serverKeystore)) +
+            configLine(ClientWithNonMatchingStore.class, "keyStoreType", "pkcs12") +
             configLine(ClientWithNonMatchingStore.class, "keyStorePassword", PASSWORD) +
             configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
         // @formatter:on

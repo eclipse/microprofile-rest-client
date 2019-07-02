@@ -50,12 +50,14 @@ public class HttpsServer {
     public HttpsServer keyStore(String keystore, String keyStorePassword) {
         sslContextFactory.setKeyStorePath(keystore);
         sslContextFactory.setKeyStorePassword(keyStorePassword);
+        sslContextFactory.setKeyStoreType("pkcs12");
         return this;
     }
 
     public HttpsServer trustStore(String keystore, String keyStorePassword) {
         sslContextFactory.setTrustStorePath(keystore);
         sslContextFactory.setTrustStorePassword(keyStorePassword);
+        sslContextFactory.setTrustStoreType("pkcs12");
         sslContextFactory.setNeedClientAuth(true);
         sslContextFactory.setEndpointIdentificationAlgorithm(null);
         return this;
