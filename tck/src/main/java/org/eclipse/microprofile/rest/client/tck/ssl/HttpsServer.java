@@ -82,6 +82,7 @@ public class HttpsServer {
         httpsConfig.setSecureScheme("https");
         httpsConfig.setSecurePort(httpsPort);
 
+        sslContextFactory.setExcludeCipherSuites();
         ServerConnector sslConnector = new ServerConnector(server,
             new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
             new HttpConnectionFactory(httpsConfig)
