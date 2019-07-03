@@ -34,7 +34,10 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.ws.rs.core.Response;
 
@@ -207,6 +210,21 @@ public class AsyncMethodTest extends WiremockArquillianTest{
                 .willReturn(aResponse()
                         .withBody(expectedBody)));
 
+        AtomicBoolean isThreadLocalCleared = new AtomicBoolean(true);
+        ThreadFactory threadFactory = new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        isThreadLocalCleared.set(TLAsyncInvocationInterceptorFactory.getTlInt() == 0);
+                        r.run();
+                    }
+                });
+            }
+        };
+        ExecutorService testExecutorService = Executors.newSingleThreadExecutor(threadFactory);
+
         final TLAsyncInvocationInterceptorFactory aiiFactory = new TLAsyncInvocationInterceptorFactory(threadLocalInt);
         final TLClientResponseFilter responseFilter = new TLClientResponseFilter();
         SimpleGetApiAsync api = RestClientBuilder.newBuilder()
@@ -214,6 +232,7 @@ public class AsyncMethodTest extends WiremockArquillianTest{
             .register(TLAddPathClientRequestFilter.class)
             .register(aiiFactory)
             .register(responseFilter)
+            .executorService(testExecutorService)
             .build(SimpleGetApiAsync.class);
         CompletionStage<Response> future = api.executeGet();
 
@@ -228,6 +247,16 @@ public class AsyncMethodTest extends WiremockArquillianTest{
 
         response.close();
 
+        // force the test to wait for async thread to be recycled and re-used
+        // and verify that the thread locals have been cleared.
+        Future<?> f = testExecutorService.submit(new Runnable(){
+            @Override
+            public void run() {
+                System.out.println("Reusing single thread pool thread");
+            }
+        });
+        f.get(30, TimeUnit.SECONDS);
+        assertTrue(isThreadLocalCleared.get());
         assertEquals(body, expectedBody);
         Map<String,Object> data = aiiFactory.getData();
         assertEquals(data.get("preThreadId"), mainThreadId);
