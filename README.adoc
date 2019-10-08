@@ -79,6 +79,7 @@ The following Implementations are available
 * Apache CXF (http://cxf.apache.org/download.html)
 * OpenLiberty (https://openliberty.io/blog/2018/01/31/mpRestClient.html)
 * Thorntail (https://github.com/thorntail/thorntail/tree/master/fractions/microprofile/microprofile-restclient)
+* RESTEasy (https://resteasy.github.io)
 
 == Contributing
 
