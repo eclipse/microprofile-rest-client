@@ -44,6 +44,8 @@ public @interface RegisterRestClient {
      * Sets the base URI for the rest client interface. This value will be used for the URI unless it is
      * overridden by MicroProfile Config.
      * 
+     * @return the base URI for annotated client interface. An empty value indicates that the base URI must be specified
+     *  in MicrprofileConfig.
      * @since 1.2
      */
     String baseUri() default "";
@@ -53,6 +55,8 @@ public @interface RegisterRestClient {
      * this interface can be configured more simply using the configuration key rather than the fully-qualified class
      * name of the interface.
      *
+     * @return the configuration key in use by this client interface. An empty value means that this interface is not
+     *  associated with a configuration key.
      * @since 1.3
      */
     String configKey() default "";

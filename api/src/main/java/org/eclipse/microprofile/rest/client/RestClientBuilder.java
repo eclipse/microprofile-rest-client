@@ -196,7 +196,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * Set the client-side key store.
      *
      * @param keyStore key store
-     * @param keystorePassword
+     * @param keystorePassword the password for the specified <code>keyStore</code>
      * @return the current builder with the key store set
      * @throws NullPointerException if the <code>keyStore</code> parameter is
      * null.
