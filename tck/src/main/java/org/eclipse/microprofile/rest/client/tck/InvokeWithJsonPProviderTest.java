@@ -19,6 +19,7 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -63,6 +64,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
     }
 
     @Inject
+    @RestClient
     private JsonPClient cdiJsonPClient;
 
     private JsonPClient builtJsonPClient;
