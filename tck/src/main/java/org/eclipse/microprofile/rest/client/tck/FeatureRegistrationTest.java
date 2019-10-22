@@ -17,6 +17,7 @@
 package org.eclipse.microprofile.rest.client.tck;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.FeatureProviderClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.eclipse.microprofile.rest.client.tck.providers.InjectedSimpleFeature;
@@ -54,6 +55,7 @@ public class FeatureRegistrationTest extends WiremockArquillianTest{
     }
 
     @Inject
+    @RestClient
     private FeatureProviderClient featureProviderClient;
 
     @Test
