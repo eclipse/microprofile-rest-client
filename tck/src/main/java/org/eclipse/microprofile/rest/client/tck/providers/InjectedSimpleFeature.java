@@ -18,9 +18,7 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
-import javax.ws.rs.ext.Provider;
 
-@Provider
 public class InjectedSimpleFeature implements Feature{
     private static boolean invoked = false;
 
