@@ -95,7 +95,7 @@ public abstract class AbstractSslTest extends Arquillian {
 
         startServer(serverInitializer);
 
-        webArchive.addAsManifestResource(new StringAsset(certificatesDirectory.toAbsolutePath().toString()), CERT_LOCATION_FILE);
+        webArchive.addAsResource(new StringAsset(certificatesDirectory.toAbsolutePath().toString()), "META-INF/" + CERT_LOCATION_FILE);
     }
 
     static void initializeCertificateLocations() {
