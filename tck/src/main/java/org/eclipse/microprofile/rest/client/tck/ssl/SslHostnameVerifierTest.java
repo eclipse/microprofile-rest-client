@@ -16,6 +16,7 @@
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ssl.ConfigurableHostnameVerifier;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -68,6 +69,7 @@ public class SslHostnameVerifierTest extends AbstractSslTest {
     }
 
     @Inject
+    @RestClient
     private JsonPClient clientWithHostnameVerifier;
 
     @Test(expectedExceptions = ProcessingException.class)
