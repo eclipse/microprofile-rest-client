@@ -16,6 +16,7 @@
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ssl.ClientWithKeystoreAndTruststore;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ssl.ClientWithKeystoreFromClasspathAndTruststore;
@@ -39,18 +40,23 @@ import static org.junit.Assert.assertEquals;
 public class SslMutualTest extends AbstractSslTest {
 
     @Inject
+    @RestClient
     private JsonPClient clientWithNoSslStores;
 
     @Inject
+    @RestClient
     private ClientWithTruststore clientWithTruststore;
 
     @Inject
+    @RestClient
     private ClientWithKeystoreAndTruststore clientWithMutualSsl;
 
     @Inject
+    @RestClient
     private ClientWithNonMatchingStore clientWithNonMatchingKeyStore;
 
     @Inject
+    @RestClient
     private ClientWithKeystoreFromClasspathAndTruststore clientWithKeystoreFromClasspathAndTruststore;
 
     @Deployment
