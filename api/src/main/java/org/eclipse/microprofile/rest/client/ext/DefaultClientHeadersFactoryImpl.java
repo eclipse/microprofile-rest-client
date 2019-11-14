@@ -46,7 +46,6 @@ public class DefaultClientHeadersFactoryImpl implements ClientHeadersFactory {
     private final static Logger LOG = Logger.getLogger(CLASS_NAME);
 
     private static Optional<Config> config() {
-        Config c;
         try {
             return Optional.ofNullable(ConfigProvider.getConfig());
         }
@@ -71,7 +70,7 @@ public class DefaultClientHeadersFactoryImpl implements ClientHeadersFactory {
         if (LOG.isLoggable(Level.FINER)) {
             LOG.entering(CLASS_NAME, "update", new Object[]{incomingHeaders, clientOutgoingHeaders});
         }
-        MultivaluedMap propagatedHeaders = new MultivaluedHashMap();
+        MultivaluedMap<String, String> propagatedHeaders = new MultivaluedHashMap<>();
         Optional<String> propagateHeaderString = getHeadersProperty();
         if (propagateHeaderString.isPresent()) {
             Arrays.stream(propagateHeaderString.get().split(","))
