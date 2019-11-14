@@ -31,7 +31,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
 import javax.inject.Inject;
-import static org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest.getStringURL;
 
 import static org.testng.Assert.assertTrue;
 
