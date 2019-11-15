@@ -77,7 +77,7 @@ public class AdditionalRegistrationTest extends Arquillian{
     @Test
     public void shouldRegisterAMultiTypedProviderInstance() {
         MultiTypedProvider provider = new MultiTypedProvider();
-        Class[] providerTypes = {ClientRequestFilter.class, ClientResponseFilter.class,
+        Class<?>[] providerTypes = {ClientRequestFilter.class, ClientResponseFilter.class,
             MessageBodyReader.class, MessageBodyWriter.class, ReaderInterceptor.class, WriterInterceptor.class,
             ResponseExceptionMapper.class, ParamConverterProvider.class};
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(provider, providerTypes);
@@ -126,7 +126,7 @@ public class AdditionalRegistrationTest extends Arquillian{
 
     @Test
     public void shouldRegisterAMultiTypedProviderClass() {
-        Class[] providerTypes = {ClientRequestFilter.class, ClientResponseFilter.class,
+        Class<?>[] providerTypes = {ClientRequestFilter.class, ClientResponseFilter.class,
             MessageBodyReader.class, MessageBodyWriter.class, ReaderInterceptor.class, WriterInterceptor.class,
             ResponseExceptionMapper.class, ParamConverterProvider.class};
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(MultiTypedProvider.class, providerTypes);
