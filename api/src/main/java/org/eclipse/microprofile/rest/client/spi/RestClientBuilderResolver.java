@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2016-2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2016-2019 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -98,26 +98,19 @@ public abstract class RestClientBuilderResolver {
             return null;
         }
 
-        // start from the root CL and go back down to the TCCL
-        PrivilegedAction<ClassLoader> action = () -> cl.getParent();
-        RestClientBuilderResolver resolver = loadSpi(AccessController.doPrivileged(action));
+        RestClientBuilderResolver instance = null;
 
-        if (resolver == null) {
-            ServiceLoader<RestClientBuilderResolver> sl = ServiceLoader.load(
-                    RestClientBuilderResolver.class, cl);
-            for (RestClientBuilderResolver spi : sl) {
-                if (resolver != null) {
-                    throw new IllegalStateException(
-                            "Multiple RestClientBuilderResolver implementations found: "
-                            + spi.getClass().getName() + " and "
-                            + resolver.getClass().getName());
-                }
-                else {
-                    resolver = spi;
-                }
+        ServiceLoader<RestClientBuilderResolver> sl = ServiceLoader.load(RestClientBuilderResolver.class, cl);
+        for (RestClientBuilderResolver spi : sl) {
+            if (instance != null) {
+                throw new IllegalStateException("Multiple RestClientBuilderResolver implementations found: "
+                                                + spi.getClass().getName() + " and "
+                                                + instance.getClass().getName());
             }
+            instance = spi;
         }
-        return resolver;
+
+        return instance;
     }
 
     /**
