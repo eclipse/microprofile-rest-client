@@ -19,8 +19,10 @@ package org.eclipse.microprofile.rest.client.inject;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Use the RestClient qualifier on an injection to point to indicate that this injection point is meant to use an instance
@@ -34,6 +36,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  * This will cause the injection point to be satisfied by the MicroProfile Rest Client runtime.
  */
+@Target({ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD})
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

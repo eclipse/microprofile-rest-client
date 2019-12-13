@@ -13,3 +13,5 @@ test-output
 *.iml
 *.iwl
 *.ipr
+.vscode/
+api/.DS_Store
