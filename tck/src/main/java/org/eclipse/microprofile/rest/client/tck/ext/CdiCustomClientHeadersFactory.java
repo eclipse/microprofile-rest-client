@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Contributors to the Eclipse Foundation
+ * Copyright 2020 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,23 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ext;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 
-public class CustomClientHeadersFactory implements ClientHeadersFactory {
+@ApplicationScoped
+public class CdiCustomClientHeadersFactory implements ClientHeadersFactory {
 
     public static MultivaluedMap<String, String> passedInOutgoingHeaders = new MultivaluedHashMap<>();
-    public static boolean invoked;
     public static boolean isIncomingHeadersMapNull;
     public static boolean isOutgoingHeadersMapNull;
+    public static boolean invoked;
+
+    @Inject
+    private Counter counter;
 
     public MultivaluedMap<String, String> update(MultivaluedMap<String, String> incomingHeaders,
                                                  MultivaluedMap<String, String> clientOutgoingHeaders) {
@@ -42,6 +48,10 @@ public class CustomClientHeadersFactory implements ClientHeadersFactory {
         returnVal.putSingle("FactoryHeader", "factoryValue");
         clientOutgoingHeaders.forEach((k, v) -> {
             returnVal.putSingle(k, v.get(0) + "Modified"); });
+
+        if (counter != null) {
+            returnVal.putSingle("CDI_INJECT_COUNT", "" + counter.count());
+        }
         return returnVal;
     }
 }

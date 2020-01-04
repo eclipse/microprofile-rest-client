@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.eclipse.microprofile.rest.client.ext;
 
 import javax.ws.rs.core.MultivaluedMap;
+
 /**
  * This interface is intended for generating or propagating HTTP headers. It is
  * invoked by the MP Rest Client implementation before invoking any entity
@@ -25,13 +26,22 @@ import javax.ws.rs.core.MultivaluedMap;
  * incoming JAX-RS request (if applicable, if not, this will be an empty map)
  * and a read-only map of headers specified by <code>ClientHeaderParam</code> or
  * <code>HeaderParam</code> annotations on the client interface.
- *
+ * <p>
  * This method should return a MultivaluedMap of headers to be merged with the
  * outgoing headers. This will determine the final set of HTTP headers that will
  * be sent to the outbound entity provider processing chain - thus any filters,
  * MessageBodyWriters, interceptors, etc. could further refine the set of
  * headers actually sent on the client request.
- *
+ * <p>
+ * If the ClientHeadersFactory instance is invoked while in the context of a
+ * JAX-RS request, the implementation must support injection of fields and
+ * method annotated with <code>{@literal @}Context</code>.
+ * <p>
+ * If the ClientHeadersFactory instance is managed by CDI (i.e. it is annotated
+ * with <code>{@literal @}ApplicationScoped</code>, etc.), the implementation
+ * must use the appropriate CDI-managed instance, and must support
+ * <code>{@literal @}Inject</code> injection.
+ * 
  * @since 1.2
  */
 public interface ClientHeadersFactory {
