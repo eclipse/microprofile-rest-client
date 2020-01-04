@@ -26,6 +26,10 @@ Integration with CDI is already built-in to the Rest Client specification, and i
 
 If CDI is available, the MP Rest Client implementation must ensure that CDI business method interceptors are invoked when the appropriate interceptor binding is applied to the client interface or method.
 
+If a client interface specifies a custom `ClientHeadersFactory` via the `@RegisterClientHeaders` annotation, and if CDI
+manages a valid instance of that class, then the implementation must use that instance, allowing support of `@Inject`
+injection into the instance.
+
 === MicroProfile Config
 
 MP Rest Client uses MP Config in order to declaratively configure the client behavior. The remote URI, client providers and priority,
@@ -51,6 +55,10 @@ When a client interface is executed from within a JAX-RS context (resource or pr
 comma-separated list of headers in the following MicroProfile Config property:
 
 `org.eclipse.microprofile.rest.client.propagateHeaders`.
+
+If the client interface is used within a JAX-RS context, then the implementation must support injection of `@Context` 
+fields and methods into custom `ClientHeadersFactory` instances. The injected objects are related to the JAX-RS context
+(i.e. an injected `UriInfo` will be specific to the JAX-RS resource's URI, not the URI of the MP Rest Client interface).
 
 === Other MicroProfile Technologies
 
