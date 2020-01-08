@@ -19,7 +19,7 @@
 
     <groupId>org.eclipse.microprofile.rest.client</groupId>
     <artifactId>microprofile-rest-client-parent</artifactId>
-    <version>1.3.5-SNAPSHOT</version>
+    <version>1.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>MicroProfile Rest Client</name>
     <description>Typesafe Rest Client APIs for MicroProfile</description>

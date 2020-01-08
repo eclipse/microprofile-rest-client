@@ -23,5 +23,5 @@
  * provide additional functionality for MP Rest Clients.
  *
  */
-@org.osgi.annotation.versioning.Version("1.1")
+@org.osgi.annotation.versioning.Version("1.1.1")
 package org.eclipse.microprofile.rest.client.spi;

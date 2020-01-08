@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 
 public class TestParamConverterProvider implements ParamConverterProvider {
     @Override
+    @SuppressWarnings("unchecked")
     public <T> ParamConverter<T> getConverter(Class<T> aClass, Type type, Annotation[] annotations) {
         if(String.class.isAssignableFrom(aClass)) {
             return (ParamConverter<T>) new TestParamConverter();

@@ -32,6 +32,7 @@ public class MockConfigProviderResolver extends ConfigProviderResolver {
     public Config getConfig() {
         return new Config(){
             @Override
+            @SuppressWarnings("unchecked")
             public <T> T getValue(String propertyName, Class<T> propertyType) {
                 Map<String, String> props = getConfigSources().iterator().next().getProperties();
                 if (!props.containsKey(propertyName)) {
