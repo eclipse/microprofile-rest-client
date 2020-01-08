@@ -20,14 +20,14 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import javax.ws.rs.ext.ParamConverter;
 
-public class TestParamConverter implements ParamConverter<String>{
+public class TestParamConverter implements ParamConverter<Widget>{
     @Override
-    public String fromString(String s) {
-        return "fromString"+s;
+    public Widget fromString(String s) {
+        return s == null ? null : Widget.fromString(s);
     }
 
     @Override
-    public String toString(String s) {
-        return "toString"+s;
+    public String toString(Widget w) {
+        return w == null ? null : w.toString();
     }
 }
