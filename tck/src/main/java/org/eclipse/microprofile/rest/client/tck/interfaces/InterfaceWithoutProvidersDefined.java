@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import org.eclipse.microprofile.rest.client.tck.providers.Widget;
 
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
@@ -42,5 +43,5 @@ public interface InterfaceWithoutProvidersDefined extends InterfaceBase {
     @PUT
     @Path("/{id}")
     @Override
-    Response executePut(@PathParam("id") String id, String body);
+    Response executePut(@PathParam("id") Widget id, String body);
 }

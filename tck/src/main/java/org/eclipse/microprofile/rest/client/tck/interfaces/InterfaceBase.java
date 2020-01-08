@@ -20,9 +20,11 @@ package org.eclipse.microprofile.rest.client.tck.interfaces;
 
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.rest.client.tck.providers.Widget;
+
 public interface InterfaceBase {
 
     Response executePost(String body);
 
-    Response executePut(String id, String body);
+    Response executePut(Widget id, String body);
 }
