@@ -27,6 +27,7 @@ import org.eclipse.microprofile.rest.client.tck.providers.TestMessageBodyWriter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestParamConverterProvider;
 import org.eclipse.microprofile.rest.client.tck.providers.TestReaderInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TestWriterInterceptor;
+import org.eclipse.microprofile.rest.client.tck.providers.Widget;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -56,5 +57,5 @@ public interface InterfaceWithProvidersDefined extends InterfaceBase {
     @PUT
     @Path("/{id}")
     @Override
-    Response executePut(@PathParam("id") String id, String body);
+    Response executePut(@PathParam("id") Widget id, String body);
 }

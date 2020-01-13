@@ -31,6 +31,7 @@ import org.eclipse.microprofile.rest.client.tck.providers.TestMessageBodyWriter;
 import org.eclipse.microprofile.rest.client.tck.providers.TestParamConverterProvider;
 import org.eclipse.microprofile.rest.client.tck.providers.TestReaderInterceptor;
 import org.eclipse.microprofile.rest.client.tck.providers.TestWriterInterceptor;
+import org.eclipse.microprofile.rest.client.tck.providers.Widget;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -167,8 +168,8 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
         String outputBody = "output body will be removed";
         String expectedReceivedBody = "this is the replaced writer "+inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
-        String id = "id";
-        String expectedId = "toStringid";
+        Widget id = new Widget("MyWidget", 7);
+        String expectedId = "MyWidget:7";
         stubFor(put(urlEqualTo("/"+expectedId))
             .willReturn(aResponse()
                 .withBody(outputBody)));
