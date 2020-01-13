@@ -18,15 +18,15 @@
 // Contributors:
 // John D. Ament, Andy McCright
 
-[[release_notes_20]]
-== Release Notes for MicroProfile Rest Client 2.0
+[[release_notes_14]]
+== Release Notes for MicroProfile Rest Client 1.4
 
 Changes since 1.3:
 
 - Ensure CDI and JAX-RS injection into `ClientHeadersFactory`.
 - Specified `@Target` to `@RestClient` annotation.
 - Removed recursive classloader check when resolving service loader for Rest Client SPI.
-- Updated dependencies to use Jakarta EE 8 technologies instead of Java EE 7.
+- Updated ParamConverter TCK test case to be more realistic (converting String-to-Widget rather than String-to-String).
 - Fixed Javadoc warnings.
 
 [[release_notes_13]]
