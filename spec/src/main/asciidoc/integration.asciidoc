@@ -56,9 +56,11 @@ comma-separated list of headers in the following MicroProfile Config property:
 
 `org.eclipse.microprofile.rest.client.propagateHeaders`.
 
-If the client interface is used within a JAX-RS context, then the implementation must support injection of `@Context` 
+If the client interface is used within a JAX-RS context, then the implementation may support injection of `@Context` 
 fields and methods into custom `ClientHeadersFactory` instances. The injected objects are related to the JAX-RS context
 (i.e. an injected `UriInfo` will be specific to the JAX-RS resource's URI, not the URI of the MP Rest Client interface).
+This injection is optional for the implementation, so the only portable injection mechanism of `ClientHeadersFactory`
+instances is `@Inject` when the client is managed by CDI.
 
 === Other MicroProfile Technologies
 
