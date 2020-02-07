@@ -34,8 +34,8 @@ import javax.ws.rs.core.MultivaluedMap;
  * headers actually sent on the client request.
  * <p>
  * If the ClientHeadersFactory instance is invoked while in the context of a
- * JAX-RS request, the implementation must support injection of fields and
- * method annotated with <code>{@literal @}Context</code>.
+ * JAX-RS request, the implementation may optionally support injection of fields
+ * and methods annotated with <code>{@literal @}Context</code>.
  * <p>
  * If the ClientHeadersFactory instance is managed by CDI (i.e. it is annotated
  * with <code>{@literal @}ApplicationScoped</code>, etc.), the implementation
