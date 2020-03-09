@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  *
  * This will cause the injection point to be satisfied by the MicroProfile Rest Client runtime.
  */
-@Target({ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE})
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
