@@ -61,7 +61,8 @@ public class TimeoutTest extends TimeoutTestBase {
     @Override
     protected void checkTimeElapsed(long elapsed) {
         assertTrue(elapsed >= 5);
-        // allow an extra 10 seconds cushion for slower test machines
-        assertTrue(elapsed < 15);
+        // allow extra seconds cushion for slower test machines
+        final long elapsedLimit = 5 + TIMEOUT_CUSHION;
+        assertTrue(elapsed < elapsedLimit, "Elapsed time expected under " + elapsedLimit + " secs, but was " + elapsed + " secs.");
     }
 }
