@@ -47,6 +47,13 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
                 "http://microprofile.io:1234/null")
         );
 
+    protected static final int TIMEOUT_CUSHION =
+        AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
+            Integer.getInteger(
+                "org.eclipse.microprofile.rest.client.tck.timeoutCushion",
+                10)
+        );
+
     @Test(expectedExceptions={ProcessingException.class})
     public void testConnectTimeout() throws Exception {
 
