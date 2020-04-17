@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ~ Copyright (c) 2017 Contributors to the Eclipse Foundation
   ~
@@ -38,6 +38,30 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.microprofile.reactive-streams-operators</groupId>
+            <artifactId>microprofile-reactive-streams-operators-api</artifactId>
+            <version>${microprofile-reactive-streams-operators.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- TODO: DELETE START -->
+        <!--
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-mp-client</artifactId>
+            <version>3.3.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>1.0.7</version>
+        </dependency>
+    -->
+        <!-- TODO: DELETE END -->
+
 
         <dependency>
             <groupId>jakarta.enterprise</groupId>
