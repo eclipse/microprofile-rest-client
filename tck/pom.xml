@@ -46,23 +46,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- TODO: DELETE START -->
-        <!--
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-mp-client</artifactId>
-            <version>3.3.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>yasson</artifactId>
-            <version>1.0.7</version>
-        </dependency>
-    -->
-        <!-- TODO: DELETE END -->
-
-
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
