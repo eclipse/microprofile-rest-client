@@ -31,10 +31,16 @@ public abstract class AbstractSseTest {
     private static final Logger LOG = Logger.getLogger(AbstractSseTest.class);
     protected static final int PORT = Integer.getInteger("sse.server.port", 10000);
 
-    private ExecutorService serverLaunchExecutor = Executors.newSingleThreadExecutor();
+    private static ExecutorService serverLaunchExecutor = Executors.newSingleThreadExecutor();
 
-    protected AtomicReference<Throwable> launchServer(CountDownLatch stopLatch, Consumer<MyEventSource> consumer)
-        throws Exception {
+    protected static AtomicReference<Throwable> launchServer(CountDownLatch stopLatch, 
+        Consumer<MyEventSource> consumer) throws Exception {
+        return launchServer(stopLatch, consumer, null);
+    }
+
+    protected static AtomicReference<Throwable> launchServer(CountDownLatch stopLatch, 
+        Consumer<MyEventSource> consumer, CountDownLatch cleanupLatch) throws Exception {
+
         AtomicReference<Throwable> caughtException = new AtomicReference<>();
         CountDownLatch startLatch = new CountDownLatch(1);
         serverLaunchExecutor.submit(() -> {
@@ -49,8 +55,13 @@ public abstract class AbstractSseTest {
                 LOG.error("launchServer caughtException ", t);
                 caughtException.set(t);
             }
+            finally {
+                if (cleanupLatch != null) {
+                    cleanupLatch.countDown();
+                }
+            }
         });
-        assertTrue(startLatch.await(10, TimeUnit.SECONDS), "Mock Sse Server did not start as expected");
+        assertTrue(startLatch.await(30, TimeUnit.SECONDS), "Mock Sse Server did not start as expected");
         return caughtException;
     }
 

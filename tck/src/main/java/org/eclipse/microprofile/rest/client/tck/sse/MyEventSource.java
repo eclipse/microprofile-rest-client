@@ -51,7 +51,7 @@ public class MyEventSource implements EventSource {
             emitter.data(data);
         }
         catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
