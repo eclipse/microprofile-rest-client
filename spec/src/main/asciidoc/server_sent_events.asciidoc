@@ -161,3 +161,7 @@ specification. Users are advised to either use `Publisher<InboundSseEvent>` or c
 Note that Java 9 and above provides the `java.util.concurrent.Flow` API, with enclosed interfaces that exactly match the
 `org.reactivestreams.*` interfaces.  MicroProfile Rest Client 2.0 only requires Java 8, but implementations may include
 support for Java 9 Flow APIs in addition to the `org.reactivestreams.*` APIs.
+
+SSE processing is intended to be asynchronous. The `Publisher` instance returned by the client interface should fire
+events to any associated `Subscription` instance using the `ExecutorService` specified when the client instance was
+built.
