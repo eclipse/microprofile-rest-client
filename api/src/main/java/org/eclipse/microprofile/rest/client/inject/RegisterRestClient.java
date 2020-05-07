@@ -45,7 +45,7 @@ public @interface RegisterRestClient {
      * overridden by MicroProfile Config.
      * 
      * @return the base URI for annotated client interface. An empty value indicates that the base URI must be specified
-     *  in MicrprofileConfig.
+     *  in MicroprofileConfig.
      * @since 1.2
      */
     String baseUri() default "";
