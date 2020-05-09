@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2019 Contributors to the Eclipse Foundation
+// Copyright (c) 2016-2020 Contributors to the Eclipse Foundation
 //
 // See the NOTICE file(s) distributed with this work for additional
 // information regarding copyright ownership.
@@ -17,6 +17,15 @@
 // limitations under the License.
 // Contributors:
 // John D. Ament, Andy McCright
+
+[[release_notes_20]]
+== Release Notes for MicroProfile Rest Client 2.0
+
+Changes since 1.4:
+
+- Added support for Server Sent Events
+- Changed dependency scope for most dependencies to `provided`
+- Update to use Jakarta EE 8 dependencies
 
 [[release_notes_14]]
 == Release Notes for MicroProfile Rest Client 1.4

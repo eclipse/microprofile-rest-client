@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2017 Contributors to the Eclipse Foundation
+  ~ Copyright (c) 2017-2020 Contributors to the Eclipse Foundation
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@
         <jakarta.inject-api.version>1.0</jakarta.inject-api.version>
         <jakarta.ws.rs-api.version>2.1.6</jakarta.ws.rs-api.version>
         <microprofile-config-api.version>1.4</microprofile-config-api.version>
+        <microprofile-reactive-streams-operators.version>1.0.1</microprofile-reactive-streams-operators.version>
         <org.osgi.annotation.versioning.version>1.1.0</org.osgi.annotation.versioning.version>
         <testng.version>6.9.9</testng.version>
     </properties>
