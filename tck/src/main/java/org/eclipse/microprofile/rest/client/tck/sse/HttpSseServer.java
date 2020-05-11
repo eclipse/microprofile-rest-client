@@ -26,10 +26,7 @@ import org.testng.log4testng.Logger;
 
 /**
  *
- * HTTP server which returns {@link #responseContent} on each request.
- *
- * Use {@link #keyStore(String, String)} and {@link #trustStore(String, String)} to set, appropriately, the server key store and trust store
- *
+ * HTTP server which fires server sent events.
  */
 public class HttpSseServer implements AutoCloseable {
 
