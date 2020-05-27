@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2020 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
+import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 
@@ -27,10 +28,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 @RegisterRestClient(configKey = "jsonb")
-public interface JsonBClient {
+@RegisterProvider(MyJsonBContextResolver.class)
+public interface JsonBPrivateClient extends JsonBClient {
 
-    @Path("/{objectName}")
+    @Path("/private/{objectName}")
     @GET
     @Produces("application/json")
-    MyJsonBObject get(@PathParam("objectName") String objectName);
+    MyJsonBObjectWithPrivateProperties getPrivate(@PathParam("objectName") String objectName);
 }

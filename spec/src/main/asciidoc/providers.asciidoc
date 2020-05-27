@@ -121,6 +121,38 @@ When an interface is registered that contains:
 
 Then a JSON-B or JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the JAX-RS 2.1 specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
 
+Users may configure how JSON-B serializes a request entity or deserializes a response entity by registering a class or instance of `ContextResolver<Jsonb>`. For example, the following code would enable the JSON-B provider implementation to deserialize private fields (without needing getters/setters):
+
+[source, java]
+----
+public class MyJsonbContextResolver implements ContextResolver<Jsonb> {
+
+    @Override
+    public Jsonb getContext(Class<?> type) {
+        JsonbConfig config = new JsonbConfig().
+                withPropertyVisibilityStrategy(new PropertyVisibilityStrategy(){
+                    @Override
+                    public boolean isVisible(Field f) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean isVisible(Method m) {
+                        return false;
+                    }
+                });
+        return JsonbBuilder.newBuilder().
+                withConfig(config).
+                build();
+    }
+}
+
+@RegisterRestClient
+@RegisterProvider(MyJsonbContextResolver.class)
+public interface JsonBClient {
+    //...
+}
+----
 === Default Message Body Readers and Writers
 
 For the following types, and any media type, the runtime must support `MessageBodyReader`s and `MessageBodyWriter`s being automatically registered.
