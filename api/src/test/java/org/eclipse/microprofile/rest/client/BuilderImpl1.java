@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017-2020 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,11 @@ public class BuilderImpl1 extends AbstractBuilder {
 
     @Override
     public RestClientBuilder readTimeout(long timeout, TimeUnit unit) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder followRedirects(boolean follow) {
         throw new IllegalStateException("not implemented");
     }
 
