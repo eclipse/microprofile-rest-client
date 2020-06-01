@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017-2020 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -215,7 +215,15 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      */
     RestClientBuilder hostnameVerifier(HostnameVerifier hostnameVerifier);
 
-
+    /**
+     * Specifies whether client built by this builder should follow HTTP
+     * redirect responses (30x) or not.
+     * 
+     * @param follow - true if the client should follow HTTP redirects, false if not.
+     * @return the current builder with the followRedirect property set.
+     * @since 2.0
+     */
+    RestClientBuilder followRedirects(boolean follow);
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the
