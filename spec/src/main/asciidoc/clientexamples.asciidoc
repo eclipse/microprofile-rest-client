@@ -165,6 +165,20 @@ RedirectClient client = RestClientBuilder.newBuilder()
 
 Alternatively, if the client is instantiated and injected using CDI, then it can be configured to follow redirect responses using the `<client_interface_name>/mp-rest/followRedirects` MP Config property. See <<cdi.asciidoc#mpconfig>> for more details.
 
+=== Using HTTP Proxy Servers
+
+In some environments it may be necessary to route requests through a HTTP proxy server to reach the REST endpoint. Users may configure the proxy server's address (hostname and port) using the `proxyAddress` method on `RestClientBuilder`. For example:
+
+[source, java]
+----
+ProxiedClient client = RestClientBuilder.newBuilder()
+                                        .baseUri(someUri)
+                                        .proxyAddress("myproxy.mycompany.com", 8080)
+                                        .build(ProxiedClient.class);
+----
+
+Alternatively, if the client is instantiated and injected using CDI, then the proxy address can be configured using the `<client_interface_name>/mp-rest/proxyAddress` MP Config property. See <<cdi.asciidoc#mpconfig>> for more details.
+
 === Invalid Client Interface Examples
 
 Invalid client interfaces will result in a RestClientDefinitionException (which may be wrapped in a `DefinitionException` if using CDI).  Invalid interfaces can include:
