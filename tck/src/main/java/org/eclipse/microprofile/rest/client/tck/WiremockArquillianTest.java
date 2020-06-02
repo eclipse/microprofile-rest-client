@@ -33,7 +33,7 @@ public abstract class WiremockArquillianTest extends Arquillian {
     private static String scheme;
     private static String context;
 
-    private static Integer getPort() {
+    public static Integer getPort() {
         if(port == null) {
             setupWireMockConnection();
         }

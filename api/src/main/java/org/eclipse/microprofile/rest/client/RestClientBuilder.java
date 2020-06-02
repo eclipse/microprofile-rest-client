@@ -226,6 +226,17 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     RestClientBuilder followRedirects(boolean follow);
 
     /**
+     * Specifies the HTTP proxy hostname/IP address and port to use for requests from client instances.
+     * 
+     * @param proxyHost - hostname or IP address of proxy server - must be non-null
+     * @param proxyPort - port of proxy server
+     * @throws IllegalArgumentException if the <code>proxyHost</code> is null or the <code>proxyPort</code> is invalid
+     * @return the current builder with the proxy host set
+     * @since 2.0
+     */
+    RestClientBuilder proxyAddress(String proxyHost, int proxyPort);
+
+    /**
      * Based on the configured RestClientBuilder, creates a new instance of the
      * given REST interface to invoke API calls against.
      *

@@ -76,6 +76,10 @@ public class BuilderImpl1 extends AbstractBuilder {
         throw new IllegalStateException("not implemented");
     }
 
+    public RestClientBuilder proxyAddress(String proxyHost, int proxyPort) {
+        throw new IllegalStateException("not implemented");
+    }
+
     @Override
     public <T> T build(Class<T> clazz) {
         throw new IllegalStateException("not implemented");
