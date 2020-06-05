@@ -19,6 +19,11 @@ package org.eclipse.microprofile.rest.client.tck.interfaces;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+
+import java.util.List;
+
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 
 @Path("/")
@@ -26,4 +31,7 @@ import javax.ws.rs.PUT;
 public interface StringClient {
     @PUT
     String getHeaderValue(String headerName);
+
+    @GET
+    String multiValues(@QueryParam("myParam") List<String> values);
 }

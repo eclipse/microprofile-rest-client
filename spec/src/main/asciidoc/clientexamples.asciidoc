@@ -179,6 +179,39 @@ ProxiedClient client = RestClientBuilder.newBuilder()
 
 Alternatively, if the client is instantiated and injected using CDI, then the proxy address can be configured using the `<client_interface_name>/mp-rest/proxyAddress` MP Config property. See <<cdi.asciidoc#mpconfig>> for more details.
 
+=== Specifying Query Parameter Style for multi-valued parameters
+
+Different RESTful services may require different styles of query parameters when handling multiple values for the same
+query parameter. For example, some servers will require query parameters to be expanded into multiple key/value pairs 
+such as `key=value1&key=value2&key=value3`. Others will require parameters to be separated by comma with a single
+key/value pair such as `key=value1,value2,value3`. Still others will require an array-like syntax using multiple
+key/value pairs such as `key[]=value1&key[]=value2&key[]=value3`.
+
+The `queryParamStyle(...)` method in the `RestClientBuilder` can be used to specify the desired format of query
+parameters when multiple values are sent for the same parameter. This method uses the `QueryParamStyle` enum. Here is
+an example:
+
+[source, java]
+----
+public interface QueryClient {
+    Response sendMultiValues(@QueryParam("myParam") List<String> values);
+}
+----
+[source, java]
+----
+QueryClient client = RestClientBuilder.newBuilder()
+                                      .baseUri(someUri)
+                                      .queryParamStyle(QueryParamStyle.COMMA_SEPARATED)
+                                      .build(QueryClient.class);
+Response response = client.sendMultiValues(Collections.asList("abc", "mno", "xyz"));
+----
+
+This should send a request with a query segment of `myParam=abc,mno,xyz`.
+
+Alternatively, if the client is instantiated and injected using CDI, then the query parameter style can be configured
+using the `<client_interface_name>/mp-rest/queryParamStyle` MP Config property. See <<cdi.asciidoc#mpconfig>> for more 
+details.
+
 === Invalid Client Interface Examples
 
 Invalid client interfaces will result in a RestClientDefinitionException (which may be wrapped in a `DefinitionException` if using CDI).  Invalid interfaces can include:
