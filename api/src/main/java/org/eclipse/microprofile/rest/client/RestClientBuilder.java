@@ -29,6 +29,7 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.Configurable;
 import java.util.concurrent.ExecutorService;
 
+import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 
@@ -235,6 +236,15 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      * @since 2.0
      */
     RestClientBuilder proxyAddress(String proxyHost, int proxyPort);
+
+    /**
+     * Specifies the URI formatting style to use when multiple query parameter values are passed to the client.
+     * 
+     * @param style - the URI formatting style to use for multiple query parameter values
+     * @return the current builder with the style of query params set
+     * @since 2.0
+     */
+    RestClientBuilder queryParamStyle(QueryParamStyle style);
 
     /**
      * Based on the configured RestClientBuilder, creates a new instance of the

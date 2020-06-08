@@ -19,6 +19,9 @@ package org.eclipse.microprofile.rest.client;
 import javax.annotation.Priority;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+
+import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
+
 import java.net.URI;
 import java.net.URL;
 import java.security.KeyStore;
@@ -78,6 +81,11 @@ public class BuilderImpl2 extends AbstractBuilder {
     }
 
     public RestClientBuilder proxyAddress(String proxyHost, int proxyPort) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
+    public RestClientBuilder queryParamStyle(QueryParamStyle style) {
         throw new IllegalStateException("not implemented");
     }
 

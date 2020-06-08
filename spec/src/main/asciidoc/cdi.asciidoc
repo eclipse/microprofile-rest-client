@@ -86,6 +86,7 @@ The values of the following properties will be provided via MicroProfile Config:
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/readTimeout`: Timeout specified in milliseconds to wait for a response from the remote endpoint.
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/followRedirects`: A boolean value (Any value other than "true" will be interpreted as "false") used to determine whether the client should follow HTTP redirect responses.
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/proxyAddress`: A string value in the form of `<proxyHost>:<proxyPort>` that specifies the HTTP proxy server hostname (or IP address) and port for requests of this client to use.
+- `com.mycompany.remoteServices.MyServiceClient/mp-rest/queryParamStyle`: An enumerated type string value with possible values of "MULTI_PAIRS" (default), "COMMA_SEPARATED", or "ARRAY_PAIRS" that specifies the format in which multiple values for the same query parameter is used.
 
 Implementations may support other custom properties registered in similar fashions or other ways.
 
@@ -120,6 +121,7 @@ Then config properties can be specified like:
 - `myClient/mp-rest/readTimeout`
 - `myClient/mp-rest/followRedirects`
 - `myClient/mp-rest/proxyAddresses`
+- `myClient/mp-rest/queryParamStyle`
 
 Multiple client interfaces may have the same configKey value, which would allow many interfaces to be configured with a single MP Config property.
 
