@@ -23,12 +23,14 @@
 
 Changes since 1.4:
 
-- Added proxy server configuration support
-- Added configuration for automatically following redirect responses
-- Added support for JSON-B configuration via `ContextResolver<Jsonb>`
-- Added support for Server Sent Events
-- Changed dependency scope for most dependencies to `provided`
-- Update to use Jakarta EE 8 dependencies
+- Defined that CDI-managed providers should be used instead of creating a new instance, if applicable.
+- Support different configurations for collections used in query parameters.
+- Added proxy server configuration support.
+- Added configuration for automatically following redirect responses.
+- Added support for JSON-B configuration via `ContextResolver<Jsonb>`.
+- Added support for Server Sent Events.
+- Changed dependency scope for most dependencies to `provided`.
+- Update to use Jakarta EE 8 dependencies.
 
 [[release_notes_14]]
 == Release Notes for MicroProfile Rest Client 1.4

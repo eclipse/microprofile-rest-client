@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2019 Contributors to the Eclipse Foundation
+// Copyright (c) 2017-2020 Contributors to the Eclipse Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -93,6 +93,62 @@ Any methods that read the response body as a stream must ensure that they reset 
 In addition to defining providers via the client definition, interfaces may use the `@RegisterProvider` annotation to define classes to be registered as providers in addition to providers registered via the `RestClientBuilder`.
 
 Providers may also be registered by implementing the `RestClientBuilderListener` or `RestClientListener` interfaces.  These interfaces are intended as SPIs to allow global provider registration.  The implementation of these interface must be specified in a `META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener` or `META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientListener` file, respectively, following the `ServiceLoader` pattern.
+
+[[cdiProviders]]
+=== CDI Managed Providers
+
+If CDI is available in the implementation's runtime environment, and CDI is managing the lifecycle of a registered
+provider class, the implementation must use the CDI-managed instance of the provider. This does not apply when an
+instance is registered, nor does it apply when a class is registered but no instance of that class is managed by CDI.
+
+The following example shows cases where a CDI-managed provider instance must be used:
+
+[source, java]
+----
+@ApplicationScoped // makes it a CDI bean
+public class MyFilter implements ClientRequestFilter {
+    @Inject SomeOtherCdiObject obj;
+    // ...
+}
+
+@RegisterRestClient
+@RegisterProvider(MyFilter.class)
+public interface MyRestClient1 { /* ... */ }
+
+@RegisterRestClient
+// MP Config property: com.mycompany.MyRestClient2/mp-rest/providers=com.mycompany.MyFilter
+public interface MyRestClient2 { /* ... */ }
+
+public interface MyRestClient3 { /* ... */ }
+
+public class Client3Builder {
+
+    public MyClient3 createClient3() {
+        return RestClientBuilder.baseUri(someUri).register(MyFilter.class).build(MyClient3.class);
+    }
+}
+----
+
+When registering `Features`, it should not matter whether the feature itself is managed by CDI or not, but the
+implementation should use CDI-managed instances of classes registered by the feature. For example:
+
+[source, java]
+----
+public class MyFeature implements Feature {
+    @Override
+    public boolean configure(FeatureContext context) {
+        context.register(MyFilter.class); // will be managed by CDI
+        context.register(new MyOtherFilter()); // will not be managed by CDI
+        return true;
+    }
+}
+
+@RegisterRestClient
+@RegisterProvider(MyFeature.class)
+public interface MyRestClient4 { /* ... */ }
+----
+
+For more information on integration with CDI, see <<cdi.asciidoc#restcdi>> for more details.
 
 === Provider Priority
 
