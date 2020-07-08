@@ -18,8 +18,10 @@
 // Contributors:
 // John D. Ament, Andy McCright
 
+== Release Notes
+
 [[release_notes_20]]
-== Release Notes for MicroProfile Rest Client 2.0
+=== Release Notes for MicroProfile Rest Client 2.0
 
 Changes since 1.4:
 
@@ -32,8 +34,12 @@ Changes since 1.4:
 - Changed dependency scope for most dependencies to `provided`.
 - Update to use Jakarta EE 8 dependencies.
 
+*Note:* Prior to this release it may have been possible to use the MicroProfile Rest Client APIs with Java EE 7
+APIs, which were added to the user application via the `compile` Maven scope. This is no longer possible as the
+APIs now depend on Jakarta EE 8 APIs and they must be provided by the implementation container (`provided` scope).
+
 [[release_notes_14]]
-== Release Notes for MicroProfile Rest Client 1.4
+=== Release Notes for MicroProfile Rest Client 1.4
 
 Changes since 1.3:
 
@@ -44,7 +50,7 @@ Changes since 1.3:
 - Fixed Javadoc warnings.
 
 [[release_notes_13]]
-== Release Notes for MicroProfile Rest Client 1.3
+=== Release Notes for MicroProfile Rest Client 1.3
 
 Changes since 1.2:
 
@@ -54,7 +60,7 @@ Changes since 1.2:
 - Defined `application/json` to be the default MediaType if none is specified in `@Produces`/`@Consumes`.
 
 [[release_notes_12]]
-== Release Notes for MicroProfile Rest Client 1.2
+=== Release Notes for MicroProfile Rest Client 1.2
 
 Changes since 1.1:
 
@@ -69,7 +75,7 @@ Changes since 1.1:
 - New `removeContext` method for `AsyncInvocationInterceptor` interface.
 
 [[release_notes_11]]
-== Release Notes for MicroProfile Rest Client 1.1
+=== Release Notes for MicroProfile Rest Client 1.1
 
 Changes since 1.0:
 
@@ -80,7 +86,7 @@ Changes since 1.0:
 
 
 [[release_notes_10]]
-== Release Notes for MicroProfile Rest Client 1.0
+=== Release Notes for MicroProfile Rest Client 1.0
 
 http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/microprofile-rest-client.pdf[MicroProfile Rest Client Spec PDF]
 http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/microprofile-rest-client.html[MicroProfile Rest Client Spec HTML]
