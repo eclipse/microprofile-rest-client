@@ -26,7 +26,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.inject.Inject;
@@ -69,8 +68,7 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
 
     private JsonPClient builtJsonPClient;
 
-    @BeforeTest
-    public void setupClient() throws Exception{
+    public void setupClient() {
         builtJsonPClient = RestClientBuilder.newBuilder()
             .baseUri(getServerURI())
             .build(JsonPClient.class);
@@ -78,24 +76,28 @@ public class InvokeWithJsonPProviderTest extends WiremockArquillianTest{
 
     @Test
     public void testGetExecutesForBothClients() {
+        setupClient();
         testGet(builtJsonPClient, BUILT);
         testGet(cdiJsonPClient, CDI);
     }
 
     @Test
     public void testGetSingleExecutesForBothClients() {
+        setupClient();
         testGetSingle(builtJsonPClient, BUILT);
         testGetSingle(cdiJsonPClient, CDI);
     }
 
     @Test
     public void testPostExecutes() {
+        setupClient();
         testPost(builtJsonPClient, BUILT);
         testPost(cdiJsonPClient, CDI);
     }
 
     @Test
     public void testPutExecutes() {
+        setupClient();
         testPut(builtJsonPClient, BUILT);
         testPut(cdiJsonPClient, CDI);
     }
