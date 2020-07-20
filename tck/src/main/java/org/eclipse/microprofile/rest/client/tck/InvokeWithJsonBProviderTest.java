@@ -28,7 +28,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.SkipException;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.inject.Inject;
@@ -71,8 +70,7 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
 
     private JsonBClient builtJsonBClient;
 
-    @BeforeTest
-    public void setupClient() throws Exception{
+    public void setupClient() {
         builtJsonBClient = RestClientBuilder.newBuilder()
             .baseUri(getServerURI())
             .build(JsonBClient.class);
@@ -80,13 +78,14 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
 
     @Test
     public void testGetExecutesForBothClients() throws Exception {
+        setupClient();
         assumeJsonbApiExists();
         testGet(builtJsonBClient, BUILT);
         testGet(cdiJsonBClient, CDI);
     }
 
 
-    private void testGet(JsonBClient client, String clientType) throws Exception {
+    private void testGet(JsonBClient client, String clientType) {
         reset();
         stubFor(get(urlEqualTo("/myObject"))
             .willReturn(aResponse()
@@ -102,7 +101,7 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest{
         assertEquals(obj.getName(), "myObject");
         assertEquals(obj.getQty(), 17);
         assertEquals(obj.getIgnoredField(), "CTOR");
-        assertEquals(obj.getDate(), LocalDate.of(2018,12,04));
+        assertEquals(obj.getDate(), LocalDate.of(2018,12,4));
     }
 
 }
