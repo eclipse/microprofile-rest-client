@@ -43,6 +43,12 @@ public class DefaultClientHeadersFactoryImplTest {
         return incomingHeaders;
     }
 
+    private MultivaluedMap<String, String> mockOutgoingHeaders() {
+        MultivaluedMap<String, String> outgoingHeaders = new MultivaluedHashMap<>();
+        outgoingHeaders.putSingle("Custom-Header", "my custom value");
+        return outgoingHeaders;
+    }
+
     @Test
     public void testUpdateWithNoConfigReturnsEmptyMap() {
         MultivaluedMap<String, String> incomingHeaders = mockIncomingHeaders();
@@ -57,6 +63,18 @@ public class DefaultClientHeadersFactoryImplTest {
         System.setProperty(DefaultClientHeadersFactoryImpl.PROPAGATE_PROPERTY, "Authorization,Favorite-Color");
         MultivaluedMap<String, String> incomingHeaders = mockIncomingHeaders();
         MultivaluedMap<String, String> clientOutgoingHeaders = new MultivaluedHashMap<>();
+        MultivaluedMap<String, String> updatedHeaders = impl.update(incomingHeaders, clientOutgoingHeaders);
+        assertNotNull(updatedHeaders);
+        assertEquals(updatedHeaders.size(), 2);
+        assertEquals("Basic xyz123", updatedHeaders.getFirst("Authorization"));
+        assertEquals("blue", updatedHeaders.getFirst("Favorite-Color"));
+    }
+
+    @Test
+    public void testUpdateWithConfiguredPropagationHeadersAndExistingOutgoingHeaders() {
+        System.setProperty(DefaultClientHeadersFactoryImpl.PROPAGATE_PROPERTY, "Authorization,Favorite-Color");
+        MultivaluedMap<String, String> incomingHeaders = mockIncomingHeaders();
+        MultivaluedMap<String, String> clientOutgoingHeaders = mockOutgoingHeaders();
         MultivaluedMap<String, String> updatedHeaders = impl.update(incomingHeaders, clientOutgoingHeaders);
         assertNotNull(updatedHeaders);
         assertEquals(updatedHeaders.size(), 2);
