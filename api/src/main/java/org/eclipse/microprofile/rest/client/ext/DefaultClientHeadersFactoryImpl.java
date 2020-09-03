@@ -37,6 +37,9 @@ import org.eclipse.microprofile.config.ConfigProvider;
  * request, this class will propagate those headers to the outbound Rest Client
  * request.
  *
+ * <p>Any headers present on {@code clientOutgoingHeaders} will not be returned when calling the
+ * {@link #update(MultivaluedMap, MultivaluedMap) update} method.
+ *
  * @since 1.2
  */
 public class DefaultClientHeadersFactoryImpl implements ClientHeadersFactory {

@@ -28,7 +28,9 @@ import javax.ws.rs.core.MultivaluedMap;
  * <code>HeaderParam</code> annotations on the client interface.
  * <p>
  * This method should return a MultivaluedMap of headers to be merged with the
- * outgoing headers. This will determine the final set of HTTP headers that will
+ * outgoing headers. If it's desired for {@code clientOutgoingHeaders} to be present in
+ * addition to any propagated headers, {@link #update(MultivaluedMap, MultivaluedMap) update}
+ * needs to combine the two sets to return. This will determine the final set of HTTP headers that will
  * be sent to the outbound entity provider processing chain - thus any filters,
  * MessageBodyWriters, interceptors, etc. could further refine the set of
  * headers actually sent on the client request.
@@ -41,7 +43,7 @@ import javax.ws.rs.core.MultivaluedMap;
  * with <code>{@literal @}ApplicationScoped</code>, etc.), the implementation
  * must use the appropriate CDI-managed instance, and must support
  * <code>{@literal @}Inject</code> injection.
- * 
+ *
  * @since 1.2
  */
 public interface ClientHeadersFactory {
