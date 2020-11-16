@@ -22,9 +22,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.eclipse.jetty.servlets.EventSource;
+import org.testng.log4testng.Logger;
 
 public class MyEventSource implements EventSource {
-
+    private static final Logger LOG = Logger.getLogger(AbstractSseTest.class);
+    
     private Emitter emitter;
     private final Consumer<MyEventSource> consumer;
     private final CountDownLatch closeLatch = new CountDownLatch(1);
@@ -49,8 +51,10 @@ public class MyEventSource implements EventSource {
     public void emitData(String data) {
         try {
             emitter.data(data);
+            LOG.debug("emitted data: " + data);
         }
         catch (IOException e) {
+            LOG.debug("Caught IOException", e);
             throw new RuntimeException(e);
         }
     }

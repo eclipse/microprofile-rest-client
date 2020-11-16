@@ -18,7 +18,10 @@ package org.eclipse.microprofile.rest.client.tck.sse;
 import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.launchServer;
 import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.PORT;
 
+import java.lang.reflect.Method;
 import java.net.URI;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -43,6 +46,11 @@ import org.testng.log4testng.Logger;
 public class ReactiveStreamsPublisherTckTest extends PublisherVerification<InboundSseEvent> {
     private static final Logger LOG = Logger.getLogger(ReactiveStreamsPublisherTckTest.class);
 
+    protected static final int DEFAULT_TIMEOUT = AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
+        Integer.getInteger("org.eclipse.microprofile.rest.client.tck.sse.reactiveStreamsDefaultTimeoutMillis", 5000));
+    protected static final int DEFAULT_RECURSION_DEPTH = AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
+        Integer.getInteger("org.eclipse.microprofile.rest.client.tck.sse.reactiveStreamsDefaultRecursionDepth", 100));
+
     private CountDownLatch cleanupLatch;
     private AtomicBoolean inMethod = new AtomicBoolean(false);
 
@@ -59,11 +67,12 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     }
 
     public ReactiveStreamsPublisherTckTest() {
-        super(new TestEnvironment(1000));
+        super(new TestEnvironment(DEFAULT_TIMEOUT));
     }
 
     @BeforeMethod
-    private void setupLatch() {
+    private void setupLatch(Method method) {
+        LOG.debug("About to invoke test: " + method);
         cleanupLatch = new CountDownLatch(1);
         inMethod.compareAndSet(false, true);
     }
@@ -77,6 +86,11 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     }
 
     @Override
+    public long boundedDepthOfOnNextAndRequestRecursion() {
+        return DEFAULT_RECURSION_DEPTH;
+    }
+
+    @Override
     public Publisher<InboundSseEvent> createFailedPublisher() {
         cleanupLatch.countDown();
         return null; // TODO: implement for failed publisher test support (optional tests)
@@ -85,12 +99,18 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     @Override
     public Publisher<InboundSseEvent> createPublisher(long elements) {
         LOG.debug("createPublisher (" + elements + ")");
+
         CountDownLatch latch = new CountDownLatch(1);
         try {
             AtomicReference<Throwable> serverException = launchServer(latch, es -> {
                 for (long i = 0; i < elements; i++) {
                     if (inMethod.get()) {
-                        es.emitData(Long.toString(i));
+                        try {
+                            es.emitData(Long.toString(i));
+                        }
+                        catch (RuntimeException ex) {
+                            break;
+                        }
                     }
                 }
                 latch.countDown();
