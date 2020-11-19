@@ -39,6 +39,8 @@
         <microprofile-reactive-streams-operators.version>1.0.1</microprofile-reactive-streams-operators.version>
         <org.osgi.annotation.versioning.version>1.1.0</org.osgi.annotation.versioning.version>
         <testng.version>6.9.9</testng.version>
+        <revremark>Draft</revremark>
+        <inceptionYear>2017</inceptionYear>
     </properties>
 
     <licenses>
@@ -296,8 +298,31 @@
                         <exclude>.checkstyle</exclude>
                         <exclude>.factorypath</exclude>
                         <exclude>.editorconfig</exclude>
+                        <exclude>**/*.html</exclude>
+                        <exclude>**/license-efsl.adoc</exclude>
+                        <exclude>**/*.asciidoc</exclude>
+                        <exclude>**/*.md</exclude>
+                        <exclude>.vscode**</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.12</version>
+                    <executions>
+                        <execution>
+                            <id>timestamp-property</id>
+                            <goals>
+                                <goal>timestamp-property</goal>
+                            </goals>
+                            <phase>validate</phase>
+                            <configuration>
+                                <name>currentYear</name>
+                                <pattern>yyyy</pattern>
+                            </configuration>
+                        </execution>
+                    </executions>
             </plugin>
 
         </plugins>
