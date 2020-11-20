@@ -83,6 +83,8 @@
                         <revnumber>${project.version}</revnumber>
                         <revremark>${revremark}</revremark>
                         <revdate>${revisiondate}</revdate>  
+                        <inceptionYear>${inceptionYear}</inceptionYear>
+                        <currentYear>${currentYear}</currentYear>
                     </attributes>
                 </configuration>
             </plugin>
