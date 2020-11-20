@@ -33,7 +33,8 @@
         <license>Apache License v 2.0</license>
         <maven.build.timestamp.format>MMMM dd, yyyy</maven.build.timestamp.format>
         <revisiondate>${maven.build.timestamp}</revisiondate>
-        <revremark>Draft</revremark>
+        <restclient.spec.pdf>${project.build.directory}/generated-docs/${project.build.finalName}.pdf</restclient.spec.pdf>
+        <restclient.spec.html>${project.build.directory}/generated-docs/${project.build.finalName}.html</restclient.spec.html>
     </properties>
 
     <build>
@@ -59,12 +60,7 @@
                         </goals>
                         <configuration>
                             <backend>pdf</backend>
-                            <outputFile>${project.build.directory}/generated-docs/microprofile-rest-client-${project.version}.pdf</outputFile>
-                            <attributes>
-                                <revnumber>${project.version}</revnumber>
-                                <revremark>${revremark}</revremark>
-                                <revdate>${revisiondate}</revdate>
-                            </attributes>
+                            <outputFile>${restclient.spec.pdf}</outputFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -75,12 +71,7 @@
                         </goals>
                         <configuration>
                             <backend>html5</backend>
-                            <outputFile>${project.build.directory}/generated-docs/microprofile-rest-client-${project.version}.html</outputFile>
-                            <attributes>
-                                <revnumber>${project.version}</revnumber>
-                                <revremark>${revremark}</revremark>
-                                <revdate>${revisiondate}</revdate>
-                            </attributes>
+                            <outputFile>${restclient.spec.html}</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -89,8 +80,38 @@
                     <sourceHighlighter>coderay</sourceHighlighter>
                     <attributes>
                         <license>Apache License v2.0</license>
+                        <revnumber>${project.version}</revnumber>
+                        <revremark>${revremark}</revremark>
+                        <revdate>${revisiondate}</revdate>  
+                        <inceptionYear>${inceptionYear}</inceptionYear>
+                        <currentYear>${currentYear}</currentYear>
                     </attributes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${restclient.spec.pdf}</file>
+                                    <type>pdf</type>
+                                </artifact>
+                                <artifact>
+                                    <file>${restclient.spec.html}</file>
+                                    <type>html</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
