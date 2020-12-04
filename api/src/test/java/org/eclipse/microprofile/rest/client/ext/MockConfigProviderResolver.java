@@ -20,17 +20,20 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigValue;
 import org.eclipse.microprofile.config.spi.ConfigBuilder;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.eclipse.microprofile.config.spi.ConfigSource;
+import org.eclipse.microprofile.config.spi.Converter;
 
 public class MockConfigProviderResolver extends ConfigProviderResolver {
 
     @Override
     public Config getConfig() {
-        return new Config(){
+        return new Config() {
             @Override
             @SuppressWarnings("unchecked")
             public <T> T getValue(String propertyName, Class<T> propertyType) {
@@ -78,13 +81,59 @@ public class MockConfigProviderResolver extends ConfigProviderResolver {
                     public String getName() {
                         return "MockConfigSource";
                     }
+
+                    @Override
+                    public Set<String> getPropertyNames() {
+                        return getSystemProps().keySet();
+                    }
                 });
             }
 
-            @SuppressWarnings({"unchecked", "rawtypes"})
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             private Map<String, String> getSystemProps() {
                 Map sysProps = (Map) System.getProperties();
                 return (Map<String, String>) sysProps;
+            }
+
+            @Override
+            public ConfigValue getConfigValue(String propertyName) {
+                return new ConfigValue(){
+
+                    @Override
+                    public String getName() {
+                        return propertyName;
+                    }
+
+                    @Override
+                    public String getValue() {
+                        return getSystemProps().get(propertyName);
+                    }
+
+                    @Override
+                    public String getRawValue() {
+                        return getSystemProps().get(propertyName);
+                    }
+
+                    @Override
+                    public String getSourceName() {
+                        return getConfigSources().iterator().next().getName();
+                    }
+
+                    @Override
+                    public int getSourceOrdinal() {
+                        return getConfigSources().iterator().next().getOrdinal();
+                    }
+                };
+            }
+
+            @Override
+            public <T> Optional<Converter<T>> getConverter(Class<T> forType) {
+                return Optional.empty();
+            }
+
+            @Override
+            public <T> T unwrap(Class<T> type) {
+                throw new IllegalArgumentException();
             }
         };
     }
