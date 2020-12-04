@@ -116,12 +116,12 @@ public class MockConfigProviderResolver extends ConfigProviderResolver {
 
                     @Override
                     public String getSourceName() {
-                        return "SystemPropWrapper";
+                        return getConfigSources().iterator().next().getName();
                     }
 
                     @Override
                     public int getSourceOrdinal() {
-                        return getSystemProps().containsKey(propertyName) ? 789 : 0;
+                        return getConfigSources().iterator().next().getOrdinal();
                     }
                 };
             }
