@@ -79,7 +79,7 @@ public class ProxyServerTest extends WiremockArquillianTest {
             startDestinationServer("foo");
             SimpleGetApi client = RestClientBuilder.newBuilder()
                                                    .proxyAddress("localhost", getPort())
-                                                   .baseUri(URI.create("http://localhost:" + DESTINATION_SERVER_PORT + "/testProxy"))
+                                                   .baseUri(URI.create(getStringURL() + "testProxy"))
                                                    .build(SimpleGetApi.class);
             Response response = client.executeGet();
             assertEquals(response.getStatus(), 200);
