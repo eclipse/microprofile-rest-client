@@ -18,10 +18,6 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
-import static org.testng.Assert.assertEquals;
-
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURIAndInterceptor;
 import org.eclipse.microprofile.rest.client.tck.interfaces.Loggable;
@@ -34,7 +30,14 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
+
+import javax.inject.Inject;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Verifies that CDI interceptors bound to client interface methods are invoked.
@@ -69,22 +72,30 @@ public class CDIInterceptorTest extends Arquillian {
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
+    @AfterTest
+    public void cleanUp() {
+        LoggableInterceptor.reset();
+    }
+
     @Test
     public void testInterceptorInvoked() throws Exception {
-        LoggableInterceptor.setInvocationMessage("");
         String expectedResponse = "GET http://localhost:5017/myBaseUri/hello";
         assertEquals(client.get(), expectedResponse);
 
-        assertEquals(LoggableInterceptor.getInvocationMessage(),
-            ClientWithURIAndInterceptor.class.getName() + ".get " + expectedResponse);
+        assertTrue(ClientWithURIAndInterceptor.class.isAssignableFrom(LoggableInterceptor.getInvocationClass()),
+            "Invalid declaring class of the intercepted method. Expected " + ClientWithURIAndInterceptor.class.getName()
+                + " or a subclass, found: " + LoggableInterceptor.getInvocationClass());
+        assertEquals(LoggableInterceptor.getInvocationMethod(), "get");
+        assertEquals(LoggableInterceptor.getResult(), expectedResponse);
     }
 
     @Test
     public void testInterceptorNotInvokedWhenNoAnnotationApplied() throws Exception {
-        LoggableInterceptor.setInvocationMessage("");
         String expectedResponse = "GET http://localhost:5017/myBaseUri/hello";
         assertEquals(client.getNoInterceptor(), expectedResponse);
 
-        assertEquals(LoggableInterceptor.getInvocationMessage(), "");
+        assertNull(LoggableInterceptor.getInvocationClass());
+        assertNull(LoggableInterceptor.getInvocationMethod());
+        assertNull(LoggableInterceptor.getResult());
     }
 }
