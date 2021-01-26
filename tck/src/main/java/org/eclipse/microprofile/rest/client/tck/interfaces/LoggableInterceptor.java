@@ -18,35 +18,47 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import java.lang.reflect.Method;
-
 import javax.annotation.Priority;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.lang.reflect.Method;
 
 @Loggable
 @Interceptor
 @Priority(Interceptor.Priority.APPLICATION)
 public class LoggableInterceptor {
 
-    private static String invocationMessage;
+    private static String invocationMethod;
+    private static Class<?> invocationClass;
+    private static Object result;
 
-    public static String getInvocationMessage() {
-        return invocationMessage;
+    public static String getInvocationMethod() {
+        return invocationMethod;
     }
 
-    public static void setInvocationMessage(String msg) {
-        invocationMessage = msg;
+    public static Class<?> getInvocationClass() {
+        return invocationClass;
+    }
+
+    public static Object getResult() {
+        return result;
+    }
+
+    public static void reset() {
+        invocationClass = null;
+        invocationMethod = null;
+        result = null;
     }
 
     @AroundInvoke
     public Object logInvocation(InvocationContext ctx) throws Exception {
         Method m = ctx.getMethod();
-        invocationMessage = m.getDeclaringClass().getName() + "." + m.getName();
+        invocationClass = m.getDeclaringClass();
+        invocationMethod = m.getName();
 
         Object returnVal = ctx.proceed();
-        invocationMessage += " " + returnVal;
+        result = returnVal;
         return returnVal;
     }
 }
