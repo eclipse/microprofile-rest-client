@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import static org.testng.Assert.assertTrue;
 
 public class TimeoutViaMPConfigTest extends TimeoutTestBase {
+    private static final int TIMEOUT = 7000;
 
     @Inject
     @RestClient
@@ -43,8 +44,8 @@ public class TimeoutViaMPConfigTest extends TimeoutTestBase {
         String clientName = SimpleGetApi.class.getName();
         String timeoutProps =
                 clientName + "/mp-rest/uri=" + UNUSED_URL + System.lineSeparator() +
-                clientName + "/mp-rest/connectTimeout=7000" + System.lineSeparator() +
-                clientName + "/mp-rest/readTimeout=7000";
+                clientName + "/mp-rest/connectTimeout=" + TIMEOUT + System.lineSeparator() +
+                clientName + "/mp-rest/readTimeout=" + TIMEOUT;
         StringAsset mpConfig = new StringAsset(timeoutProps);
         return ShrinkWrap.create(WebArchive.class, TimeoutViaMPConfigTest.class.getSimpleName()+".war")
             .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties")
@@ -66,9 +67,9 @@ public class TimeoutViaMPConfigTest extends TimeoutTestBase {
 
     @Override
     protected void checkTimeElapsed(long elapsed) {
-        assertTrue(elapsed >= 7);
+        assertTrue(elapsed >= TIMEOUT - ROUNDING_FACTOR_CUSHION);
         // allow extra seconds cushion for slower test machines
-        final long elapsedLimit = 7 + TIMEOUT_CUSHION;
-        assertTrue(elapsed < elapsedLimit, "Elapsed time expected under " + elapsedLimit + " secs, but was " + elapsed + " secs.");
+        final long elapsedLimit = TIMEOUT + TIMEOUT_CUSHION;
+        assertTrue(elapsed < elapsedLimit, "Elapsed time expected under " + elapsedLimit + "ms, but was " + elapsed + "ms.");
     }
 }
