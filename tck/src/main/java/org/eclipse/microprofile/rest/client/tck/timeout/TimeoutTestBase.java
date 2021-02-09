@@ -33,12 +33,14 @@ import javax.ws.rs.ProcessingException;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.testng.annotations.Test;
+import org.testng.log4testng.Logger;
 
 
 
 
 
 public abstract class TimeoutTestBase extends WiremockArquillianTest {
+    private static final Logger LOG = Logger.getLogger(TimeoutTestBase.class);
 
     protected static final String UNUSED_URL =
         AccessController.doPrivileged((PrivilegedAction<String>) () ->
@@ -51,7 +53,14 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
             Integer.getInteger(
                 "org.eclipse.microprofile.rest.client.tck.timeoutCushion",
-                10)
+                1000)
+        );
+
+    protected static final int ROUNDING_FACTOR_CUSHION =
+        AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
+            Integer.getInteger(
+                "org.eclipse.microprofile.rest.client.tck.roundingFactorCushion",
+                300)
         );
 
     @Test(expectedExceptions={ProcessingException.class})
@@ -64,8 +73,11 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         }
         finally {
             long elapsedTime = System.nanoTime() - startTime;
-            long elapsedSecs = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-            checkTimeElapsed(elapsedSecs);
+            long elapsedMs = TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("testConnectTimeout - elapsedTime (millis) = " + elapsedMs);
+            }
+            checkTimeElapsed(elapsedMs);
         }
     }
 
@@ -82,8 +94,11 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         }
         finally {
             long elapsedTime = System.nanoTime() - startTime;
-            long elapsedSecs = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
-            checkTimeElapsed(elapsedSecs);
+            long elapsedMs = TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("testConnectTimeout - elapsedTime (millis) = " + elapsedMs);
+            }
+            checkTimeElapsed(elapsedMs);
         }
     }
 
@@ -91,5 +106,5 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
     protected abstract SimpleGetApi getClientWithConnectTimeout();
 
 
-    protected abstract void checkTimeElapsed(long elapsed);
+    protected abstract void checkTimeElapsed(long elapsedMS);
 }
