@@ -68,11 +68,11 @@ public class CDIManagedProviderTest extends Arquillian {
         String simpleName = CDIManagedProviderTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
                 .addClasses(SimpleGetApi.class)
-                .addAsManifestResource(new StringAsset(String.format(uriProp + "%n" + providerProp)), 
+                .addAsManifestResource(new StringAsset(String.format(uriProp + "%n" + providerProp)),
                                        "microprofile-config.properties")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war").addAsLibrary(jar)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
