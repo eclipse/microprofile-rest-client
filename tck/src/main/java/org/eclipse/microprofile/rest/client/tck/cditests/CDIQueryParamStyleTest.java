@@ -70,7 +70,7 @@ public class CDIQueryParamStyleTest extends Arquillian {
         String simpleName = CDIQueryParamStyleTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
             .addClasses(StringClient.class, ReturnWithURLRequestFilter.class, QueryParamStyleTest.class)
-            .addAsManifestResource(new StringAsset(String.format(filterProperty + "%n" 
+            .addAsManifestResource(new StringAsset(String.format(filterProperty + "%n"
                                                                + urlProperty + "%n"
                                                                + multiPairsProperty + "%n"
                                                                + commaSeparatedProperty + "%n"
@@ -79,7 +79,7 @@ public class CDIQueryParamStyleTest extends Arquillian {
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
             .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class CDIQueryParamStyleTest extends Arquillian {
     @RegisterRestClient(configKey = "queryParamStyle")
     public static interface CommaSeparatedStringClient extends StringClient {
     }
-    
+
     @RegisterRestClient(configKey = "queryParamStyle")
     public static interface ArrayPairsStringClient extends StringClient {
     }
