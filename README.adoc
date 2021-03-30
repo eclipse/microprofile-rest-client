@@ -23,7 +23,7 @@ image:https://badges.gitter.im/eclipse/microprofile-rest-client.svg[link="https:
 == Rationale
 
 The MicroProfile Rest Client provides a type-safe approach to invoke RESTful services over HTTP.  As much as possible the
-MP Rest Client attempts to use link:https://jcp.org/en/jsr/detail?id=339[JAX-RS 2.0] APIs for consistency and easier re-use.
+MP Rest Client attempts to use link:https://jakarta.ee/specifications/restful-ws/2.1/[Jakarta RESTful Web Services 2.1] APIs for consistency and easier re-use.
 
 == Example
 
