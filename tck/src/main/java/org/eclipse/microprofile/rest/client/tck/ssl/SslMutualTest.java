@@ -35,7 +35,7 @@ import javax.ws.rs.ProcessingException;
 import java.security.KeyStore;
 
 import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
-import static org.junit.Assert.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 public class SslMutualTest extends AbstractSslTest {
 
