@@ -91,6 +91,17 @@ The values of the following properties will be provided via MicroProfile Config:
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/proxyAddress`: A string value in the form of `<proxyHost>:<proxyPort>` that specifies the HTTP proxy server hostname (or IP address) and port for requests of this client to use.
 - `com.mycompany.remoteServices.MyServiceClient/mp-rest/queryParamStyle`: An enumerated type string value with possible values of "MULTI_PAIRS" (default), "COMMA_SEPARATED", or "ARRAY_PAIRS" that specifies the format in which multiple values for the same query parameter is used.
 
+On top of the per service-client settings, the following properties can be provided as defaults by using the `mp.restclient` prefix.
+The specific properties listed above will override those defaults.
+
+- `mp.restclient/providers`
+- `mp.restclient/connectTimeout`
+- `mp.restclient/readTimeout`
+- `mp.restclient/followRedirects`
+- `mp.restclient/proxyAddress`
+- `mp.restclient/queryParamStyle`
+
+
 Implementations may support other custom properties registered in similar fashions or other ways.
 
 The `url` property must resolve to a value that can be parsed by the `URL` converter required by the MicroProfile Config spec. Likewise, the `uri` property must resolve to a value that can be parsed by the `URI` converter.
