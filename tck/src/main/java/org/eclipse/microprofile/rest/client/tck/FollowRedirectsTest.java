@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,6 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
-import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiWithConfigKey;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import javax.ws.rs.core.Response;
-
-import com.github.tomakehurst.wiremock.client.WireMock;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
@@ -38,16 +25,29 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-public class FollowRedirectsTest extends WiremockArquillianTest{
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
+import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiWithConfigKey;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
+
+import jakarta.ws.rs.core.Response;
+
+public class FollowRedirectsTest extends WiremockArquillianTest {
     private static final String FOLLOWED_REDIRECT = "followed redirect";
     private static final String DID_NOT_FOLLOW_REDIRECT = "did not follow redirect";
     private static final String LOCATION = "Location";
 
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, 
-                FollowRedirectsTest.class.getSimpleName()+".war")
-            .addClasses(SimpleGetApi.class, SimpleGetApiWithConfigKey.class, WiremockArquillianTest.class);
+        return ShrinkWrap.create(WebArchive.class,
+                FollowRedirectsTest.class.getSimpleName() + ".war")
+                .addClasses(SimpleGetApi.class, SimpleGetApiWithConfigKey.class, WiremockArquillianTest.class);
     }
 
     @BeforeMethod
@@ -128,14 +128,14 @@ public class FollowRedirectsTest extends WiremockArquillianTest{
 
     private static Response execute(SimpleGetApi simpleGetApi, int redirectCode) throws Exception {
         stubFor(get(urlEqualTo("/"))
-            .willReturn(aResponse()
-                .withStatus(redirectCode)
-                .withBody(DID_NOT_FOLLOW_REDIRECT)
-                .withHeader(LOCATION, getStringURL() + "redirected")));
+                .willReturn(aResponse()
+                        .withStatus(redirectCode)
+                        .withBody(DID_NOT_FOLLOW_REDIRECT)
+                        .withHeader(LOCATION, getStringURL() + "redirected")));
         stubFor(get(urlEqualTo("/redirected"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withBody(FOLLOWED_REDIRECT)));
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(FOLLOWED_REDIRECT)));
 
         return simpleGetApi.executeGet();
     }

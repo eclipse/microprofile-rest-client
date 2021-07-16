@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,30 +21,27 @@ package org.eclipse.microprofile.rest.client.tck.interfaces;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-import javax.json.bind.JsonbConfig;
-import javax.json.bind.config.PropertyVisibilityStrategy;
-import javax.ws.rs.ext.ContextResolver;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbConfig;
+import jakarta.json.bind.config.PropertyVisibilityStrategy;
+import jakarta.ws.rs.ext.ContextResolver;
 
 public class MyJsonBContextResolver implements ContextResolver<Jsonb> {
     @Override
     public Jsonb getContext(Class<?> type) {
-        JsonbConfig config = new JsonbConfig().
-                withPropertyVisibilityStrategy(new PropertyVisibilityStrategy(){
+        JsonbConfig config = new JsonbConfig().withPropertyVisibilityStrategy(new PropertyVisibilityStrategy() {
 
-                    @Override
-                    public boolean isVisible(Field f) {
-                        return true;
-                    }
+            @Override
+            public boolean isVisible(Field f) {
+                return true;
+            }
 
-                    @Override
-                    public boolean isVisible(Method m) {
-                        return false;
-                    }
-                });
-        return JsonbBuilder.newBuilder().
-                withConfig(config).
-                build();
+            @Override
+            public boolean isVisible(Method m) {
+                return false;
+            }
+        });
+        return JsonbBuilder.newBuilder().withConfig(config).build();
     }
 }

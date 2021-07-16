@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientResponseContext;
-import javax.ws.rs.client.ClientResponseFilter;
 import java.io.IOException;
 
-public class TLClientResponseFilter implements ClientResponseFilter{
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientResponseFilter;
+
+public class TLClientResponseFilter implements ClientResponseFilter {
 
     private int threadLocalIntDuringResponse;
 

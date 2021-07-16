@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,19 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import java.io.IOException;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientResponseContext;
-import javax.ws.rs.client.ClientResponseFilter;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientResponseFilter;
 
-public class ThreadedClientResponseFilter implements ClientResponseFilter{
+public class ThreadedClientResponseFilter implements ClientResponseFilter {
     public final static String RESPONSE_THREAD_ID_HEADER = "Response-Thread-ID";
     public final static String RESPONSE_THREAD_NAME_HEADER = "Response-Thread-Name";
     private String responseThreadId;
     private String responseThreadName;
 
     @Override
-    public void filter(ClientRequestContext clientRequestContext, ClientResponseContext clientResponseContext) throws IOException {
+    public void filter(ClientRequestContext clientRequestContext, ClientResponseContext clientResponseContext)
+            throws IOException {
         responseThreadId = "" + Thread.currentThread().getId();
         clientResponseContext.getHeaders().putSingle(RESPONSE_THREAD_ID_HEADER, responseThreadId);
         responseThreadName = Thread.currentThread().getName();

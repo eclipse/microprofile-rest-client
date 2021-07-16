@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,19 +52,19 @@ public abstract class AbstractSslTest extends Arquillian {
     static final String BASE_URI_STRING = "https://" + HTTPS_HOST + ":" + HTTPS_PORT;
     static final URI BASE_URI = URI.create(BASE_URI_STRING);
 
-    static File serverKeystore;
-    static File serverTruststore;
+    protected static File serverKeystore;
+    protected static File serverTruststore;
 
-    static File clientKeystore;
-    static File clientTruststore;
-    static String clientTruststoreFromClasspath = "client.truststore";
-    static String clientKeystoreFromClasspath = "client.keystore";
+    protected static File clientKeystore;
+    protected static File clientTruststore;
+    protected static String clientTruststoreFromClasspath = "client.truststore";
+    protected static String clientKeystoreFromClasspath = "client.keystore";
 
-    static File serverWrongHostnameKeystore;
-    static File clientWrongHostnameTruststore;
-    static String clientWrongHostnameTruststoreFromClasspath = "client-wrong-hostname.truststore";
+    protected static File serverWrongHostnameKeystore;
+    protected static File clientWrongHostnameTruststore;
+    protected static String clientWrongHostnameTruststoreFromClasspath = "client-wrong-hostname.truststore";
 
-    static File anotherTruststore;
+    protected static File anotherTruststore;
 
     static final String PASSWORD = "password";
 
@@ -106,7 +106,8 @@ public abstract class AbstractSslTest extends Arquillian {
                 String certsDir = reader.readLine();
 
                 initializeCertPaths(certsDir);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException("failed to read certification file", e);
             }
         }
@@ -158,7 +159,8 @@ public abstract class AbstractSslTest extends Arquillian {
         try (InputStream input = AbstractSslTest.class.getResourceAsStream(resourceLocation)){
             Files.copy(input, diskLocation);
             diskLocation.toFile().deleteOnExit();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Failed to copy " + resource + " to " + directory.toAbsolutePath(), e);
         }
     }

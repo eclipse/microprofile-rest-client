@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,16 +28,12 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.testng.annotations.Test;
 import org.testng.log4testng.Logger;
-
-
-
-
 
 public abstract class TimeoutTestBase extends WiremockArquillianTest {
     private static final Logger LOG = Logger.getLogger(TimeoutTestBase.class);
@@ -104,7 +100,6 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
 
     protected abstract SimpleGetApi getClientWithReadTimeout();
     protected abstract SimpleGetApi getClientWithConnectTimeout();
-
 
     protected abstract void checkTimeElapsed(long elapsedMS);
 }

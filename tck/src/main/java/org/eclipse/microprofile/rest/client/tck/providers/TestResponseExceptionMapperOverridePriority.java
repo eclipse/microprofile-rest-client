@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
-import javax.ws.rs.Priorities;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 public class TestResponseExceptionMapperOverridePriority implements ResponseExceptionMapper<Throwable> {
     private static boolean handlesCalled = false;
@@ -35,7 +35,7 @@ public class TestResponseExceptionMapperOverridePriority implements ResponseExce
     }
 
     @Override
-    public boolean handles(int status, MultivaluedMap<String,Object> headers) {
+    public boolean handles(int status, MultivaluedMap<String, Object> headers) {
         handlesCalled = true;
         return false;
     }

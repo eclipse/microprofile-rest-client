@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
 import java.util.Date;
-import javax.ws.rs.GET;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.core.Response;
+
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.core.Response;
 
 public interface InvalidComputeMethodSignature {
 
@@ -46,7 +48,7 @@ public interface InvalidComputeMethodSignature {
         return "should not be invoked - unexpected Double arg";
     }
 
-    @ClientHeaderParam(name="TestHeader", value="{invalidMethod}")
+    @ClientHeaderParam(name = "TestHeader", value = "{invalidMethod}")
     @GET
     Response get();
 }

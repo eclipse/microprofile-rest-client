@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,69 +18,69 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import javax.json.JsonObject;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 
-@ClientHeaderParam(name="InterfaceHeaderExplicit", value="interfaceExplicit")
-@ClientHeaderParam(name="OverrideableExplicit", value="overrideableInterfaceExplicit")
-@ClientHeaderParam(name="InterfaceHeaderComputed", value="{computeForInterface}")
-@ClientHeaderParam(name="OverrideableComputed", value="{computeForInterface2}")
-@ClientHeaderParam(name="OptionalInterfaceHeader", value="{fail}", required=false)
-@ClientHeaderParam(name="InterfaceMultiValuedHeaderExplicit", value={"abc", "xyz"})
+import jakarta.json.JsonObject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
+
+@ClientHeaderParam(name = "InterfaceHeaderExplicit", value = "interfaceExplicit")
+@ClientHeaderParam(name = "OverrideableExplicit", value = "overrideableInterfaceExplicit")
+@ClientHeaderParam(name = "InterfaceHeaderComputed", value = "{computeForInterface}")
+@ClientHeaderParam(name = "OverrideableComputed", value = "{computeForInterface2}")
+@ClientHeaderParam(name = "OptionalInterfaceHeader", value = "{fail}", required = false)
+@ClientHeaderParam(name = "InterfaceMultiValuedHeaderExplicit", value = {"abc", "xyz"})
 @Path("/")
 public interface ClientHeaderParamClient {
     @GET
     String interfaceExplicit();
 
     @GET
-    @ClientHeaderParam(name="MethodHeaderExplicit", value="methodExplicit")
+    @ClientHeaderParam(name = "MethodHeaderExplicit", value = "methodExplicit")
     String methodExplicit();
 
     @GET
     String headerParamOverridesInterfaceExplicit(@HeaderParam("InterfaceHeaderExplicit") String param);
 
     @GET
-    @ClientHeaderParam(name="MethodHeaderExplicit", value="methodExplicit")
+    @ClientHeaderParam(name = "MethodHeaderExplicit", value = "methodExplicit")
     String headerParamOverridesMethodExplicit(@HeaderParam("MethodHeaderExplicit") String param);
 
     @GET
-    @ClientHeaderParam(name="OverrideableExplicit", value="overriddenMethodExplicit")
+    @ClientHeaderParam(name = "OverrideableExplicit", value = "overriddenMethodExplicit")
     String methodClientHeaderParamOverridesInterfaceExplicit();
 
     @GET
     String interfaceComputed();
 
     @GET
-    @ClientHeaderParam(name="MethodHeaderComputed", value="{computeForMethod}")
+    @ClientHeaderParam(name = "MethodHeaderComputed", value = "{computeForMethod}")
     String methodComputed();
 
     @GET
     String headerParamOverridesInterfaceComputed(@HeaderParam("InterfaceHeaderComputed") String param);
 
     @GET
-    @ClientHeaderParam(name="MethodHeaderComputed", value="{computeForMethod2}")
+    @ClientHeaderParam(name = "MethodHeaderComputed", value = "{computeForMethod2}")
     String headerParamOverridesMethodComputed(@HeaderParam("MethodHeaderComputed") String param);
 
     @GET
-    @ClientHeaderParam(name="OverrideableComputed", value="{computeForMethod3}")
+    @ClientHeaderParam(name = "OverrideableComputed", value = "{computeForMethod3}")
     String methodClientHeaderParamOverridesInterfaceComputed();
 
     @GET
-    @ClientHeaderParam(name="OptionalMethodHeader", value="{fail}", required=false)
-    @ClientHeaderParam(name="MethodHeaderExplicit", value="SomeValue")
+    @ClientHeaderParam(name = "OptionalMethodHeader", value = "{fail}", required = false)
+    @ClientHeaderParam(name = "MethodHeaderExplicit", value = "SomeValue")
     JsonObject methodOptionalMethodHeaderNotSentWhenComputeThrowsException();
 
     @GET
-    @ClientHeaderParam(name="WillCauseFailure", value="{fail}")
+    @ClientHeaderParam(name = "WillCauseFailure", value = "{fail}")
     String methodRequiredComputeMethodFails();
 
     @GET
-    @ClientHeaderParam(name="MultiValueInvokedFromAnotherClass",
-                       value="{org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator.generateHeader}")
+    @ClientHeaderParam(name = "MultiValueInvokedFromAnotherClass",
+                       value = "{org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator.generateHeader}")
     String methodComputeMultiValuedHeaderFromOtherClass();
 
     default String computeForInterface() {

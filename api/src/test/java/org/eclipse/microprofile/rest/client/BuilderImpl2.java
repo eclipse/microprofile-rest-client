@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017-2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,18 @@
 
 package org.eclipse.microprofile.rest.client;
 
-import javax.annotation.Priority;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-
-import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
-
 import java.net.URI;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
+import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
+
+import jakarta.annotation.Priority;
 
 @Priority(2)
 public class BuilderImpl2 extends AbstractBuilder {

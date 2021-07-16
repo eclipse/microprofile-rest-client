@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Contributors to the Eclipse Foundation
+ * Copyright 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
-import javax.json.JsonObject;
+import jakarta.json.JsonObject;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
 import org.eclipse.microprofile.rest.client.tck.ext.CustomClientHeadersFactory;
+import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllClientHeadersFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
@@ -74,7 +74,6 @@ public class ClientHeadersFactoryTest extends Arquillian {
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("IntfHeader"), "intfValue");
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("MethodHeader"), "methodValue");
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("ArgHeader"), "argValue");
-
 
         assertEquals(headers.getString("IntfHeader"), "intfValueModified");
         assertEquals(headers.getString("MethodHeader"), "methodValueModified");

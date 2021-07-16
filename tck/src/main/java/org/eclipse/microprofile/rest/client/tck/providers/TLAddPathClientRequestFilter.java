@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,17 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.UriBuilder;
 
 public class TLAddPathClientRequestFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
         URI updatedUri = UriBuilder.fromUri(clientRequestContext.getUri())
-                                   .path("/" + TLAsyncInvocationInterceptorFactory.getTlInt())
-                                   .build();
+                .path("/" + TLAsyncInvocationInterceptorFactory.getTlInt())
+                .build();
         clientRequestContext.setUri(updatedUri);
     }
 }

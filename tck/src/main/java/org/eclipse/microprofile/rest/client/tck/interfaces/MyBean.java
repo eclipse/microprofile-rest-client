@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.CookieParam;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.QueryParam;
 
 public class MyBean {
     @QueryParam("query")

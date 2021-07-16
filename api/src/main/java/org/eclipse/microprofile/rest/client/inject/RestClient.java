@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,23 @@
 
 package org.eclipse.microprofile.rest.client.inject;
 
-import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.inject.Qualifier;
+
 /**
- * Use the RestClient qualifier on an injection to point to indicate that this injection point is meant to use an instance
- * of a Type-Safe Rest Client.
+ * Use the RestClient qualifier on an injection to point to indicate that this injection point is meant to use an
+ * instance of a Type-Safe Rest Client.
  *
  * <pre>
- *     &#064;Inject
- *     &#064;RestClient
- *     private MyRemoteApi api;
+ * &#064;Inject
+ * &#064;RestClient
+ * private MyRemoteApi api;
  * </pre>
  *
  * This will cause the injection point to be satisfied by the MicroProfile Rest Client runtime.

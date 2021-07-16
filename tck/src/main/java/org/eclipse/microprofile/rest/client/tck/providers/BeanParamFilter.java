@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,21 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
+
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.Response;
 
 public class BeanParamFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {
-        String body = (String)clientRequestContext.getEntity();
+        String body = (String) clientRequestContext.getEntity();
         String query = clientRequestContext.getUri().getQuery();
         Cookie cookie = clientRequestContext.getCookies().get("cookie");
-        String cookieValue = cookie==null?"null":cookie.getValue();
+        String cookieValue = cookie == null ? "null" : cookie.getValue();
         String header = clientRequestContext.getHeaderString("MyHeader");
         clientRequestContext.abortWith(Response.ok(query + " " + cookieValue + " " + header + " " + body).build());
     }

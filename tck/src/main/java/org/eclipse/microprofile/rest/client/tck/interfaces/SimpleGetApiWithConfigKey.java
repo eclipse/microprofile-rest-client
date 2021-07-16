@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import javax.ws.rs.Path;
-
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import jakarta.ws.rs.Path;
+
 @Path("/")
-@RegisterRestClient(configKey="myConfigKey")
+@RegisterRestClient(configKey = "myConfigKey")
 public interface SimpleGetApiWithConfigKey extends SimpleGetApi {
 }

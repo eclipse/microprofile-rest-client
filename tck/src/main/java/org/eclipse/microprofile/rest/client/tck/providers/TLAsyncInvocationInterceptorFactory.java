@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,11 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactor
 
 public class TLAsyncInvocationInterceptorFactory implements AsyncInvocationInterceptorFactory {
 
-    private static ThreadLocal<Integer> tlInt = ThreadLocal.withInitial( () -> { return new Integer(0); });
+    private static ThreadLocal<Integer> tlInt = ThreadLocal.withInitial(() -> {
+        return new Integer(0);
+    });
 
-    private Map<String,Object> data = new ConcurrentHashMap<>();
+    private Map<String, Object> data = new ConcurrentHashMap<>();
 
     public static Integer getTlInt() {
         return tlInt.get();
@@ -42,12 +44,12 @@ public class TLAsyncInvocationInterceptorFactory implements AsyncInvocationInter
         tlInt.set(initialTlInt);
     }
 
-    public Map<String,Object> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
     @Override
     public AsyncInvocationInterceptor newInterceptor() {
-           return new TLAsyncInvocationInterceptor(this, getTlInt());
+        return new TLAsyncInvocationInterceptor(this, getTlInt());
     }
 }

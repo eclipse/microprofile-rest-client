@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,17 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.DESTINATION_SERVER_PORT;
+import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.startDestinationServer;
+import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.stopDestinationServer;
+import static org.testng.Assert.assertEquals;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.ProxyServerTest;
@@ -32,15 +41,6 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.DESTINATION_SERVER_PORT;
-import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.startDestinationServer;
-import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.stopDestinationServer;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Verifies via CDI injection that you can use a programmatic interface.  verifies that the interface has Dependent scope.

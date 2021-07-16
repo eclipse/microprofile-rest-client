@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,14 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.testng.Assert.assertEquals;
+
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientWithURI;
@@ -26,27 +34,19 @@ import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import static org.testng.Assert.assertEquals;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Verifies that URI declared via MP Config takes precedence over URL.
  */
-public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
+public class CDIURIvsURLConfigTest extends WiremockArquillianTest {
 
     @Inject
     @RestClient
@@ -62,40 +62,40 @@ public class CDIURIvsURLConfigTest extends WiremockArquillianTest{
 
     @Deployment
     public static WebArchive createDeployment() {
-        String uriPropertyName = SimpleGetApi.class.getName()+"/mp-rest/uri";
+        String uriPropertyName = SimpleGetApi.class.getName() + "/mp-rest/uri";
         String uriValue = getStringURL() + "uri";
-        String urlPropertyName = SimpleGetApi.class.getName()+"/mp-rest/url";
+        String urlPropertyName = SimpleGetApi.class.getName() + "/mp-rest/url";
         String urlValue = getStringURL() + "url";
-        String overridePropName = ClientWithURI2.class.getName()+"/mp-rest/uri";
+        String overridePropName = ClientWithURI2.class.getName() + "/mp-rest/uri";
         String overridePropValue = "http://localhost:9876/someOtherBaseUri";
         String simpleName = CDIURIvsURLConfigTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(ClientWithURI.class,
+                .addClasses(ClientWithURI.class,
                         ClientWithURI2.class,
                         SimpleGetApi.class,
                         WiremockArquillianTest.class,
                         ReturnWithURLRequestFilter.class)
-            .addAsManifestResource(new StringAsset(
-                String.format(uriPropertyName+"="+uriValue+"%n"+
-                              urlPropertyName+"="+urlValue+"%n"+
-                              overridePropName+"="+overridePropValue)),
-                "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(new StringAsset(
+                        String.format(uriPropertyName + "=" + uriValue + "%n" +
+                                urlPropertyName + "=" + urlValue + "%n" +
+                                overridePropName + "=" + overridePropValue)),
+                        "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
-    public void testURItakesPrecedenceOverURL() throws Exception{
+    public void testURItakesPrecedenceOverURL() throws Exception {
         String expectedBody = "Hello, MicroProfile URI!!";
         stubFor(get(urlEqualTo("/uri"))
-            .willReturn(aResponse()
-                .withBody(expectedBody)));
+                .willReturn(aResponse()
+                        .withBody(expectedBody)));
 
         stubFor(get(urlEqualTo("/url"))
-            .willReturn(aResponse()
-                .withBody("Using URL instead of URI")));
+                .willReturn(aResponse()
+                        .withBody("Using URL instead of URI")));
 
         Response response = api.executeGet();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,33 +18,41 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.client.ClientResponseContext;
-import javax.ws.rs.client.ClientResponseFilter;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.ParamConverter;
-import javax.ws.rs.ext.ParamConverterProvider;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.ReaderInterceptorContext;
-import javax.ws.rs.ext.WriterInterceptor;
-import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-public class MultiTypedProvider implements ClientRequestFilter, ClientResponseFilter, MessageBodyReader<Object>,
-    MessageBodyWriter<Object>, ReaderInterceptor, WriterInterceptor, ResponseExceptionMapper<Throwable>,
-    ParamConverterProvider{
+import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
+
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientResponseFilter;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.MessageBodyReader;
+import jakarta.ws.rs.ext.MessageBodyWriter;
+import jakarta.ws.rs.ext.ParamConverter;
+import jakarta.ws.rs.ext.ParamConverterProvider;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
+import jakarta.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
+
+public class MultiTypedProvider
+        implements
+            ClientRequestFilter,
+            ClientResponseFilter,
+            MessageBodyReader<Object>,
+            MessageBodyWriter<Object>,
+            ReaderInterceptor,
+            WriterInterceptor,
+            ResponseExceptionMapper<Throwable>,
+            ParamConverterProvider {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
@@ -61,8 +69,8 @@ public class MultiTypedProvider implements ClientRequestFilter, ClientResponseFi
 
     @Override
     public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-        MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-        throws IOException, WebApplicationException {
+            MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+            throws IOException, WebApplicationException {
         return null;
     }
 

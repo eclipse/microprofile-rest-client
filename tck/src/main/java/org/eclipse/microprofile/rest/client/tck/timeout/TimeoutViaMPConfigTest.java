@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,10 @@
 
 package org.eclipse.microprofile.rest.client.tck.timeout;
 
+import static org.testng.Assert.assertTrue;
+
+import jakarta.inject.Inject;
+
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
@@ -27,10 +31,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-
-import javax.inject.Inject;
-
-import static org.testng.Assert.assertTrue;
 
 public class TimeoutViaMPConfigTest extends TimeoutTestBase {
     private static final int TIMEOUT = 7000;
