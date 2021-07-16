@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,16 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.net.URI;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.BaseClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ChildClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -30,20 +35,14 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
-import java.net.URI;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-public class InheritanceTest extends Arquillian{
+public class InheritanceTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, InheritanceTest.class.getSimpleName()+".war")
-            .addPackage(ReturnWithURLRequestFilter.class.getPackage())
-            .addClasses(BaseClient.class, ChildClient.class);
+        return ShrinkWrap.create(WebArchive.class, InheritanceTest.class.getSimpleName() + ".war")
+                .addPackage(ReturnWithURLRequestFilter.class.getPackage())
+                .addClasses(BaseClient.class, ChildClient.class);
     }
 
     @Test
@@ -56,7 +55,7 @@ public class InheritanceTest extends Arquillian{
         String responseStr = response.readEntity(String.class);
         assertNotNull(responseStr, "Response entity is null");
         assertTrue(responseStr.contains("GET ") && responseStr.contains("/base"),
-            "Did not invoke expected method/URI. Expected GET .../base ; got " + responseStr);
+                "Did not invoke expected method/URI. Expected GET .../base ; got " + responseStr);
     }
 
     @Test
@@ -69,7 +68,7 @@ public class InheritanceTest extends Arquillian{
         String responseStr = response.readEntity(String.class);
         assertNotNull(responseStr, "Response entity is null");
         assertTrue(responseStr.contains("GET ") && responseStr.contains("/child"),
-            "Did not invoke expected method/URI. Expected GET .../child ; got " + responseStr);
+                "Did not invoke expected method/URI. Expected GET .../child ; got " + responseStr);
     }
 
     @Test
@@ -82,6 +81,6 @@ public class InheritanceTest extends Arquillian{
         String responseStr = response.readEntity(String.class);
         assertNotNull(responseStr, "Response entity is null");
         assertTrue(responseStr.contains("POST ") && responseStr.contains("/childOverride"),
-            "Did not invoke expected method/URI. Expected POST .../childOverride ; got " + responseStr);
+                "Did not invoke expected method/URI. Expected POST .../childOverride ; got " + responseStr);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,14 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
+import static org.testng.Assert.assertEquals;
+
+import java.security.KeyStore;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
@@ -29,13 +37,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
-
-import javax.inject.Inject;
-import javax.ws.rs.ProcessingException;
-import java.security.KeyStore;
-
-import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
-import static org.testng.Assert.assertEquals;
 
 public class SslMutualTest extends AbstractSslTest {
 
@@ -165,6 +166,4 @@ public class SslMutualTest extends AbstractSslTest {
     public void shouldFailWithInvalidClientSignatureCDI() {
         clientWithNonMatchingKeyStore.get("1");
     }
-
-
 }

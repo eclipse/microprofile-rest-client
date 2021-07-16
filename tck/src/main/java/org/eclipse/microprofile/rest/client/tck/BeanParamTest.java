@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,16 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.net.URI;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceUsingBeanParam;
 import org.eclipse.microprofile.rest.client.tck.interfaces.MyBean;
 import org.eclipse.microprofile.rest.client.tck.providers.BeanParamFilter;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -30,27 +35,22 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
-import java.net.URI;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-public class BeanParamTest extends Arquillian{
+public class BeanParamTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, BeanParamTest.class.getSimpleName()+".war")
-            .addPackage(BeanParamFilter.class.getPackage())
-            .addClasses(InterfaceUsingBeanParam.class, MyBean.class);
+        return ShrinkWrap.create(WebArchive.class, BeanParamTest.class.getSimpleName() + ".war")
+                .addPackage(BeanParamFilter.class.getPackage())
+                .addClasses(InterfaceUsingBeanParam.class, MyBean.class);
     }
 
     @Test
     public void sendsParamsSpecifiedInBeanParam() throws Exception {
         BeanParamFilter filter = new BeanParamFilter();
         RestClientBuilder builder = RestClientBuilder.newBuilder().register(filter);
-        InterfaceUsingBeanParam client = builder.baseUri(new URI("http://localhost/stub")).build(InterfaceUsingBeanParam.class);
+        InterfaceUsingBeanParam client =
+                builder.baseUri(new URI("http://localhost/stub")).build(InterfaceUsingBeanParam.class);
 
         MyBean myBean = new MyBean("qParam", "123", "headerVal");
         Response response = client.executePut(myBean, "body");

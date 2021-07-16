@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,14 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import java.io.IOException;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
 
 /**
- * Aborts with a response showing "Sent-Accept" and "Sent-ContentType" headers
- * to indicate the request's header values for "Accept" and "Content-type",
- * respectively.
+ * Aborts with a response showing "Sent-Accept" and "Sent-ContentType" headers to indicate the request's header values
+ * for "Accept" and "Content-type", respectively.
  */
 public class ProducesConsumesFilter implements ClientRequestFilter {
     @Override
@@ -36,9 +35,9 @@ public class ProducesConsumesFilter implements ClientRequestFilter {
         String contentType = ctx.getHeaderString(HttpHeaders.CONTENT_TYPE);
         String accept = ctx.getHeaderString(HttpHeaders.ACCEPT);
         ctx.abortWith(Response.ok()
-                              .header("Sent-Accept", accept)
-                              .header("Sent-ContentType", contentType)
-                              .build());
+                .header("Sent-Accept", accept)
+                .header("Sent-ContentType", contentType)
+                .build());
 
     }
 

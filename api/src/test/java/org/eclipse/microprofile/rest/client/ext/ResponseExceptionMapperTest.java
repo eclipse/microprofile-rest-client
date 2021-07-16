@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,25 @@
 
 package org.eclipse.microprofile.rest.client.ext;
 
-import org.testng.annotations.Test;
-
-import javax.annotation.Priority;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
-import static javax.ws.rs.Priorities.ENTITY_CODER;
+import static jakarta.ws.rs.Priorities.ENTITY_CODER;
 import static org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper.DEFAULT_PRIORITY;
 import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertFalse;
 
+import org.testng.annotations.Test;
+
+import jakarta.annotation.Priority;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 public class ResponseExceptionMapperTest {
 
     @Test
     public void testHandles() {
-        final MultivaluedMap<String,Object> headers = new MultivaluedHashMap<>();
+        final MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
 
         final DummyResponseExceptionMapper mapper = new DummyResponseExceptionMapper();
         assertTrue(mapper.handles(500, headers));

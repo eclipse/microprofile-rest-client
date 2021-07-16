@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2018-2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2018-2021 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -19,8 +19,8 @@
  *******************************************************************************/
 
 /**
- * APIs for extending MP Rest Client functionality - such as new providers.
- * Example:
+ * APIs for extending MP Rest Client functionality - such as new providers. Example:
+ * 
  * <pre>
  * &#064;RegisterProvider(UnknownWidgetExceptionMapper.class)
  * public interface MyClientService {
@@ -39,6 +39,6 @@
  * }
  * </pre>
  */
-@org.osgi.annotation.versioning.Version("1.2")
+@org.osgi.annotation.versioning.Version("2.0")
 @org.osgi.annotation.versioning.ProviderType
 package org.eclipse.microprofile.rest.client.ext;

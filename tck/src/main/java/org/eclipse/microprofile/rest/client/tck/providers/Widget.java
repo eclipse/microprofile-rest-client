@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,11 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-
-
 public class Widget {
 
     private String name;
     private int length;
-    
+
     public static Widget fromString(String s) {
         String[] split = s.split(":");
         return new Widget(split[0], Integer.parseInt(split[1]));
@@ -58,7 +56,7 @@ public class Widget {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Widget) && o != null && ((Widget)o).name.equals(name) && ((Widget)o).length == length;
+        return (o instanceof Widget) && o != null && ((Widget) o).name.equals(name) && ((Widget) o).length == length;
     }
 
     @Override

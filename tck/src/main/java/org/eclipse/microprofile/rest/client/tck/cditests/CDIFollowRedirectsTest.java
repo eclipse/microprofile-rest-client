@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-
 import com.github.tomakehurst.wiremock.client.WireMock;
 
+import jakarta.inject.Inject;
 
 /**
  * Verifies auto following redirects is performed when configured via MP Confg and CDI.
@@ -59,14 +58,15 @@ public class CDIFollowRedirectsTest extends WiremockArquillianTest {
         String redirectProperty = "myConfigKey/mp-rest/followRedirects=true";
         String simpleName = CDIFollowRedirectsTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApi.class, SimpleGetApiWithConfigKey.class, 
+                .addClasses(SimpleGetApi.class, SimpleGetApiWithConfigKey.class,
                         FollowRedirectsTest.class, WiremockArquillianTest.class)
-            .addAsManifestResource(new StringAsset(String.format(redirectProperty + "%n" + urlProperty1 + "%n" + urlProperty2)),
-                                                   "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsManifestResource(
+                        new StringAsset(String.format(redirectProperty + "%n" + urlProperty1 + "%n" + urlProperty2)),
+                        "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @BeforeMethod

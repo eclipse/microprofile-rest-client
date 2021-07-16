@@ -38,7 +38,9 @@ public class MyEventSource implements EventSource {
     @Override
     public void onOpen(Emitter emitter) throws IOException {
         this.emitter = emitter;
-        ForkJoinPool.commonPool().submit(() -> {consumer.accept(this);});
+        ForkJoinPool.commonPool().submit(() -> {
+            consumer.accept(this);
+        });
     }
 
     @Override

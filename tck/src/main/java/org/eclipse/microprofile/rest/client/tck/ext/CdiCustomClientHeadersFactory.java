@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,22 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ext;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 
 @ApplicationScoped
 public class CdiCustomClientHeadersFactory implements ClientHeadersFactory {
 
+    //CHECKSTYLE:OFF
     public static MultivaluedMap<String, String> passedInOutgoingHeaders = new MultivaluedHashMap<>();
     public static boolean isIncomingHeadersMapNull;
     public static boolean isOutgoingHeadersMapNull;
     public static boolean invoked;
+    //CHECKSTYLE:ON
 
     @Inject
     private Counter counter;

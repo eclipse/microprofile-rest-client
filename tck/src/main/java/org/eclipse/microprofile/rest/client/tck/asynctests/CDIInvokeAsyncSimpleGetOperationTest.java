@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,6 @@ import static org.testng.Assert.assertEquals;
 import java.util.Set;
 import java.util.concurrent.CompletionStage;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApiAsync;
@@ -46,12 +40,18 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+
 /**
- * Verifies via CDI injection that you can use a programmatic interface.  verifies that the interface has Dependent scope.
- * This test is the same as the {@link org.eclipse.microprofile.rest.client.tck.cditests.CDIInvokeSimpleGetOperationTest}
- * but uses async methods.
+ * Verifies via CDI injection that you can use a programmatic interface. verifies that the interface has Dependent
+ * scope. This test is the same as the
+ * {@link org.eclipse.microprofile.rest.client.tck.cditests.CDIInvokeSimpleGetOperationTest} but uses async methods.
  */
-public class CDIInvokeAsyncSimpleGetOperationTest extends WiremockArquillianTest{
+public class CDIInvokeAsyncSimpleGetOperationTest extends WiremockArquillianTest {
     @Inject
     @RestClient
     private SimpleGetApiAsync api;
@@ -61,24 +61,24 @@ public class CDIInvokeAsyncSimpleGetOperationTest extends WiremockArquillianTest
 
     @Deployment
     public static WebArchive createDeployment() {
-        String propertyName = SimpleGetApiAsync.class.getName()+"/mp-rest/url";
+        String propertyName = SimpleGetApiAsync.class.getName() + "/mp-rest/url";
         String value = getStringURL();
         String simpleName = CDIInvokeAsyncSimpleGetOperationTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApiAsync.class, WiremockArquillianTest.class)
-            .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(SimpleGetApiAsync.class, WiremockArquillianTest.class)
+                .addAsManifestResource(new StringAsset(propertyName + "=" + value), "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
-    public void testInvokesGetOperationWithCDIBean() throws Exception{
+    public void testInvokesGetOperationWithCDIBean() throws Exception {
         final String expectedBody = "Hello, MicroProfile!";
         stubFor(get(urlEqualTo("/"))
-            .willReturn(aResponse()
-                .withBody(expectedBody)));
+                .willReturn(aResponse()
+                        .withBody(expectedBody)));
 
         CompletionStage<Response> future = api.executeGet();
 

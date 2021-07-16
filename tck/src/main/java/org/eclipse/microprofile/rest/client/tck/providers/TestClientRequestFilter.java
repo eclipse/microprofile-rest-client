@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TestClientRequestFilter implements ClientRequestFilter{
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+
+public class TestClientRequestFilter implements ClientRequestFilter {
     private static AtomicInteger invocations = new AtomicInteger(0);
     @Override
     public void filter(ClientRequestContext clientRequestContext) throws IOException {

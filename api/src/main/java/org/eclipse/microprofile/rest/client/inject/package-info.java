@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2018-2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2018-2021 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -19,12 +19,12 @@
  *******************************************************************************/
 
 /**
- * APIs to aid in CDI-based injection of MP Rest Client implementations.  These
- * annotations are used both to mark an interface as registered Rest Client and
- * also to designate that an implementation of that interface should be injected
+ * APIs to aid in CDI-based injection of MP Rest Client implementations. These annotations are used both to mark an
+ * interface as registered Rest Client and also to designate that an implementation of that interface should be injected
  * at a specific injection point.
  *
  * Example:
+ * 
  * <pre>
  * &#064;RegisterProvider
  * &#064;Dependent
@@ -44,6 +44,6 @@
  * }
  * </pre>
  */
-@org.osgi.annotation.versioning.Version("1.2.1")
+@org.osgi.annotation.versioning.Version("2.0")
 @org.osgi.annotation.versioning.ProviderType
 package org.eclipse.microprofile.rest.client.inject;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,10 @@ import static org.testng.Assert.fail;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import javax.json.JsonObject;
-
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
+
+import jakarta.json.JsonObject;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeaderParamClient;

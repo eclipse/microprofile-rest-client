@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 
-@ClientHeaderParam(name="IdenticalHeader", value="{computeMethod}")
-@ClientHeaderParam(name="IdenticalHeader", value="someValue")
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.core.Response;
+
+@ClientHeaderParam(name = "IdenticalHeader", value = "{computeMethod}")
+@ClientHeaderParam(name = "IdenticalHeader", value = "someValue")
 public interface MultipleHeadersOnSameInterface {
 
     default String computeMethod(String headerName) {

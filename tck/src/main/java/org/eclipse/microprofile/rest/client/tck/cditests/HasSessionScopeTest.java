@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,10 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import static org.testng.Assert.assertEquals;
+
+import java.util.Set;
+
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ConfigKeyClient;
@@ -31,37 +35,34 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 
 /**
  * This test verifies that you can configure a bean of SessionScoped, as well as have the scope on an interface.
  */
-public class HasSessionScopeTest extends Arquillian{
+public class HasSessionScopeTest extends Arquillian {
     @Inject
     private BeanManager beanManager;
     @Deployment
     public static WebArchive createDeployment() {
-        String url = SimpleGetApi.class.getName()+"/mp-rest/url=http://localhost:8080";
-        String scope = SimpleGetApi.class.getName()+"/mp-rest/scope="+ SessionScoped.class.getName();
+        String url = SimpleGetApi.class.getName() + "/mp-rest/url=http://localhost:8080";
+        String scope = SimpleGetApi.class.getName() + "/mp-rest/scope=" + SessionScoped.class.getName();
         String configKeyScope = "myConfigKey/mp-rest/scope=" + SessionScoped.class.getName();
         String simpleName = HasSessionScopeTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApi.class, MySessionScopedApi.class, ConfigKeyClient.class)
-            .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + configKeyScope),
-                                                   "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(SimpleGetApi.class, MySessionScopedApi.class, ConfigKeyClient.class)
+                .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + configKeyScope),
+                        "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     @Test
     public void testHasSingletonScoped() {

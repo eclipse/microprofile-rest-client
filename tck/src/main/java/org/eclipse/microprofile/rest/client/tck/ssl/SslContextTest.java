@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
+import javax.net.ssl.SSLContext;
+
+import jakarta.ws.rs.ProcessingException;
+
 import org.apache.http.ssl.SSLContextBuilder;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
@@ -23,10 +27,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
-
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.ProcessingException;
-
 
 public class SslContextTest extends AbstractSslTest {
 
