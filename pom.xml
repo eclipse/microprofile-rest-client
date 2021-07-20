@@ -40,7 +40,6 @@
         <version.plugin.checkstyle>3.1.1</version.plugin.checkstyle>
 
         <!--  Dependencies - Jakarta  -->
-        <version.jakarta.api>9.0.0</version.jakarta.api>
         <version.jakarta.annotation>2.0.0</version.jakarta.annotation>
         <version.jakarta.cdi>3.0.0</version.jakarta.cdi>
         <version.jakarta.ws-rs>3.0.0</version.jakarta.ws-rs>
