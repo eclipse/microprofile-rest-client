@@ -15,9 +15,6 @@
  */
 package org.eclipse.microprofile.rest.client.tck.sse;
 
-import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.launchServer;
-import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.PORT;
-
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.security.AccessController;
@@ -26,10 +23,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javax.ws.rs.sse.InboundSseEvent;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.PORT;
+import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.launchServer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -73,14 +70,14 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     @BeforeMethod
     private void setupLatch(Method method) {
         LOG.debug("About to invoke test: " + method);
-        cleanupLatch = new CountDownLatch(1);
+        cleanupLatch = null;
         inMethod.compareAndSet(false, true);
     }
 
     @AfterMethod
     private void countDownLatch() throws InterruptedException {
         inMethod.compareAndSet(true, false);
-        if (!cleanupLatch.await(30, TimeUnit.SECONDS)) {
+        if (cleanupLatch !=null && !cleanupLatch.await(30, TimeUnit.SECONDS)) {
             LOG.error("Server did not close long after test completed");
         }
     }
@@ -92,7 +89,6 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
 
     @Override
     public Publisher<InboundSseEvent> createFailedPublisher() {
-        cleanupLatch.countDown();
         return null; // TODO: implement for failed publisher test support (optional tests)
     }
 
@@ -100,9 +96,10 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     public Publisher<InboundSseEvent> createPublisher(long elements) {
         LOG.debug("createPublisher (" + elements + ")");
 
-        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch stopLatch = new CountDownLatch(1);
         try {
-            AtomicReference<Throwable> serverException = launchServer(latch, es -> {
+            cleanupLatch = new CountDownLatch(1);
+            AtomicReference<Throwable> serverException = launchServer(stopLatch, es -> {
                 for (long i = 0; i < elements; i++) {
                     if (inMethod.get()) {
                         try {
@@ -113,7 +110,7 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
                         }
                     }
                 }
-                latch.countDown();
+                stopLatch.countDown();
             }, cleanupLatch);
 
             if (serverException.get() != null) {
