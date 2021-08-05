@@ -73,14 +73,14 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     @BeforeMethod
     private void setupLatch(Method method) {
         LOG.debug("About to invoke test: " + method);
-        cleanupLatch = new CountDownLatch(1);
+        cleanupLatch = null;
         inMethod.compareAndSet(false, true);
     }
 
     @AfterMethod
     private void countDownLatch() throws InterruptedException {
         inMethod.compareAndSet(true, false);
-        if (!cleanupLatch.await(30, TimeUnit.SECONDS)) {
+        if (cleanupLatch !=null && !cleanupLatch.await(30, TimeUnit.SECONDS)) {
             LOG.error("Server did not close long after test completed");
         }
     }
@@ -92,7 +92,6 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
 
     @Override
     public Publisher<InboundSseEvent> createFailedPublisher() {
-        cleanupLatch.countDown();
         return null; // TODO: implement for failed publisher test support (optional tests)
     }
 
@@ -100,9 +99,10 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     public Publisher<InboundSseEvent> createPublisher(long elements) {
         LOG.debug("createPublisher (" + elements + ")");
 
-        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch stopLatch = new CountDownLatch(1);
         try {
-            AtomicReference<Throwable> serverException = launchServer(latch, es -> {
+            cleanupLatch = new CountDownLatch(1);
+            AtomicReference<Throwable> serverException = launchServer(stopLatch, es -> {
                 for (long i = 0; i < elements; i++) {
                     if (inMethod.get()) {
                         try {
@@ -113,7 +113,7 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
                         }
                     }
                 }
-                latch.countDown();
+                stopLatch.countDown();
             }, cleanupLatch);
 
             if (serverException.get() != null) {
