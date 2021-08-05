@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.eclipse.microprofile.rest.client.tck.sse;
 
+import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.launchServer;
+import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.PORT;
+
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.security.AccessController;
@@ -23,10 +26,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.ws.rs.sse.InboundSseEvent;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.PORT;
-import static org.eclipse.microprofile.rest.client.tck.sse.AbstractSseTest.launchServer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
