@@ -31,8 +31,7 @@ public class CustomHttpMethodFilter implements ClientRequestFilter {
         String httpMethod = clientRequestContext.getMethod();
         if ("MYMETHOD".equals(httpMethod)) {
             clientRequestContext.abortWith(Response.ok(httpMethod).build());
-        }
-        else {
+        } else {
             clientRequestContext.abortWith(Response.status(405).entity(httpMethod).build());
         }
     }

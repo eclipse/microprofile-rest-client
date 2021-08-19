@@ -25,11 +25,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to specify HTTP parameters that should be sent with the outbound request.
- * When this annotation is placed at the interface level of a REST client interface, the specified headers will be sent on each request for all
- * methods in the interface.
- * When this annotation is placed on a method, the headers will be sent only for that method. If the same HTTP header is specified in an annotation
- * for both the type and the method, only the header value specified in the annotation on the method will be sent.
+ * Used to specify HTTP parameters that should be sent with the outbound request. When this annotation is placed at the
+ * interface level of a REST client interface, the specified headers will be sent on each request for all methods in the
+ * interface. When this annotation is placed on a method, the headers will be sent only for that method. If the same
+ * HTTP header is specified in an annotation for both the type and the method, only the header value specified in the
+ * annotation on the method will be sent.
  * <p>
  * This class serves to act as the {@link java.lang.annotation.Repeatable} implementation for {@link ClientHeaderParam}.
  *

@@ -43,39 +43,38 @@ public class RestClientListenerTest extends Arquillian {
     public static WebArchive createDeployment() {
         StringAsset serviceFile = new StringAsset(SimpleRestClientListenerImpl.class.getName());
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(SimpleGetApi.class,
+                .addClasses(SimpleGetApi.class,
                         SimpleRestClientListenerImpl.class,
                         ReturnWith200RequestFilter.class,
                         ReturnWith500RequestFilter.class)
-            .addAsManifestResource(serviceFile,"services/" + RestClientListener.class.getName());
-        return ShrinkWrap.create(WebArchive.class, RestClientListenerTest.class.getSimpleName()+".war")
-            .addAsLibrary(jar)
-            .addClasses(RestClientListenerTest.class);
+                .addAsManifestResource(serviceFile, "services/" + RestClientListener.class.getName());
+        return ShrinkWrap.create(WebArchive.class, RestClientListenerTest.class.getSimpleName() + ".war")
+                .addAsLibrary(jar)
+                .addClasses(RestClientListenerTest.class);
     }
 
     /**
-     * This test checks that a RestClientListener loaded via the service loader
-     * is invoked.  The RestClientListener impl used will register a
-     * ClientRequestFilter that aborts with a 500 status code - it is registered
-     * with priority 1.  The test class registers another filter that will abort
-     * with a 200 status code, but at priority 2.  If the RestClientListener impl
-     * is correctly invoked, then the request will abort with the 500; if not,
-     * it will abort with the 200.  This test will also check that the correct
-     * serviceInterface class was passed to the RestClientListener impl.
+     * This test checks that a RestClientListener loaded via the service loader is invoked. The RestClientListener impl
+     * used will register a ClientRequestFilter that aborts with a 500 status code - it is registered with priority 1.
+     * The test class registers another filter that will abort with a 200 status code, but at priority 2. If the
+     * RestClientListener impl is correctly invoked, then the request will abort with the 500; if not, it will abort
+     * with the 200. This test will also check that the correct serviceInterface class was passed to the
+     * RestClientListener impl.
      *
-     * @throws Exception - indicates test failure
+     * @throws Exception
+     *             - indicates test failure
      */
     @Test
     public void testRestClientListenerInvoked() throws Exception {
         SimpleGetApi client = RestClientBuilder.newBuilder()
-            .register(ReturnWith200RequestFilter.class, 2)
-            .property("microprofile.rest.client.disable.default.mapper", true)
-            .baseUri(new URI("http://localhost:8080/neverUsed"))
-            .build(SimpleGetApi.class);
+                .register(ReturnWith200RequestFilter.class, 2)
+                .property("microprofile.rest.client.disable.default.mapper", true)
+                .baseUri(new URI("http://localhost:8080/neverUsed"))
+                .build(SimpleGetApi.class);
 
         assertEquals(client.executeGet().getStatus(), 500,
-            "The RestClientListener impl was not invoked");
+                "The RestClientListener impl was not invoked");
         assertEquals(SimpleRestClientListenerImpl.getServiceInterface(), SimpleGetApi.class,
-            "An incorrect serviceInterface class was passed to the RestClientListener impl");
+                "An incorrect serviceInterface class was passed to the RestClientListener impl");
     }
 }

@@ -52,8 +52,7 @@ public class WeatherEventProvider implements MessageBodyReader<WeatherEvent> {
         try {
             WeatherEvent event = new WeatherEvent(df.parse(dateString), description);
             return event;
-        }
-        catch (ParseException ex) {
+        } catch (ParseException ex) {
             throw new IOException(ex);
         }
     }

@@ -15,14 +15,14 @@
  */
 package org.eclipse.microprofile.rest.client.tck.sse;
 
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import org.reactivestreams.Publisher;
+
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.sse.InboundSseEvent;
-
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import org.reactivestreams.Publisher;
 
 @RegisterRestClient(baseUri = "http://localhost:10000/string/sse")
 public interface RsSseClient {

@@ -28,7 +28,6 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.core.Response;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -40,8 +39,11 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.ws.rs.core.Response;
+
 public class ProxyServerTest extends WiremockArquillianTest {
-    public static final int DESTINATION_SERVER_PORT = Integer.getInteger("org.eclipse.microprofile.rest.client.ssl.port", 8948);
+    public static final int DESTINATION_SERVER_PORT =
+            Integer.getInteger("org.eclipse.microprofile.rest.client.ssl.port", 8948);
     private static final Server DESTINATION_SERVER = new Server(DESTINATION_SERVER_PORT);
 
     @Deployment
@@ -73,43 +75,41 @@ public class ProxyServerTest extends WiremockArquillianTest {
     @Test
     public void testProxy() throws Exception {
         stubFor(get(urlMatching("/.*")).willReturn(
-            aResponse().proxiedFrom("http://localhost:" + DESTINATION_SERVER_PORT)
-                       .withAdditionalRequestHeader("X-Via", "WireMockProxy")));
+                aResponse().proxiedFrom("http://localhost:" + DESTINATION_SERVER_PORT)
+                        .withAdditionalRequestHeader("X-Via", "WireMockProxy")));
         try {
             startDestinationServer("foo");
             SimpleGetApi client = RestClientBuilder.newBuilder()
-                                                   .proxyAddress("localhost", getPort())
-                                                   .baseUri(URI.create("http://localhost:" + DESTINATION_SERVER_PORT + "/testProxy"))
-                                                   .build(SimpleGetApi.class);
+                    .proxyAddress("localhost", getPort())
+                    .baseUri(URI.create("http://localhost:" + DESTINATION_SERVER_PORT + "/testProxy"))
+                    .build(SimpleGetApi.class);
             Response response = client.executeGet();
             assertEquals(response.getStatus(), 200);
             assertEquals(response.readEntity(String.class).trim(), "foo");
             assertEquals(response.getHeaderString("X-Via"), "WireMockProxy");
-        }
-        finally {
+        } finally {
             stopDestinationServer();
         }
     }
 
     public static void startDestinationServer(String responseContent) {
         DESTINATION_SERVER.setHandler(
-            new AbstractHandler() {
-                @Override
-                public void handle(String path,
-                                   Request request,
-                                   HttpServletRequest httpRequest,
-                                   HttpServletResponse response) throws IOException {
-                    response.setHeader("Content-Type", "text/plain");
-                    response.setHeader("X-Via", request.getHeader("X-Via"));
-                    try (PrintWriter writer = response.getWriter()) {
-                        writer.println(responseContent);
+                new AbstractHandler() {
+                    @Override
+                    public void handle(String path,
+                            Request request,
+                            HttpServletRequest httpRequest,
+                            HttpServletResponse response) throws IOException {
+                        response.setHeader("Content-Type", "text/plain");
+                        response.setHeader("X-Via", request.getHeader("X-Via"));
+                        try (PrintWriter writer = response.getWriter()) {
+                            writer.println(responseContent);
+                        }
                     }
-                }
-            });
+                });
         try {
             DESTINATION_SERVER.start();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to start destination server", e);
         }
     }
@@ -117,8 +117,7 @@ public class ProxyServerTest extends WiremockArquillianTest {
     public static void stopDestinationServer() {
         try {
             DESTINATION_SERVER.stop();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to stop destination server", e);
         }
     }

@@ -76,8 +76,7 @@ public class InvokeWithJsonBProviderTest extends WiremockArquillianTest {
     private static void assumeJsonbApiExists() throws SkipException {
         try {
             Class.forName("jakarta.json.bind.annotation.JsonbProperty");
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             throw new SkipException("Skipping since JSON-B APIs were not found.");
         }
     }

@@ -24,8 +24,6 @@ import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
-import jakarta.json.JsonObject;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.ext.CustomClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
@@ -37,24 +35,26 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.json.JsonObject;
+
 public class ClientHeadersFactoryTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, ClientHeadersFactoryTest.class.getSimpleName()+".war")
-            .addClasses(ClientHeadersFactoryClient.class,
-                CustomClientHeadersFactory.class,
-                ReturnWithAllClientHeadersFilter.class);
+        return ShrinkWrap.create(WebArchive.class, ClientHeadersFactoryTest.class.getSimpleName() + ".war")
+                .addClasses(ClientHeadersFactoryClient.class,
+                        CustomClientHeadersFactory.class,
+                        ReturnWithAllClientHeadersFilter.class);
     }
 
     private static ClientHeadersFactoryClient client(Class<?>... providers) {
         try {
-            RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri(URI.create("http://localhost:9080/notused"));
+            RestClientBuilder builder =
+                    RestClientBuilder.newBuilder().baseUri(URI.create("http://localhost:9080/notused"));
             for (Class<?> provider : providers) {
                 builder.register(provider);
             }
             return builder.build(ClientHeadersFactoryClient.class);
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             t.printStackTrace();
             return null;
         }

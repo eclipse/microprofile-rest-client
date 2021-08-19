@@ -24,6 +24,7 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  * A resolver that should be picked in tests by default
+ * 
  * @author Ondrej Mihalyi
  * @author John D. Ament
  */
@@ -33,4 +34,3 @@ public class SimpleRestClientBuilderResolver extends RestClientBuilderResolver {
         return new BuilderImpl2();
     }
 }
-

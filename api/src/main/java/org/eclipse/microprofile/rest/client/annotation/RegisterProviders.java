@@ -25,10 +25,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * When annotation is placed at the interface level of a REST API definition, the providers listed will be registered upon proxying.
+ * When annotation is placed at the interface level of a REST API definition, the providers listed will be registered
+ * upon proxying.
  * <p>
- * If a provider listed is not found on the classpath, it is ignored.  If a provider is listed, but is not a valid provider, then an
- * {@link IllegalArgumentException} is thrown indicating that the provider is invalid.
+ * If a provider listed is not found on the classpath, it is ignored. If a provider is listed, but is not a valid
+ * provider, then an {@link IllegalArgumentException} is thrown indicating that the provider is invalid.
  * <p>
  * This class serves to act as the {@link java.lang.annotation.Repeatable} implementation for {@link RegisterProvider}
  */

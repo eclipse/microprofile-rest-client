@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import jakarta.ws.rs.sse.InboundSseEvent;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -42,14 +40,17 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.log4testng.Logger;
 
+import jakarta.ws.rs.sse.InboundSseEvent;
+
 @Test(singleThreaded = true)
 public class ReactiveStreamsPublisherTckTest extends PublisherVerification<InboundSseEvent> {
     private static final Logger LOG = Logger.getLogger(ReactiveStreamsPublisherTckTest.class);
 
-    protected static final int DEFAULT_TIMEOUT = AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
-        Integer.getInteger("org.eclipse.microprofile.rest.client.tck.sse.reactiveStreamsDefaultTimeoutMillis", 5000));
-    protected static final int DEFAULT_RECURSION_DEPTH = AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
-        Integer.getInteger("org.eclipse.microprofile.rest.client.tck.sse.reactiveStreamsDefaultRecursionDepth", 100));
+    protected static final int DEFAULT_TIMEOUT = AccessController.doPrivileged((PrivilegedAction<Integer>) () -> Integer
+            .getInteger("org.eclipse.microprofile.rest.client.tck.sse.reactiveStreamsDefaultTimeoutMillis", 5000));
+    protected static final int DEFAULT_RECURSION_DEPTH =
+            AccessController.doPrivileged((PrivilegedAction<Integer>) () -> Integer.getInteger(
+                    "org.eclipse.microprofile.rest.client.tck.sse.reactiveStreamsDefaultRecursionDepth", 100));
 
     private CountDownLatch cleanupLatch;
     private AtomicBoolean inMethod = new AtomicBoolean(false);
@@ -80,7 +81,7 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
     @AfterMethod
     private void countDownLatch() throws InterruptedException {
         inMethod.compareAndSet(true, false);
-        if (cleanupLatch !=null && !cleanupLatch.await(30, TimeUnit.SECONDS)) {
+        if (cleanupLatch != null && !cleanupLatch.await(30, TimeUnit.SECONDS)) {
             LOG.error("Server did not close long after test completed");
         }
     }
@@ -107,8 +108,7 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
                     if (inMethod.get()) {
                         try {
                             es.emitData(Long.toString(i));
-                        }
-                        catch (RuntimeException ex) {
+                        } catch (RuntimeException ex) {
                             break;
                         }
                     }
@@ -125,8 +125,7 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
             Publisher<InboundSseEvent> publisher = client.getEvents();
             LOG.debug("createPublisher --> " + publisher);
             return publisher;
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             LOG.error("Failed to create publisher", t);
             t.printStackTrace();
             return null;

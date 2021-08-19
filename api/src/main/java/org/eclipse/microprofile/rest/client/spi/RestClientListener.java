@@ -22,20 +22,17 @@ package org.eclipse.microprofile.rest.client.spi;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
- * Implementations of this interface will be notified when new Rest Client
- * instances are being constructed.  This will allow implementations to register
- * providers on the RestClientBuilder, and is intended for global providers.
+ * Implementations of this interface will be notified when new Rest Client instances are being constructed. This will
+ * allow implementations to register providers on the RestClientBuilder, and is intended for global providers.
  *
- * In order for the RestClientBuilder implementation to call implementations of
- * this interface, the implementation must be specified such that
- * <code>ServiceLoader</code> can find it - i.e. it must be specified in the <code>
+ * In order for the RestClientBuilder implementation to call implementations of this interface, the implementation must
+ * be specified such that <code>ServiceLoader</code> can find it - i.e. it must be specified in the <code>
  * META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientListener
- * </code> file in an archive on the current thread's context classloader's
- * class path - or specified in the <code>module-info.java</code>.
+ * </code> file in an archive on the current thread's context classloader's class path - or specified in the
+ * <code>module-info.java</code>.
  *
- * Note that the <code>onNewClient</code> method will be called when the
- * RestClientBuilder's <code>build(Class&lt;?&gt; serviceInterface)</code> method is
- * called.
+ * Note that the <code>onNewClient</code> method will be called when the RestClientBuilder's
+ * <code>build(Class&lt;?&gt; serviceInterface)</code> method is called.
  *
  * @since 1.2
  */

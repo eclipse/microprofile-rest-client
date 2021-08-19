@@ -28,46 +28,39 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.ws.rs.ProcessingException;
-
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.testng.annotations.Test;
 import org.testng.log4testng.Logger;
 
+import jakarta.ws.rs.ProcessingException;
+
 public abstract class TimeoutTestBase extends WiremockArquillianTest {
     private static final Logger LOG = Logger.getLogger(TimeoutTestBase.class);
 
     protected static final String UNUSED_URL =
-        AccessController.doPrivileged((PrivilegedAction<String>) () ->
-            System.getProperty(
-                "org.eclipse.microprofile.rest.client.tck.unusedURL",
-                "http://microprofile.io:1234/null")
-        );
+            AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(
+                    "org.eclipse.microprofile.rest.client.tck.unusedURL",
+                    "http://microprofile.io:1234/null"));
 
     protected static final int TIMEOUT_CUSHION =
-        AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
-            Integer.getInteger(
-                "org.eclipse.microprofile.rest.client.tck.timeoutCushion",
-                1000)
-        );
+            AccessController.doPrivileged((PrivilegedAction<Integer>) () -> Integer.getInteger(
+                    "org.eclipse.microprofile.rest.client.tck.timeoutCushion",
+                    1000));
 
     protected static final int ROUNDING_FACTOR_CUSHION =
-        AccessController.doPrivileged((PrivilegedAction<Integer>) () ->
-            Integer.getInteger(
-                "org.eclipse.microprofile.rest.client.tck.roundingFactorCushion",
-                300)
-        );
+            AccessController.doPrivileged((PrivilegedAction<Integer>) () -> Integer.getInteger(
+                    "org.eclipse.microprofile.rest.client.tck.roundingFactorCushion",
+                    300));
 
-    @Test(expectedExceptions={ProcessingException.class})
+    @Test(expectedExceptions = {ProcessingException.class})
     public void testConnectTimeout() throws Exception {
 
         long startTime = System.nanoTime();
         try {
             getClientWithConnectTimeout().executeGet();
             fail("A ProcessingException should have been thrown to indicate a timeout");
-        }
-        finally {
+        } finally {
             long elapsedTime = System.nanoTime() - startTime;
             long elapsedMs = TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
             if (LOG.isDebugEnabled()) {
@@ -77,18 +70,17 @@ public abstract class TimeoutTestBase extends WiremockArquillianTest {
         }
     }
 
-    @Test(expectedExceptions={ProcessingException.class})
+    @Test(expectedExceptions = {ProcessingException.class})
     public void testReadTimeout() throws Exception {
 
         stubFor(get(urlEqualTo("/")).willReturn(aResponse()
-                                        .withStatus(200)
-                                        .withFixedDelay(30000)));
+                .withStatus(200)
+                .withFixedDelay(30000)));
         long startTime = System.nanoTime();
         try {
             getClientWithReadTimeout().executeGet();
             fail("A ProcessingException should have been thrown due to a read timeout");
-        }
-        finally {
+        } finally {
             long elapsedTime = System.nanoTime() - startTime;
             long elapsedMs = TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
             if (LOG.isDebugEnabled()) {

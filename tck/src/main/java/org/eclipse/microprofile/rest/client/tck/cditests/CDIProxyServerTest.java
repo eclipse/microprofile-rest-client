@@ -27,9 +27,6 @@ import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.startDest
 import static org.eclipse.microprofile.rest.client.tck.ProxyServerTest.stopDestinationServer;
 import static org.testng.Assert.assertEquals;
 
-import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.ProxyServerTest;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
@@ -42,42 +39,45 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
+
 /**
- * Verifies via CDI injection that you can use a programmatic interface.  verifies that the interface has Dependent scope.
+ * Verifies via CDI injection that you can use a programmatic interface. verifies that the interface has Dependent
+ * scope.
  */
-public class CDIProxyServerTest extends WiremockArquillianTest{
+public class CDIProxyServerTest extends WiremockArquillianTest {
     @Inject
     @RestClient
     private SimpleGetApi client;
 
     @Deployment
     public static WebArchive createDeployment() {
-        String uriProperty = SimpleGetApi.class.getName()+"/mp-rest/uri=" + getStringURL() + "testProxyCDI";
-        String proxyProperty = SimpleGetApi.class.getName()+"/mp-rest/proxyAddress=localhost:" + getPort();
+        String uriProperty = SimpleGetApi.class.getName() + "/mp-rest/uri=" + getStringURL() + "testProxyCDI";
+        String proxyProperty = SimpleGetApi.class.getName() + "/mp-rest/proxyAddress=localhost:" + getPort();
         String simpleName = CDIProxyServerTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class, ProxyServerTest.class)
-            .addAsManifestResource(new StringAsset(String.format(uriProperty+"%n"+proxyProperty)),
-                                                                 "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(SimpleGetApi.class, WiremockArquillianTest.class, ProxyServerTest.class)
+                .addAsManifestResource(new StringAsset(String.format(uriProperty + "%n" + proxyProperty)),
+                        "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
     public void testProxy() throws Exception {
         stubFor(get(urlMatching("/.*")).willReturn(
-            aResponse().proxiedFrom("http://localhost:" + DESTINATION_SERVER_PORT)
-                       .withAdditionalRequestHeader("X-Via", "CDIWireMockProxy")));
+                aResponse().proxiedFrom("http://localhost:" + DESTINATION_SERVER_PORT)
+                        .withAdditionalRequestHeader("X-Via", "CDIWireMockProxy")));
         try {
             startDestinationServer("bar");
             Response response = client.executeGet();
             assertEquals(response.getStatus(), 200);
             assertEquals(response.readEntity(String.class).trim(), "bar");
             assertEquals(response.getHeaderString("X-Via"), "CDIWireMockProxy");
-        }
-        finally {
+        } finally {
             stopDestinationServer();
         }
     }

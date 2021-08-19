@@ -15,14 +15,12 @@
  */
 package org.eclipse.microprofile.rest.client.tck;
 
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,19 +32,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class ClientReuseTest extends WiremockArquillianTest {
 
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientReuseTest.class.getSimpleName() + ".war")
-            .addClasses(WiremockArquillianTest.class, JsonPClient.class);
+                .addClasses(WiremockArquillianTest.class, JsonPClient.class);
     }
 
     @Test
@@ -54,15 +54,15 @@ public class ClientReuseTest extends WiremockArquillianTest {
         stubReturning(1, "{\"content\": true}");
         stubReturning(2, "Not a json");
         stubReturning(3, "{\"content\": true}");
-        
+
         callWithTimeout(this::testReuseClientAfterFailure, 20, TimeUnit.SECONDS);
     }
 
     private Void testReuseClientAfterFailure() {
         JsonPClient client =
-            RestClientBuilder.newBuilder()
-                .baseUri(getServerURI())
-                .build(JsonPClient.class);
+                RestClientBuilder.newBuilder()
+                        .baseUri(getServerURI())
+                        .build(JsonPClient.class);
 
         // expect a successful invocation
         assertTrue(client.get("1").getBoolean("content"));
@@ -72,30 +72,27 @@ public class ClientReuseTest extends WiremockArquillianTest {
 
         // expect a successful invocation
         assertTrue(client.get("3").getBoolean("content"));
-        
+
         return null;
     }
 
     private void stubReturning(int id, String text) {
         stubFor(
-            get(urlEqualTo("/" + id))
-                .willReturn(
-                    aResponse().withBody(text).withHeader("Content-Type", "application/json")
-                )
-        );
+                get(urlEqualTo("/" + id))
+                        .willReturn(
+                                aResponse().withBody(text).withHeader("Content-Type", "application/json")));
     }
 
     private void callWithTimeout(Callable<Object> timedCallable, long timeout, TimeUnit timeUnit) throws Throwable {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         try {
-            List<Future<Object>> futures = executorService.invokeAll(Collections.singleton(timedCallable), timeout, timeUnit);
+            List<Future<Object>> futures =
+                    executorService.invokeAll(Collections.singleton(timedCallable), timeout, timeUnit);
             futures.iterator().next().get();
-        }
-        catch (InterruptedException | CancellationException e) {
+        } catch (InterruptedException | CancellationException e) {
             e.printStackTrace();
             Assert.fail("the test didn't finish in " + timeout + " " + timeUnit);
-        }
-        catch (ExecutionException e) {
+        } catch (ExecutionException e) {
             Throwable unwrappedError = e.getCause();
             throw unwrappedError;
         }
@@ -105,8 +102,7 @@ public class ClientReuseTest extends WiremockArquillianTest {
         try {
             // this request should fail
             callable.call();
-        }
-        catch (Exception ignored) {
+        } catch (Exception ignored) {
             return;
         }
         fail("The call that was expected to fall succeeded");

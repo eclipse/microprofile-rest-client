@@ -22,8 +22,6 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.testng.log4testng.Logger;
 
-
-
 /**
  *
  * HTTP server which fires server sent events.
@@ -44,8 +42,7 @@ public class HttpSseServer implements AutoCloseable {
         try {
             server.start();
             LOG.debug("started");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to start SSE HTTP server", e);
         }
         return this;
@@ -55,8 +52,7 @@ public class HttpSseServer implements AutoCloseable {
         try {
             server.stop();
             LOG.debug("stopped");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.error("Failed to stop", e);
             throw new RuntimeException("Failed to stop SSE HTTP server", e);
         }
