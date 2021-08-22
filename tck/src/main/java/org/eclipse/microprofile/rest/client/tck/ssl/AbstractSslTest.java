@@ -15,11 +15,7 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
-import org.jboss.arquillian.testng.Arquillian;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import static java.lang.System.getProperty;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,13 +30,18 @@ import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.util.function.Consumer;
 
-import static java.lang.System.getProperty;
+import org.jboss.arquillian.testng.Arquillian;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 /**
  *
  * A superclass for SSL-related tests
  *
- * Certificates were generated with Tomas Terem's script: https://gist.github.com/tterem/8c4891641eddd6f070c6cdc738738c34
+ * Certificates were generated with Tomas Terem's script:
+ * https://gist.github.com/tterem/8c4891641eddd6f070c6cdc738738c34
  *
  */
 public abstract class AbstractSslTest extends Arquillian {
@@ -68,7 +69,6 @@ public abstract class AbstractSslTest extends Arquillian {
 
     static final String PASSWORD = "password";
 
-
     public static KeyStore getKeyStore(File keystoreFile) throws Exception {
         KeyStore keystore = KeyStore.getInstance("pkcs12");
         try (FileInputStream input = new FileInputStream(keystoreFile)) {
@@ -80,13 +80,14 @@ public abstract class AbstractSslTest extends Arquillian {
     private static HttpsServer httpsServer;
 
     /**
-     * Initializes the https server and prepares a directory with certificates for testing
-     * usage of certificates stored on disk.
-     * Additionally, to pass the information about the directory with the certificates to the container, creates a
-     * <code>META-INF/certificates-dir.txt</code> file in the web archive with the location
+     * Initializes the https server and prepares a directory with certificates for testing usage of certificates stored
+     * on disk. Additionally, to pass the information about the directory with the certificates to the container,
+     * creates a <code>META-INF/certificates-dir.txt</code> file in the web archive with the location
      *
-     * @param webArchive performs a test-specific configuration of the https server
-     * @param serverInitializer performs a test-specific configuration of the https server
+     * @param webArchive
+     *            performs a test-specific configuration of the https server
+     * @param serverInitializer
+     *            performs a test-specific configuration of the https server
      * @return the disk directory containing certificates
      */
     static void initializeTest(WebArchive webArchive, Consumer<HttpsServer> serverInitializer) {
@@ -95,19 +96,20 @@ public abstract class AbstractSslTest extends Arquillian {
 
         startServer(serverInitializer);
 
-        webArchive.addAsResource(new StringAsset(certificatesDirectory.toAbsolutePath().toString()), "META-INF/" + CERT_LOCATION_FILE);
+        webArchive.addAsResource(new StringAsset(certificatesDirectory.toAbsolutePath().toString()),
+                "META-INF/" + CERT_LOCATION_FILE);
     }
 
     static void initializeCertificateLocations() {
-        InputStream certLocationStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("/META-INF/" + CERT_LOCATION_FILE);
+        InputStream certLocationStream =
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("/META-INF/" + CERT_LOCATION_FILE);
         if (certLocationStream != null) {
             try (InputStreamReader streamReader = new InputStreamReader(certLocationStream);
-                 BufferedReader reader = new BufferedReader(streamReader)) {
+                    BufferedReader reader = new BufferedReader(streamReader)) {
                 String certsDir = reader.readLine();
 
                 initializeCertPaths(certsDir);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException("failed to read certification file", e);
             }
         }
@@ -139,8 +141,7 @@ public abstract class AbstractSslTest extends Arquillian {
             copyResourceTo("server-wrong-hostname.keystore", result);
 
             return result;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Unable to prepare certificates for tests that use certificates from disk");
         }
     }
@@ -156,11 +157,10 @@ public abstract class AbstractSslTest extends Arquillian {
         String resourceLocation = "/ssl/" + resource;
         Path diskLocation = directory.resolve(resource);
 
-        try (InputStream input = AbstractSslTest.class.getResourceAsStream(resourceLocation)){
+        try (InputStream input = AbstractSslTest.class.getResourceAsStream(resourceLocation)) {
             Files.copy(input, diskLocation);
             diskLocation.toFile().deleteOnExit();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to copy " + resource + " to " + directory.toAbsolutePath(), e);
         }
     }

@@ -71,8 +71,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest {
             simpleGetApi.executeGet();
             fail("A " + WebApplicationException.class + " should have been thrown via the registered "
                     + TestResponseExceptionMapper.class);
-        }
-        catch (WebApplicationException w) {
+        } catch (WebApplicationException w) {
             assertEquals(w.getMessage(), TestResponseExceptionMapper.MESSAGE,
                     "The message should be sourced from " + TestResponseExceptionMapper.class);
             assertTrue(TestResponseExceptionMapper.isHandlesCalled(),
@@ -96,8 +95,7 @@ public class ExceptionMapperTest extends WiremockArquillianTest {
             simpleGetApi.executeGet();
             fail("A " + WebApplicationException.class + " should have been thrown via the registered "
                     + TestResponseExceptionMapper.class);
-        }
-        catch (WebApplicationException w) {
+        } catch (WebApplicationException w) {
             // only handles should be called on the new mapper, since it returns false
             assertTrue(TestResponseExceptionMapperOverridePriority.isHandlesCalled(),
                     "The handles method should have been called on "

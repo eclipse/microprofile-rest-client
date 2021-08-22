@@ -22,9 +22,12 @@ public class ConfigUtil {
     /**
      * Create a MicroProfile Config property entry
      *
-     * @param aClass rest client interface class
-     * @param key configuration key, e.g. url
-     * @param value property value
+     * @param aClass
+     *            rest client interface class
+     * @param key
+     *            configuration key, e.g. url
+     * @param value
+     *            property value
      * @return an MP Config line, e.g. com.example.MyClient/mp-rest/url=http://example.com
      */
     public static String configLine(Class<?> aClass, String key, String value) {

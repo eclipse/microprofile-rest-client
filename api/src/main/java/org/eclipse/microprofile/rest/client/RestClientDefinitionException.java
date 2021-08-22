@@ -16,18 +16,17 @@
 package org.eclipse.microprofile.rest.client;
 
 /**
- * This exception is thrown when the MicroProfile Rest Client implementation
- * attempts to build a client using an invalid interface.  Interfaces are
- * considered invalid (1) if it contains a method with more than one HTTP method
- * annotations or (2) if the combined type-level/method-level URI path contains
- * an unresolved URI template or (3) if an interface method contains a
- * <code>@PathParam</code> annotation that refers to a URI template that is not
- * defined in any <code>@Path</code> annotations on the method or interface.
+ * This exception is thrown when the MicroProfile Rest Client implementation attempts to build a client using an invalid
+ * interface. Interfaces are considered invalid (1) if it contains a method with more than one HTTP method annotations
+ * or (2) if the combined type-level/method-level URI path contains an unresolved URI template or (3) if an interface
+ * method contains a <code>@PathParam</code> annotation that refers to a URI template that is not defined in any
+ * <code>@Path</code> annotations on the method or interface.
  */
 public class RestClientDefinitionException extends RuntimeException {
     static final long serialVersionUID = -3544786190345722935L;
 
-    public RestClientDefinitionException() {}
+    public RestClientDefinitionException() {
+    }
 
     public RestClientDefinitionException(String paramString) {
         super(paramString);

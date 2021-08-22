@@ -36,12 +36,11 @@ public class InvokedMethodRequestFilter implements ClientRequestFilter {
 
             Path path = m.getAnnotation(Path.class);
             ctx.abortWith(Response.ok("OK")
-                                  .header("ReturnType", m.getReturnType().getName())
-                                  .header("POST", m.getAnnotation(POST.class) == null ? "null" : "POST")
-                                  .header("Path", path == null ? "null" : path.value())
-                                  .build());
-        }
-        catch (Throwable t) {
+                    .header("ReturnType", m.getReturnType().getName())
+                    .header("POST", m.getAnnotation(POST.class) == null ? "null" : "POST")
+                    .header("Path", path == null ? "null" : path.value())
+                    .build());
+        } catch (Throwable t) {
             t.printStackTrace();
             ctx.abortWith(Response.serverError().build());
         }

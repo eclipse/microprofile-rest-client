@@ -65,8 +65,7 @@ public class CallMultipleMappersTest extends WiremockArquillianTest {
             simpleGetApi.executeGet();
             fail("A " + WebApplicationException.class + " should have been thrown via the registered "
                     + TestResponseExceptionMapper.class);
-        }
-        catch (WebApplicationException w) {
+        } catch (WebApplicationException w) {
             assertEquals(w.getMessage(), TestResponseExceptionMapper.MESSAGE,
                     "The message should be sourced from " + TestResponseExceptionMapper.class);
             assertTrue(TestResponseExceptionMapper.isHandlesCalled(),

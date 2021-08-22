@@ -17,22 +17,22 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ext;
 
+import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
+
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 
-import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
-
 public class CustomClientHeadersFactory implements ClientHeadersFactory {
 
-    //CHECKSTYLE:OFF
+    // CHECKSTYLE:OFF
     public static MultivaluedMap<String, String> passedInOutgoingHeaders = new MultivaluedHashMap<>();
     public static boolean invoked;
     public static boolean isIncomingHeadersMapNull;
     public static boolean isOutgoingHeadersMapNull;
-    //CHECKSTYLE:ON
+    // CHECKSTYLE:ON
 
     public MultivaluedMap<String, String> update(MultivaluedMap<String, String> incomingHeaders,
-                                                 MultivaluedMap<String, String> clientOutgoingHeaders) {
+            MultivaluedMap<String, String> clientOutgoingHeaders) {
         invoked = true;
         isIncomingHeadersMapNull = incomingHeaders == null;
         isOutgoingHeadersMapNull = clientOutgoingHeaders == null;
@@ -43,7 +43,8 @@ public class CustomClientHeadersFactory implements ClientHeadersFactory {
         MultivaluedMap<String, String> returnVal = new MultivaluedHashMap<>();
         returnVal.putSingle("FactoryHeader", "factoryValue");
         clientOutgoingHeaders.forEach((k, v) -> {
-            returnVal.putSingle(k, v.get(0) + "Modified"); });
+            returnVal.putSingle(k, v.get(0) + "Modified");
+        });
         return returnVal;
     }
 }

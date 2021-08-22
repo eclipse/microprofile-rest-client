@@ -74,16 +74,14 @@ public class WeatherEvent {
             if (other.date != null) {
                 return false;
             }
-        }
-        else if (!date.equals(other.date)) {
+        } else if (!date.equals(other.date)) {
             return false;
         }
         if (description == null) {
             if (other.description != null) {
                 return false;
             }
-        }
-        else if (!description.equals(other.description)) {
+        } else if (!description.equals(other.description)) {
             return false;
         }
         return true;

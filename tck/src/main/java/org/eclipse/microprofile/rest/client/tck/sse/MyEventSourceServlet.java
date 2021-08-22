@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.jetty.servlets.EventSource;
 import org.eclipse.jetty.servlets.EventSourceServlet;
 
-
 public class MyEventSourceServlet extends EventSourceServlet {
     private static final long serialVersionUID = -45238967561209543L;
 

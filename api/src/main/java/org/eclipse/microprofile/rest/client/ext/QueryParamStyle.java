@@ -17,10 +17,9 @@
 package org.eclipse.microprofile.rest.client.ext;
 
 /**
- * A QueryParamStyle enum is used to specify how multiple values are handled
- * when constructing the query portion of the URI. For example, a client
- * interface may take a collection of strings as it's query parameter. This enum
- * determines the style:
+ * A QueryParamStyle enum is used to specify how multiple values are handled when constructing the query portion of the
+ * URI. For example, a client interface may take a collection of strings as it's query parameter. This enum determines
+ * the style:
  * 
  * <pre>
  * public interface MultiParamClient {
@@ -28,23 +27,21 @@ package org.eclipse.microprofile.rest.client.ext;
  * }
  * </pre>
  * 
- * The style selected when building this client instance will determine the format
- * of the query portion of the URI.
+ * The style selected when building this client instance will determine the format of the query portion of the URI.
  *
  * @since 2.0
  */
 public enum QueryParamStyle {
 
     /**
-     * Multiple parameter instances, e.g.:
-     * <code>foo=v1&amp;foot=v2&amp;foo=v3</code>
+     * Multiple parameter instances, e.g.: <code>foo=v1&amp;foot=v2&amp;foo=v3</code>
      * 
      * This is the default if no style is configured.
      */
     MULTI_PAIRS,
 
-    /** A single parameter instance with multiple, comma-separated values, e.g.:
-     * <code>foo=v1,v2,v3</code>
+    /**
+     * A single parameter instance with multiple, comma-separated values, e.g.: <code>foo=v1,v2,v3</code>
      */
     COMMA_SEPARATED,
 

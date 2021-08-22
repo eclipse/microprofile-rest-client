@@ -20,9 +20,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.security.KeyStore;
 
-import jakarta.inject.Inject;
-import jakarta.ws.rs.ProcessingException;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
@@ -37,6 +34,9 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
 
 public class SslMutualTest extends AbstractSslTest {
 
@@ -65,50 +65,53 @@ public class SslMutualTest extends AbstractSslTest {
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class, SslMutualTest.class.getSimpleName() + ".war");
 
         initializeTest(webArchive,
-            server ->
-                server.keyStore(serverKeystore.getAbsolutePath(), PASSWORD)
-                    .trustStore(serverTruststore.getAbsolutePath(), PASSWORD)
-        );
+                server -> server.keyStore(serverKeystore.getAbsolutePath(), PASSWORD)
+                        .trustStore(serverTruststore.getAbsolutePath(), PASSWORD));
 
         // @formatter:off
         String config =
-            configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
-            configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
-            configLine(ClientWithTruststore.class, "trustStoreType", "pkcs12") +
-            configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
+                configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
+                        configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
+                        configLine(ClientWithTruststore.class, "trustStoreType", "pkcs12") +
+                        configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
+                        configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
 
-            configLine(ClientWithKeystoreAndTruststore.class, "trustStore", filePath(clientTruststore)) +
-            configLine(ClientWithKeystoreAndTruststore.class, "trustStoreType", "pkcs12") +
-            configLine(ClientWithKeystoreAndTruststore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithKeystoreAndTruststore.class, "keyStore", filePath(clientKeystore)) +
-            configLine(ClientWithKeystoreAndTruststore.class, "keyStoreType", "pkcs12") +
-            configLine(ClientWithKeystoreAndTruststore.class, "keyStorePassword", PASSWORD) +
-            configLine(ClientWithKeystoreAndTruststore.class, "uri", BASE_URI_STRING) +
+                        configLine(ClientWithKeystoreAndTruststore.class, "trustStore", filePath(clientTruststore)) +
+                        configLine(ClientWithKeystoreAndTruststore.class, "trustStoreType", "pkcs12") +
+                        configLine(ClientWithKeystoreAndTruststore.class, "trustStorePassword", PASSWORD) +
+                        configLine(ClientWithKeystoreAndTruststore.class, "keyStore", filePath(clientKeystore)) +
+                        configLine(ClientWithKeystoreAndTruststore.class, "keyStoreType", "pkcs12") +
+                        configLine(ClientWithKeystoreAndTruststore.class, "keyStorePassword", PASSWORD) +
+                        configLine(ClientWithKeystoreAndTruststore.class, "uri", BASE_URI_STRING) +
 
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStore", filePath(clientTruststore)) +
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStoreType", "pkcs12") +
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStore", "classpath:/META-INF/" + clientKeystoreFromClasspath) +
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStoreType", "pkcs12") +
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStorePassword", PASSWORD) +
-            configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "uri", BASE_URI_STRING) +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStore",
+                                filePath(clientTruststore))
+                        +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStorePassword", PASSWORD) +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "trustStoreType", "pkcs12") +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStore",
+                                "classpath:/META-INF/" + clientKeystoreFromClasspath)
+                        +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStoreType", "pkcs12") +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "keyStorePassword", PASSWORD) +
+                        configLine(ClientWithKeystoreFromClasspathAndTruststore.class, "uri", BASE_URI_STRING) +
 
-            configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(clientTruststore)) +
-            configLine(ClientWithNonMatchingStore.class, "trustStoreType", "pkcs12") +
-            configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithNonMatchingStore.class, "keyStore", filePath(serverKeystore)) +
-            configLine(ClientWithNonMatchingStore.class, "keyStoreType", "pkcs12") +
-            configLine(ClientWithNonMatchingStore.class, "keyStorePassword", PASSWORD) +
-            configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
+                        configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(clientTruststore)) +
+                        configLine(ClientWithNonMatchingStore.class, "trustStoreType", "pkcs12") +
+                        configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
+                        configLine(ClientWithNonMatchingStore.class, "keyStore", filePath(serverKeystore)) +
+                        configLine(ClientWithNonMatchingStore.class, "keyStoreType", "pkcs12") +
+                        configLine(ClientWithNonMatchingStore.class, "keyStorePassword", PASSWORD) +
+                        configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
         // @formatter:on
         webArchive
-            .addClasses(JsonPClient.class, ClientWithTruststore.class, ClientWithNonMatchingStore.class,
-                ClientWithKeystoreAndTruststore.class, ClientWithKeystoreFromClasspathAndTruststore.class,
-                HttpsServer.class, AbstractSslTest.class)
-            .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
-            .addAsWebInfResource(new ClassLoaderAsset("ssl/" + clientKeystoreFromClasspath), "classes/META-INF/" + clientKeystoreFromClasspath)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(JsonPClient.class, ClientWithTruststore.class, ClientWithNonMatchingStore.class,
+                        ClientWithKeystoreAndTruststore.class, ClientWithKeystoreFromClasspathAndTruststore.class,
+                        HttpsServer.class, AbstractSslTest.class)
+                .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
+                .addAsWebInfResource(new ClassLoaderAsset("ssl/" + clientKeystoreFromClasspath),
+                        "classes/META-INF/" + clientKeystoreFromClasspath)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return webArchive;
     }
@@ -117,10 +120,10 @@ public class SslMutualTest extends AbstractSslTest {
     public void shouldFailWithNoClientSignature() throws Exception {
         KeyStore trustStore = getKeyStore(clientTruststore);
         RestClientBuilder.newBuilder()
-            .baseUri(BASE_URI)
-            .trustStore(trustStore)
-            .build(JsonPClient.class)
-            .get("1");
+                .baseUri(BASE_URI)
+                .trustStore(trustStore)
+                .build(JsonPClient.class)
+                .get("1");
     }
 
     @Test
@@ -128,10 +131,10 @@ public class SslMutualTest extends AbstractSslTest {
         KeyStore trustStore = getKeyStore(clientTruststore);
         KeyStore keyStore = getKeyStore(clientKeystore);
         JsonPClient client = RestClientBuilder.newBuilder()
-            .baseUri(BASE_URI)
-            .trustStore(trustStore)
-            .keyStore(keyStore, PASSWORD)
-            .build(JsonPClient.class);
+                .baseUri(BASE_URI)
+                .trustStore(trustStore)
+                .keyStore(keyStore, PASSWORD)
+                .build(JsonPClient.class);
         assertEquals("bar", client.get("1").getString("foo"));
     }
 
@@ -140,11 +143,11 @@ public class SslMutualTest extends AbstractSslTest {
         KeyStore trustStore = getKeyStore(clientTruststore);
         KeyStore wrongKeyStore = getKeyStore(serverKeystore);
         RestClientBuilder.newBuilder()
-            .baseUri(BASE_URI)
-            .trustStore(trustStore)
-            .keyStore(wrongKeyStore, PASSWORD)
-            .build(JsonPClient.class)
-            .get("1");
+                .baseUri(BASE_URI)
+                .trustStore(trustStore)
+                .keyStore(wrongKeyStore, PASSWORD)
+                .build(JsonPClient.class)
+                .get("1");
     }
 
     @Test(expectedExceptions = ProcessingException.class)

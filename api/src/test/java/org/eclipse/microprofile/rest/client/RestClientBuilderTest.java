@@ -16,12 +16,12 @@
 
 package org.eclipse.microprofile.rest.client;
 
+import static org.testng.Assert.assertTrue;
+
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilder1Resolver;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class RestClientBuilderTest {
 
@@ -42,8 +42,8 @@ public class RestClientBuilderTest {
         RestClientBuilderResolver.setInstance(new RestClientBuilder1Resolver());
         // when
         RestClientBuilder builder = RestClientBuilder.newBuilder();
-        //then
+        // then
         assertTrue(builder instanceof BuilderImpl1);
     }
-    
+
 }

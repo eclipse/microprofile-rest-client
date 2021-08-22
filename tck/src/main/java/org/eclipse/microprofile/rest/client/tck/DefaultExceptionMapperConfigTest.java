@@ -59,8 +59,7 @@ public class DefaultExceptionMapperConfigTest extends WiremockArquillianTest {
         try {
             Response response = simpleGetApi.executeGet();
             assertEquals(response.getStatus(), STATUS);
-        }
-        catch (Exception w) {
+        } catch (Exception w) {
             fail("No exception should be thrown", w);
         }
     }

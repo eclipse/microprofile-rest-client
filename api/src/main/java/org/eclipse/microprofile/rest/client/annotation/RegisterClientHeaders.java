@@ -26,15 +26,16 @@ import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.ext.DefaultClientHeadersFactoryImpl;
 
 /**
- * Used to specify that a {@link ClientHeadersFactory} should be used to generate or propagate HTTP headers on the outbound request.
- * When annotation is placed at the interface level of a Rest Client interface, the implementation will invoke the ClientHeadersFactory's
- * <code>update</code> method.
+ * Used to specify that a {@link ClientHeadersFactory} should be used to generate or propagate HTTP headers on the
+ * outbound request. When annotation is placed at the interface level of a Rest Client interface, the implementation
+ * will invoke the ClientHeadersFactory's <code>update</code> method.
  * <p>
  * If no implementation class of the ClientHeadersFactory interface is specified in the annotation, then the
- * {@link DefaultClientHeadersFactoryImpl} will be used.  This implementation will simply propagate headers (specified via MP Config property)
- * from an inbound JAX-RS request (if applicable) to the outbound request.
+ * {@link DefaultClientHeadersFactoryImpl} will be used. This implementation will simply propagate headers (specified
+ * via MP Config property) from an inbound JAX-RS request (if applicable) to the outbound request.
  * <p>
- * If a ClientHeadersFactory class specified is not found on the classpath, this should be considered a deployment exception.
+ * If a ClientHeadersFactory class specified is not found on the classpath, this should be considered a deployment
+ * exception.
  *
  * @since 1.2
  */

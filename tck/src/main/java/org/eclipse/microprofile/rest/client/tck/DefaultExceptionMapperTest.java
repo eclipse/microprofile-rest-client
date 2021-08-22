@@ -26,9 +26,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
 import org.eclipse.microprofile.rest.client.tck.providers.LowerPriorityTestResponseExceptionMapper;
@@ -39,6 +36,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+
 public class DefaultExceptionMapperTest extends WiremockArquillianTest {
 
     private static final int STATUS = 401;
@@ -46,9 +46,9 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, DefaultExceptionMapperTest.class.getSimpleName()+".war")
-            .addClass(WiremockArquillianTest.class)
-            .addClasses(SimpleGetApi.class, LowerPriorityTestResponseExceptionMapper.class);
+        return ShrinkWrap.create(WebArchive.class, DefaultExceptionMapperTest.class.getSimpleName() + ".war")
+                .addClass(WiremockArquillianTest.class)
+                .addClasses(SimpleGetApi.class, LowerPriorityTestResponseExceptionMapper.class);
     }
 
     @BeforeTest
@@ -61,15 +61,14 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .property("microprofile.rest.client.disable.default.mapper", true)
-            .build(SimpleGetApi.class);
+                .baseUri(getServerURI())
+                .property("microprofile.rest.client.disable.default.mapper", true)
+                .build(SimpleGetApi.class);
 
         try {
             Response response = simpleGetApi.executeGet();
             assertEquals(response.getStatus(), STATUS);
-        }
-        catch (Exception w) {
+        } catch (Exception w) {
             fail("No exception should be thrown", w);
         }
     }
@@ -79,21 +78,20 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .build(SimpleGetApi.class);
+                .baseUri(getServerURI())
+                .build(SimpleGetApi.class);
 
         try {
             simpleGetApi.executeGet();
-            fail("A "+WebApplicationException.class+" should have been thrown automatically");
-        }
-        catch (WebApplicationException w) {
+            fail("A " + WebApplicationException.class + " should have been thrown automatically");
+        } catch (WebApplicationException w) {
             Response response = w.getResponse();
             // the response should have the response code from the api call
             assertEquals(response.getStatus(), STATUS,
-                "The 401 from the response should be propagated");
+                    "The 401 from the response should be propagated");
             String body = response.readEntity(String.class);
             assertEquals(body, BODY,
-                "The body of the response should be propagated");
+                    "The body of the response should be propagated");
             response.close();
         }
     }
@@ -103,15 +101,14 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .property("microprofile.rest.client.disable.default.mapper", false)
-            .build(SimpleGetApi.class);
+                .baseUri(getServerURI())
+                .property("microprofile.rest.client.disable.default.mapper", false)
+                .build(SimpleGetApi.class);
 
         try {
             simpleGetApi.executeGet();
-            fail("A "+WebApplicationException.class+" should have been thrown automatically");
-        }
-        catch (WebApplicationException w) {
+            fail("A " + WebApplicationException.class + " should have been thrown automatically");
+        } catch (WebApplicationException w) {
         }
     }
 
@@ -120,21 +117,20 @@ public class DefaultExceptionMapperTest extends WiremockArquillianTest {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(STATUS).withBody(BODY)));
 
         SimpleGetApi simpleGetApi = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .register(LowerPriorityTestResponseExceptionMapper.class)
-            .build(SimpleGetApi.class);
+                .baseUri(getServerURI())
+                .register(LowerPriorityTestResponseExceptionMapper.class)
+                .build(SimpleGetApi.class);
 
         try {
             simpleGetApi.executeGet();
-            fail("A "+WebApplicationException.class+" should have been thrown automatically");
-        }
-        catch (WebApplicationException w) {
+            fail("A " + WebApplicationException.class + " should have been thrown automatically");
+        } catch (WebApplicationException w) {
             assertTrue(LowerPriorityTestResponseExceptionMapper.isHandlesCalled(),
-                LowerPriorityTestResponseExceptionMapper.class +" should handle this exception");
+                    LowerPriorityTestResponseExceptionMapper.class + " should handle this exception");
             assertTrue(LowerPriorityTestResponseExceptionMapper.isThrowableCalled(),
-                LowerPriorityTestResponseExceptionMapper.class +" should handle this exception");
+                    LowerPriorityTestResponseExceptionMapper.class + " should handle this exception");
             assertEquals(w.getMessage(), LowerPriorityTestResponseExceptionMapper.class.getSimpleName(),
-                LowerPriorityTestResponseExceptionMapper.class+ " should be in the message");
+                    LowerPriorityTestResponseExceptionMapper.class + " should be in the message");
         }
     }
 }

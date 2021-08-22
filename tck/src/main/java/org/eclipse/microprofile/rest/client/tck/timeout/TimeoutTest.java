@@ -38,25 +38,25 @@ public class TimeoutTest extends TimeoutTestBase {
     public static Archive<?> createDeployment() {
         String simpleName = TimeoutTest.class.getSimpleName();
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-                         .addClasses(WiremockArquillianTest.class,
-                                     TimeoutTestBase.class,
-                                     SimpleGetApi.class);
+                .addClasses(WiremockArquillianTest.class,
+                        TimeoutTestBase.class,
+                        SimpleGetApi.class);
     }
 
     @Override
     protected SimpleGetApi getClientWithReadTimeout() {
         return RestClientBuilder.newBuilder()
-            .baseUri(WiremockArquillianTest.getServerURI())
-            .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-            .build(SimpleGetApi.class);
+                .baseUri(WiremockArquillianTest.getServerURI())
+                .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                .build(SimpleGetApi.class);
     }
 
     @Override
     protected SimpleGetApi getClientWithConnectTimeout() {
         return RestClientBuilder.newBuilder()
-            .baseUri(URI.create(UNUSED_URL))
-            .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-            .build(SimpleGetApi.class);
+                .baseUri(URI.create(UNUSED_URL))
+                .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                .build(SimpleGetApi.class);
     }
 
     @Override
@@ -64,6 +64,7 @@ public class TimeoutTest extends TimeoutTestBase {
         assertTrue(elapsed >= TIMEOUT - ROUNDING_FACTOR_CUSHION);
         // allow extra seconds cushion for slower test machines
         final long elapsedLimit = TIMEOUT + TIMEOUT_CUSHION;
-        assertTrue(elapsed < elapsedLimit, "Elapsed time expected under " + elapsedLimit + "ms, but was " + elapsed + "ms.");
+        assertTrue(elapsed < elapsedLimit,
+                "Elapsed time expected under " + elapsedLimit + "ms, but was " + elapsed + "ms.");
     }
 }

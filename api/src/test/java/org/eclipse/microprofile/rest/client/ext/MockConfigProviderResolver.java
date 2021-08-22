@@ -53,8 +53,7 @@ public class MockConfigProviderResolver extends ConfigProviderResolver {
             public <T> Optional<T> getOptionalValue(String propertyName, Class<T> propertyType) {
                 try {
                     return Optional.ofNullable(getValue(propertyName, propertyType));
-                }
-                catch (NoSuchElementException ex) {
+                } catch (NoSuchElementException ex) {
                     return Optional.empty();
                 }
             }
@@ -89,7 +88,7 @@ public class MockConfigProviderResolver extends ConfigProviderResolver {
                 });
             }
 
-            @SuppressWarnings({ "unchecked", "rawtypes" })
+            @SuppressWarnings({"unchecked", "rawtypes"})
             private Map<String, String> getSystemProps() {
                 Map sysProps = (Map) System.getProperties();
                 return (Map<String, String>) sysProps;
@@ -97,7 +96,7 @@ public class MockConfigProviderResolver extends ConfigProviderResolver {
 
             @Override
             public ConfigValue getConfigValue(String propertyName) {
-                return new ConfigValue(){
+                return new ConfigValue() {
 
                     @Override
                     public String getName() {

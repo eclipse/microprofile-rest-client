@@ -20,8 +20,6 @@ package org.eclipse.microprofile.rest.client.tck.timeout;
 
 import static org.testng.Assert.assertTrue;
 
-import jakarta.inject.Inject;
-
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
@@ -32,6 +30,8 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+
+import jakarta.inject.Inject;
 
 public class TimeoutViaMPConfigWithConfigKeyTest extends TimeoutTestBase {
     private static final int TIMEOUT = 7000;
@@ -44,13 +44,13 @@ public class TimeoutViaMPConfigWithConfigKeyTest extends TimeoutTestBase {
     public static Archive<?> createDeployment() {
         String timeoutProps =
                 "myConfigKey/mp-rest/uri=" + UNUSED_URL + System.lineSeparator() +
-                "myConfigKey/mp-rest/connectTimeout=" + TIMEOUT + System.lineSeparator() +
-                "myConfigKey/mp-rest/readTimeout=" + TIMEOUT;
+                        "myConfigKey/mp-rest/connectTimeout=" + TIMEOUT + System.lineSeparator() +
+                        "myConfigKey/mp-rest/readTimeout=" + TIMEOUT;
         StringAsset mpConfig = new StringAsset(timeoutProps);
-        return ShrinkWrap.create(WebArchive.class, TimeoutViaMPConfigWithConfigKeyTest.class.getSimpleName()+".war")
-            .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties")
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addClasses(SimpleGetApi.class,
+        return ShrinkWrap.create(WebArchive.class, TimeoutViaMPConfigWithConfigKeyTest.class.getSimpleName() + ".war")
+                .addAsWebInfResource(mpConfig, "classes/META-INF/microprofile-config.properties")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addClasses(SimpleGetApi.class,
                         SimpleGetApiWithConfigKey.class,
                         TimeoutTestBase.class,
                         WiremockArquillianTest.class);
@@ -71,6 +71,7 @@ public class TimeoutViaMPConfigWithConfigKeyTest extends TimeoutTestBase {
         assertTrue(elapsed >= TIMEOUT - ROUNDING_FACTOR_CUSHION);
         // allow extra seconds cushion for slower test machines
         final long elapsedLimit = TIMEOUT + TIMEOUT_CUSHION;
-        assertTrue(elapsed < elapsedLimit, "Elapsed time expected under " + elapsedLimit + "ms, but was " + elapsed + "ms.");
+        assertTrue(elapsed < elapsedLimit,
+                "Elapsed time expected under " + elapsedLimit + "ms, but was " + elapsed + "ms.");
     }
 }

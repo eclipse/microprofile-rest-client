@@ -33,13 +33,13 @@ public abstract class AbstractSseTest {
 
     private static ExecutorService serverLaunchExecutor = Executors.newSingleThreadExecutor();
 
-    protected static AtomicReference<Throwable> launchServer(CountDownLatch stopLatch, 
-        Consumer<MyEventSource> consumer) throws Exception {
+    protected static AtomicReference<Throwable> launchServer(CountDownLatch stopLatch,
+            Consumer<MyEventSource> consumer) throws Exception {
         return launchServer(stopLatch, consumer, null);
     }
 
-    protected static AtomicReference<Throwable> launchServer(CountDownLatch stopLatch, 
-        Consumer<MyEventSource> consumer, CountDownLatch cleanupLatch) throws Exception {
+    protected static AtomicReference<Throwable> launchServer(CountDownLatch stopLatch,
+            Consumer<MyEventSource> consumer, CountDownLatch cleanupLatch) throws Exception {
 
         AtomicReference<Throwable> caughtException = new AtomicReference<>();
         CountDownLatch startLatch = new CountDownLatch(1);
@@ -50,12 +50,10 @@ public abstract class AbstractSseTest {
                 LOG.info("launchServer server started on port " + PORT);
                 assertTrue(stopLatch.await(30, TimeUnit.SECONDS),
                         "Timed out with client expecting " + stopLatch.getCount() + " unreceived event(s)");
-            }
-            catch (Throwable t) {
+            } catch (Throwable t) {
                 LOG.error("launchServer caughtException ", t);
                 caughtException.set(t);
-            }
-            finally {
+            } finally {
                 if (cleanupLatch != null) {
                     cleanupLatch.countDown();
                 }
@@ -68,8 +66,7 @@ public abstract class AbstractSseTest {
     protected static void sleep(long millis) {
         try {
             Thread.sleep(millis);
-        }
-        catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
