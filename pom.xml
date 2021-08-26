@@ -33,7 +33,7 @@
     <url>http://microprofile.io</url>
 
     <properties>
-        <version.mp.config>3.0-RC2</version.mp.config>
+        <version.mp.config>3.0-RC3</version.mp.config>
         <inceptionYear>2017</inceptionYear>
     </properties>
 
