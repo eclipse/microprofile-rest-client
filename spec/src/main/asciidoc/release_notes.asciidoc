@@ -20,7 +20,7 @@
 
 == Release Notes
 
-[[release_notes_20]]
+[[release_notes_30]]
 === Release Notes for MicroProfile Rest Client 3.0
 
 A full list of changes delivered in the 3.0 release can be found at
