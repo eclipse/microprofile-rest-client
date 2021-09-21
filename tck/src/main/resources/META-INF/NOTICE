@@ -4,7 +4,7 @@
 =========================================================================
 
 SPDXVersion: SPDX-2.1
-PackageName: Eclipse Microprofile
+PackageName: Eclipse MicroProfile
 PackageHomePage: http://www.eclipse.org/microprofile
 PackageLicenseDeclared: Apache-2.0
 
