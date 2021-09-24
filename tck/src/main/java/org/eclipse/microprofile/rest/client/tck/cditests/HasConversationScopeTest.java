@@ -18,6 +18,8 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ClassUtils.canLoad;
+import static org.eclipse.microprofile.rest.client.tck.utils.TestUtils.assumeThat;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
@@ -69,6 +71,9 @@ public class HasConversationScopeTest extends Arquillian {
 
     @Test
     public void testHasConversationScoped() {
+        // per CDI spec, ConversationScope is only applicable when servlets are in play
+        assumeThat(canLoad("jakarta.servlet.http.HttpServlet"));
+
         Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), ConversationScoped.class);
@@ -76,6 +81,9 @@ public class HasConversationScopeTest extends Arquillian {
 
     @Test
     public void testHasConversationScopedFromConfigKey() {
+        // per CDI spec, ConversationScope is only applicable when servlets are in play
+        assumeThat(canLoad("jakarta.servlet.http.HttpServlet"));
+
         Set<Bean<?>> beans = beanManager.getBeans(ConfigKeyClient.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), ConversationScoped.class);
@@ -83,6 +91,9 @@ public class HasConversationScopeTest extends Arquillian {
 
     @Test
     public void testHasConversationScopedWhenAnnotated() {
+        // per CDI spec, ConversationScope is only applicable when servlets are in play
+        assumeThat(canLoad("jakarta.servlet.http.HttpServlet"));
+
         Set<Bean<?>> beans = beanManager.getBeans(MyConversationScopedApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), ConversationScoped.class);
