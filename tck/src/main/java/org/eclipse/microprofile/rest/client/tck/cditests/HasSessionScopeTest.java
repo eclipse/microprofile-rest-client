@@ -18,6 +18,8 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ClassUtils.canLoad;
+import static org.eclipse.microprofile.rest.client.tck.utils.TestUtils.assumeThat;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
@@ -66,6 +68,8 @@ public class HasSessionScopeTest extends Arquillian {
     }
     @Test
     public void testHasSingletonScoped() {
+        // per CDI spec, SessionScope is only applicable when servlets are in play
+        assumeThat(canLoad("jakarta.servlet.http.HttpServlet"));
         Set<Bean<?>> beans = beanManager.getBeans(SimpleGetApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), SessionScoped.class);
@@ -73,6 +77,8 @@ public class HasSessionScopeTest extends Arquillian {
 
     @Test
     public void testHasSessionScopedFromConfigKey() {
+        // per CDI spec, SessionScope is only applicable when servlets are in play
+        assumeThat(canLoad("jakarta.servlet.http.HttpServlet"));
         Set<Bean<?>> beans = beanManager.getBeans(ConfigKeyClient.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), SessionScoped.class);
@@ -80,6 +86,8 @@ public class HasSessionScopeTest extends Arquillian {
 
     @Test
     public void testHasSessionScopedWhenAnnotated() {
+        // per CDI spec, SessionScope is only applicable when servlets are in play
+        assumeThat(canLoad("jakarta.servlet.http.HttpServlet"));
         Set<Bean<?>> beans = beanManager.getBeans(MySessionScopedApi.class, RestClient.LITERAL);
         Bean<?> resolved = beanManager.resolve(beans);
         assertEquals(resolved.getScope(), SessionScoped.class);
