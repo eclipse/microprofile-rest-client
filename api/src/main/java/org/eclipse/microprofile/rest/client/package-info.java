@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2016-2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2016-2021 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -19,8 +19,8 @@
  *******************************************************************************/
 
 /**
- * APIs for building a type-safe RESTful client leveraging existing JAX-RS
- * APIs, for example:
+ * APIs for building a type-safe RESTful client leveraging existing JAX-RS APIs, for example:
+ * 
  * <pre>
  * public interface MyClientService {
  *     &#064;GET
@@ -35,8 +35,9 @@
  *                                            .build();
  * Widget w = service.getWidget(widgetId); // invokes remote service, returns domain object
  * </pre>
+ * 
  * @since 1.0
  */
-@org.osgi.annotation.versioning.Version("1.4")
+@org.osgi.annotation.versioning.Version("2.0")
 @org.osgi.annotation.versioning.ProviderType
 package org.eclipse.microprofile.rest.client;

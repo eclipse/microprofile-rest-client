@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,20 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces;
 
-import javax.json.JsonObject;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
 import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
 import org.eclipse.microprofile.rest.client.tck.ext.CdiCustomClientHeadersFactory;
 
+import jakarta.json.JsonObject;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
 
 @Path("/")
 @RegisterClientHeaders(CdiCustomClientHeadersFactory.class)
-@ClientHeaderParam(name="IntfHeader", value="intfValue")
+@ClientHeaderParam(name = "IntfHeader", value = "intfValue")
 public interface CdiClientHeadersFactoryClient {
     @DELETE
-    @ClientHeaderParam(name="MethodHeader", value="methodValue")
+    @ClientHeaderParam(name = "MethodHeader", value = "methodValue")
     JsonObject delete(@HeaderParam("ArgHeader") String argHeader);
 }

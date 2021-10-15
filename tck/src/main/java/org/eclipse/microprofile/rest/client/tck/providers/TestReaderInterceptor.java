@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,18 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.ext.ReaderInterceptor;
-import javax.ws.rs.ext.ReaderInterceptorContext;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TestReaderInterceptor implements ReaderInterceptor{
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ext.ReaderInterceptor;
+import jakarta.ws.rs.ext.ReaderInterceptorContext;
+
+public class TestReaderInterceptor implements ReaderInterceptor {
     private static AtomicInteger invocations = new AtomicInteger(0);
     @Override
-    public Object aroundReadFrom(ReaderInterceptorContext readerInterceptorContext) throws IOException, WebApplicationException {
+    public Object aroundReadFrom(ReaderInterceptorContext readerInterceptorContext)
+            throws IOException, WebApplicationException {
         invocations.incrementAndGet();
         return readerInterceptorContext.proceed();
     }

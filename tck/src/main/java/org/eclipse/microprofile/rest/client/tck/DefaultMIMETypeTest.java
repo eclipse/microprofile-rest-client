@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Contributors to the Eclipse Foundation
+ * Copyright 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.StringClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithSpecifiedHeaderFilter;
@@ -35,12 +32,15 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+
 public class DefaultMIMETypeTest extends Arquillian {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, DefaultMIMETypeTest.class.getSimpleName()+".war")
-            .addClasses(DefaultMIMETypeTest.class, StringClient.class, ReturnWithSpecifiedHeaderFilter.class);
+        return ShrinkWrap.create(WebArchive.class, DefaultMIMETypeTest.class.getSimpleName() + ".war")
+                .addClasses(DefaultMIMETypeTest.class, StringClient.class, ReturnWithSpecifiedHeaderFilter.class);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class DefaultMIMETypeTest extends Arquillian {
 
     private StringClient client() {
         return RestClientBuilder.newBuilder()
-            .baseUri(URI.create("http://localhost:1234/notUsed"))
-            .register(ReturnWithSpecifiedHeaderFilter.class)
-            .build(StringClient.class);
+                .baseUri(URI.create("http://localhost:1234/notUsed"))
+                .register(ReturnWithSpecifiedHeaderFilter.class)
+                .build(StringClient.class);
     }
 }

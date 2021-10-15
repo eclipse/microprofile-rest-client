@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Contributors to the Eclipse Foundation
+ * Copyright 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,9 @@ import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
-import javax.json.JsonObject;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
 import org.eclipse.microprofile.rest.client.tck.ext.CustomClientHeadersFactory;
+import org.eclipse.microprofile.rest.client.tck.interfaces.ClientHeadersFactoryClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllClientHeadersFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
@@ -37,24 +35,26 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.json.JsonObject;
+
 public class ClientHeadersFactoryTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, ClientHeadersFactoryTest.class.getSimpleName()+".war")
-            .addClasses(ClientHeadersFactoryClient.class,
-                CustomClientHeadersFactory.class,
-                ReturnWithAllClientHeadersFilter.class);
+        return ShrinkWrap.create(WebArchive.class, ClientHeadersFactoryTest.class.getSimpleName() + ".war")
+                .addClasses(ClientHeadersFactoryClient.class,
+                        CustomClientHeadersFactory.class,
+                        ReturnWithAllClientHeadersFilter.class);
     }
 
     private static ClientHeadersFactoryClient client(Class<?>... providers) {
         try {
-            RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri(URI.create("http://localhost:9080/notused"));
+            RestClientBuilder builder =
+                    RestClientBuilder.newBuilder().baseUri(URI.create("http://localhost:9080/notused"));
             for (Class<?> provider : providers) {
                 builder.register(provider);
             }
             return builder.build(ClientHeadersFactoryClient.class);
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             t.printStackTrace();
             return null;
         }
@@ -74,7 +74,6 @@ public class ClientHeadersFactoryTest extends Arquillian {
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("IntfHeader"), "intfValue");
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("MethodHeader"), "methodValue");
         assertEquals(CustomClientHeadersFactory.passedInOutgoingHeaders.getFirst("ArgHeader"), "argValue");
-
 
         assertEquals(headers.getString("IntfHeader"), "intfValueModified");
         assertEquals(headers.getString("MethodHeader"), "methodValueModified");

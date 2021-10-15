@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,17 @@
  */
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.testng.Assert.assertEquals;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
@@ -40,24 +51,12 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static org.testng.Assert.assertEquals;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 /**
- * Verifies via CDI injection that you can use a programmatic interface.
- * Verifies that the interface includes registered providers.
- * Also verifies that providers registered via MicroProfile Config are honored.
+ * Verifies via CDI injection that you can use a programmatic interface. Verifies that the interface includes registered
+ * providers. Also verifies that providers registered via MicroProfile Config are honored.
  */
 public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     @Inject
@@ -81,32 +80,31 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
         String simpleName = CDIInvokeWithRegisteredProvidersTest.class.getSimpleName();
         String providersPropName = InterfaceWithoutProvidersDefined.class.getName() + "/mp-rest/providers";
         String providersValue = TestClientRequestFilter.class.getName() + "," +
-                                TestClientResponseFilter.class.getName() + "," +
-                                TestMessageBodyReader.class.getName() + "," +
-                                TestMessageBodyWriter.class.getName() + "," +
-                                TestParamConverterProvider.class.getName() + "," +
-                                TestReaderInterceptor.class.getName() + "," +
-                                TestWriterInterceptor.class.getName();
+                TestClientResponseFilter.class.getName() + "," +
+                TestMessageBodyReader.class.getName() + "," +
+                TestMessageBodyWriter.class.getName() + "," +
+                TestParamConverterProvider.class.getName() + "," +
+                TestReaderInterceptor.class.getName() + "," +
+                TestWriterInterceptor.class.getName();
         String providersConfigKeyPropName = "theKey/mp-rest/providers";
-        String propsFile = String.format(urlPropName1+"="+urlValue+"%n" +
-                                         urlPropName2+"="+urlValue+"%n" +
-                                         urlPropName3+"="+urlValue+"%n" +
-                                         providersPropName+"="+providersValue+"%n" +
-                                         providersConfigKeyPropName+"="+providersValue);
+        String propsFile = String.format(urlPropName1 + "=" + urlValue + "%n" +
+                urlPropName2 + "=" + urlValue + "%n" +
+                urlPropName3 + "=" + urlValue + "%n" +
+                providersPropName + "=" + providersValue + "%n" +
+                providersConfigKeyPropName + "=" + providersValue);
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(InterfaceWithProvidersDefined.class,
+                .addClasses(InterfaceWithProvidersDefined.class,
                         InterfaceWithoutProvidersDefined.class,
                         InterfaceWithoutProvidersDefinedWithConfigKey.class,
                         InterfaceBase.class,
                         WiremockArquillianTest.class)
-            .addPackage(TestClientResponseFilter.class.getPackage())
-            .addAsManifestResource(new StringAsset(propsFile), "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addPackage(TestClientResponseFilter.class.getPackage())
+                .addAsManifestResource(new StringAsset(propsFile), "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
-
 
     @Test
     public void testInvokesPostOperation_viaAnnotation() throws Exception {
@@ -123,14 +121,14 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
         testInvokesPostOperation(clientProvidersViaConfigKey);
     }
 
-    private void testInvokesPostOperation(InterfaceBase api) throws Exception{
+    private void testInvokesPostOperation(InterfaceBase api) throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
-        String expectedReceivedBody = "this is the replaced writer "+inputBody;
+        String expectedReceivedBody = "this is the replaced writer " + inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         stubFor(post(urlEqualTo("/"))
-            .willReturn(aResponse()
-                .withBody(outputBody)));
+                .willReturn(aResponse()
+                        .withBody(outputBody)));
 
         Response response = api.executePost(inputBody);
 
@@ -142,10 +140,10 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
 
         verify(postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
 
-        assertEquals(TestClientResponseFilter.getAndResetValue(),1);
-        assertEquals(TestClientRequestFilter.getAndResetValue(),1);
-        assertEquals(TestReaderInterceptor.getAndResetValue(),1);
-        assertEquals(TestWriterInterceptor.getAndResetValue(),1);
+        assertEquals(TestClientResponseFilter.getAndResetValue(), 1);
+        assertEquals(TestClientRequestFilter.getAndResetValue(), 1);
+        assertEquals(TestReaderInterceptor.getAndResetValue(), 1);
+        assertEquals(TestWriterInterceptor.getAndResetValue(), 1);
     }
 
     @Test
@@ -166,13 +164,13 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
     private void testInvokesPutOperation(InterfaceBase api) throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
-        String expectedReceivedBody = "this is the replaced writer "+inputBody;
+        String expectedReceivedBody = "this is the replaced writer " + inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         Widget id = new Widget("MyWidget", 7);
         String expectedId = "MyWidget:7";
-        stubFor(put(urlEqualTo("/"+expectedId))
-            .willReturn(aResponse()
-                .withBody(outputBody)));
+        stubFor(put(urlEqualTo("/" + expectedId))
+                .willReturn(aResponse()
+                        .withBody(outputBody)));
 
         Response response = api.executePut(id, inputBody);
 
@@ -182,11 +180,11 @@ public class CDIInvokeWithRegisteredProvidersTest extends WiremockArquillianTest
 
         assertEquals(body, expectedResponseBody);
 
-        verify(putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(putRequestedFor(urlEqualTo("/" + expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
 
-        assertEquals(TestClientResponseFilter.getAndResetValue(),1);
-        assertEquals(TestClientRequestFilter.getAndResetValue(),1);
-        assertEquals(TestReaderInterceptor.getAndResetValue(),1);
-        assertEquals(TestWriterInterceptor.getAndResetValue(),1);
+        assertEquals(TestClientResponseFilter.getAndResetValue(), 1);
+        assertEquals(TestClientRequestFilter.getAndResetValue(), 1);
+        assertEquals(TestReaderInterceptor.getAndResetValue(), 1);
+        assertEquals(TestWriterInterceptor.getAndResetValue(), 1);
     }
 }

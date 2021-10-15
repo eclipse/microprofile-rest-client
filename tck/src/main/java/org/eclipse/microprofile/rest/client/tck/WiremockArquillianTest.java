@@ -18,14 +18,15 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import org.jboss.arquillian.testng.Arquillian;
-import org.testng.annotations.BeforeClass;
-
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import org.jboss.arquillian.testng.Arquillian;
+import org.testng.annotations.BeforeClass;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 public abstract class WiremockArquillianTest extends Arquillian {
     private static Integer port;
@@ -34,7 +35,7 @@ public abstract class WiremockArquillianTest extends Arquillian {
     private static String context;
 
     public static Integer getPort() {
-        if(port == null) {
+        if (port == null) {
             setupWireMockConnection();
         }
         return port;
@@ -43,8 +44,7 @@ public abstract class WiremockArquillianTest extends Arquillian {
     protected static URI getServerURI() {
         try {
             return new URI(getStringURL());
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             throw new RuntimeException("Malformed URI not expected", e);
         }
     }
@@ -52,15 +52,14 @@ public abstract class WiremockArquillianTest extends Arquillian {
     protected static URL getServerURL() {
         try {
             return new URL(getStringURL());
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException("Malformed URL not expected", e);
         }
     }
 
     protected static String getStringURL() {
         int port = getPort();
-        return scheme+"://"+host+":" + port+""+context;
+        return scheme + "://" + host + ":" + port + "" + context;
     }
 
     @BeforeClass

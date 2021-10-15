@@ -32,37 +32,39 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class TimeoutTest extends TimeoutTestBase {
+    private static final int TIMEOUT = 5000;
 
     @Deployment
     public static Archive<?> createDeployment() {
         String simpleName = TimeoutTest.class.getSimpleName();
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-                         .addClasses(WiremockArquillianTest.class,
-                                     TimeoutTestBase.class,
-                                     SimpleGetApi.class);
+                .addClasses(WiremockArquillianTest.class,
+                        TimeoutTestBase.class,
+                        SimpleGetApi.class);
     }
 
     @Override
     protected SimpleGetApi getClientWithReadTimeout() {
         return RestClientBuilder.newBuilder()
-            .baseUri(WiremockArquillianTest.getServerURI())
-            .readTimeout(5, TimeUnit.SECONDS)
-            .build(SimpleGetApi.class);
+                .baseUri(WiremockArquillianTest.getServerURI())
+                .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                .build(SimpleGetApi.class);
     }
 
     @Override
     protected SimpleGetApi getClientWithConnectTimeout() {
         return RestClientBuilder.newBuilder()
-            .baseUri(URI.create(UNUSED_URL))
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .build(SimpleGetApi.class);
+                .baseUri(URI.create(UNUSED_URL))
+                .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                .build(SimpleGetApi.class);
     }
 
     @Override
     protected void checkTimeElapsed(long elapsed) {
-        assertTrue(elapsed >= 5);
+        assertTrue(elapsed >= TIMEOUT - ROUNDING_FACTOR_CUSHION);
         // allow extra seconds cushion for slower test machines
-        final long elapsedLimit = 5 + TIMEOUT_CUSHION;
-        assertTrue(elapsed < elapsedLimit, "Elapsed time expected under " + elapsedLimit + " secs, but was " + elapsed + " secs.");
+        final long elapsedLimit = TIMEOUT + TIMEOUT_CUSHION;
+        assertTrue(elapsed < elapsedLimit,
+                "Elapsed time expected under " + elapsedLimit + "ms, but was " + elapsed + "ms.");
     }
 }

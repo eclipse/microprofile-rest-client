@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,17 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.testng.Assert.assertEquals;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceBase;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithProvidersDefined;
@@ -32,40 +43,29 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.core.Response;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static org.testng.Assert.assertEquals;
+import jakarta.ws.rs.core.Response;
 
 public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, InvokeWithRegisteredProvidersTest.class.getSimpleName()+".war")
-            .addClasses(InterfaceWithProvidersDefined.class, WiremockArquillianTest.class, InterfaceBase.class)
-            .addPackage(TestClientResponseFilter.class.getPackage());
+        return ShrinkWrap.create(WebArchive.class, InvokeWithRegisteredProvidersTest.class.getSimpleName() + ".war")
+                .addClasses(InterfaceWithProvidersDefined.class, WiremockArquillianTest.class, InterfaceBase.class)
+                .addPackage(TestClientResponseFilter.class.getPackage());
     }
 
     @Test
-    public void testInvokesPostOperationWithAnnotatedProviders() throws Exception{
+    public void testInvokesPostOperationWithAnnotatedProviders() throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
-        String expectedReceivedBody = "this is the replaced writer "+inputBody;
+        String expectedReceivedBody = "this is the replaced writer " + inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         stubFor(post(urlEqualTo("/"))
-            .willReturn(aResponse()
-                .withBody(outputBody)));
+                .willReturn(aResponse()
+                        .withBody(outputBody)));
 
         InterfaceWithProvidersDefined api = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .build(InterfaceWithProvidersDefined.class);
+                .baseUri(getServerURI())
+                .build(InterfaceWithProvidersDefined.class);
 
         Response response = api.executePost(inputBody);
 
@@ -77,27 +77,27 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
 
         verify(1, postRequestedFor(urlEqualTo("/")).withRequestBody(equalTo(expectedReceivedBody)));
 
-        assertEquals(TestClientResponseFilter.getAndResetValue(),1);
-        assertEquals(TestClientRequestFilter.getAndResetValue(),1);
-        assertEquals(TestReaderInterceptor.getAndResetValue(),1);
-        assertEquals(TestWriterInterceptor.getAndResetValue(),1);
+        assertEquals(TestClientResponseFilter.getAndResetValue(), 1);
+        assertEquals(TestClientRequestFilter.getAndResetValue(), 1);
+        assertEquals(TestReaderInterceptor.getAndResetValue(), 1);
+        assertEquals(TestWriterInterceptor.getAndResetValue(), 1);
     }
 
     @Test
     public void testInvokesPutOperationWithAnnotatedProviders() throws Exception {
         String inputBody = "input body will be removed";
         String outputBody = "output body will be removed";
-        String expectedReceivedBody = "this is the replaced writer "+inputBody;
+        String expectedReceivedBody = "this is the replaced writer " + inputBody;
         String expectedResponseBody = TestMessageBodyReader.REPLACED_BODY;
         Widget id = new Widget("Keyboard", 123);
         String expectedId = "Keyboard:123";
-        stubFor(put(urlEqualTo("/"+expectedId))
-            .willReturn(aResponse()
-                .withBody(outputBody)));
+        stubFor(put(urlEqualTo("/" + expectedId))
+                .willReturn(aResponse()
+                        .withBody(outputBody)));
 
         InterfaceWithProvidersDefined api = RestClientBuilder.newBuilder()
-            .baseUri(getServerURI())
-            .build(InterfaceWithProvidersDefined.class);
+                .baseUri(getServerURI())
+                .build(InterfaceWithProvidersDefined.class);
 
         Response response = api.executePut(id, inputBody);
 
@@ -107,11 +107,11 @@ public class InvokeWithRegisteredProvidersTest extends WiremockArquillianTest {
 
         assertEquals(body, expectedResponseBody);
 
-        verify(1, putRequestedFor(urlEqualTo("/"+expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
+        verify(1, putRequestedFor(urlEqualTo("/" + expectedId)).withRequestBody(equalTo(expectedReceivedBody)));
 
-        assertEquals(TestClientResponseFilter.getAndResetValue(),1);
-        assertEquals(TestClientRequestFilter.getAndResetValue(),1);
-        assertEquals(TestReaderInterceptor.getAndResetValue(),1);
-        assertEquals(TestWriterInterceptor.getAndResetValue(),1);
+        assertEquals(TestClientResponseFilter.getAndResetValue(), 1);
+        assertEquals(TestClientRequestFilter.getAndResetValue(), 1);
+        assertEquals(TestReaderInterceptor.getAndResetValue(), 1);
+        assertEquals(TestWriterInterceptor.getAndResetValue(), 1);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@
 package org.eclipse.microprofile.rest.client.tck.ext;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.enterprise.context.ApplicationScoped;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class Counter {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
@@ -45,6 +36,15 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Verifies the CDI-managed providers are used when their class is registered with the client interface.
@@ -68,11 +68,11 @@ public class CDIManagedProviderTest extends Arquillian {
         String simpleName = CDIManagedProviderTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
                 .addClasses(SimpleGetApi.class)
-                .addAsManifestResource(new StringAsset(String.format(uriProp + "%n" + providerProp)), 
-                                       "microprofile-config.properties")
+                .addAsManifestResource(new StringAsset(String.format(uriProp + "%n" + providerProp)),
+                        "microprofile-config.properties")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war").addAsLibrary(jar)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
@@ -90,9 +90,9 @@ public class CDIManagedProviderTest extends Arquillian {
     @Test
     public void testCDIProviderSpecifiedViaRestClientBuilder() throws Exception {
         MyProgrammaticClient client = RestClientBuilder.newBuilder()
-                                                       .baseUri(URI.create(STUB_URI))
-                                                       .register(MyFilter.class)
-                                                       .build(MyProgrammaticClient.class);
+                .baseUri(URI.create(STUB_URI))
+                .register(MyFilter.class)
+                .build(MyProgrammaticClient.class);
         Response r = client.executeGet();
         assertEquals(r.getStatus(), 200);
     }
@@ -100,9 +100,9 @@ public class CDIManagedProviderTest extends Arquillian {
     @Test
     public void testInstanceProviderSpecifiedViaRestClientBuilderDoesNotUseCDIManagedProvider() throws Exception {
         MyProgrammaticClient client = RestClientBuilder.newBuilder()
-                                                       .baseUri(URI.create("http://localhost:9080/stub"))
-                                                       .register(new MyFilter())
-                                                       .build(MyProgrammaticClient.class);
+                .baseUri(URI.create("http://localhost:9080/stub"))
+                .register(new MyFilter())
+                .build(MyProgrammaticClient.class);
         Response r = client.executeGet();
         assertEquals(r.getStatus(), 204);
     }
@@ -110,10 +110,10 @@ public class CDIManagedProviderTest extends Arquillian {
     @ApplicationScoped
     public static class MyFilter implements ClientRequestFilter {
 
-        boolean postConstructInvoked;
+        protected boolean postConstructInvoked;
 
         @Inject
-        BeanManager beanManager;
+        protected BeanManager beanManager;
 
         @PostConstruct
         public void postConstruct() {
@@ -122,7 +122,7 @@ public class CDIManagedProviderTest extends Arquillian {
 
         @Override
         public void filter(ClientRequestContext requestContext) throws IOException {
-            requestContext.abortWith(Response.status(beanManager != null  && postConstructInvoked ? 200 : 204).build());
+            requestContext.abortWith(Response.status(beanManager != null && postConstructInvoked ? 200 : 204).build());
         }
     }
 

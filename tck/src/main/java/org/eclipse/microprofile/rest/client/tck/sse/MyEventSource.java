@@ -26,7 +26,7 @@ import org.testng.log4testng.Logger;
 
 public class MyEventSource implements EventSource {
     private static final Logger LOG = Logger.getLogger(AbstractSseTest.class);
-    
+
     private Emitter emitter;
     private final Consumer<MyEventSource> consumer;
     private final CountDownLatch closeLatch = new CountDownLatch(1);
@@ -38,7 +38,9 @@ public class MyEventSource implements EventSource {
     @Override
     public void onOpen(Emitter emitter) throws IOException {
         this.emitter = emitter;
-        ForkJoinPool.commonPool().submit(() -> {consumer.accept(this);});
+        ForkJoinPool.commonPool().submit(() -> {
+            consumer.accept(this);
+        });
     }
 
     @Override
@@ -47,13 +49,12 @@ public class MyEventSource implements EventSource {
         emitter = null;
         closeLatch.countDown();
     }
-    
+
     public void emitData(String data) {
         try {
             emitter.data(data);
             LOG.debug("emitted data: " + data);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOG.debug("Caught IOException", e);
             throw new RuntimeException(e);
         }
@@ -62,8 +63,7 @@ public class MyEventSource implements EventSource {
     public void emitComment(String comment) {
         try {
             emitter.comment(comment);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -71,8 +71,7 @@ public class MyEventSource implements EventSource {
     public void emitNamedEvent(String name, String data) {
         try {
             emitter.event(name, data);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -84,8 +83,7 @@ public class MyEventSource implements EventSource {
     public boolean awaitClose(long timeout, TimeUnit unit) {
         try {
             return closeLatch.await(timeout, unit);
-        }
-        catch (InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
             return false;
         }

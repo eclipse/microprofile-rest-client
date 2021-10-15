@@ -43,34 +43,33 @@ public class RestClientBuilderListenerTest extends Arquillian {
     public static WebArchive createDeployment() {
         StringAsset serviceFile = new StringAsset(SimpleRestClientBuilderListenerImpl.class.getName());
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
-            .addClasses(SimpleGetApi.class,
+                .addClasses(SimpleGetApi.class,
                         SimpleRestClientBuilderListenerImpl.class,
                         ReturnWith200RequestFilter.class)
-            .addAsManifestResource(serviceFile,"services/" + RestClientBuilderListener.class.getName());
-        return ShrinkWrap.create(WebArchive.class, RestClientBuilderListenerTest.class.getSimpleName()+".war")
-            .addAsLibrary(jar)
-            .addClasses(RestClientBuilderListenerTest.class, ReturnWith500RequestFilter.class);
+                .addAsManifestResource(serviceFile, "services/" + RestClientBuilderListener.class.getName());
+        return ShrinkWrap.create(WebArchive.class, RestClientBuilderListenerTest.class.getSimpleName() + ".war")
+                .addAsLibrary(jar)
+                .addClasses(RestClientBuilderListenerTest.class, ReturnWith500RequestFilter.class);
     }
 
     /**
-     * This test checks that a RestClientBuilderListener loaded via the service loader
-     * is invoked.  The RestClientBuilderListener impl used will register a
-     * ClientRequestFilter that aborts with a 200 status code - it is registered
-     * with priority 1.  The test class registers another filter that will abort
-     * with a 500 status code, but at priority 2.  If the RestClientBuilderListener impl
-     * is correctly invoked, then the request will abort with the 200; if not,
-     * it will abort with the 500.
+     * This test checks that a RestClientBuilderListener loaded via the service loader is invoked. The
+     * RestClientBuilderListener impl used will register a ClientRequestFilter that aborts with a 200 status code - it
+     * is registered with priority 1. The test class registers another filter that will abort with a 500 status code,
+     * but at priority 2. If the RestClientBuilderListener impl is correctly invoked, then the request will abort with
+     * the 200; if not, it will abort with the 500.
      *
-     * @throws Exception - indicates test failure
+     * @throws Exception
+     *             - indicates test failure
      */
     @Test
     public void testRegistrarInvoked() throws Exception {
         SimpleGetApi client = RestClientBuilder.newBuilder()
-            .register(ReturnWith500RequestFilter.class, 2)
-            .baseUri(new URI("http://localhost:8080/neverUsed"))
-            .build(SimpleGetApi.class);
+                .register(ReturnWith500RequestFilter.class, 2)
+                .baseUri(new URI("http://localhost:8080/neverUsed"))
+                .build(SimpleGetApi.class);
 
         assertEquals(client.executeGet().getStatus(), 200,
-            "The RestClientBuilderListener impl was not invoked");
+                "The RestClientBuilderListener impl was not invoked");
     }
 }

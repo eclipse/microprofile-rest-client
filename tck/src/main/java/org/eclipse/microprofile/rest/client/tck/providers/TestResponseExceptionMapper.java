@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ package org.eclipse.microprofile.rest.client.tck.providers;
 
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
-import javax.annotation.Priority;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.annotation.Priority;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 
 @Priority(Priorities.USER + 2)
 public class TestResponseExceptionMapper implements ResponseExceptionMapper<Throwable> {
@@ -40,7 +40,7 @@ public class TestResponseExceptionMapper implements ResponseExceptionMapper<Thro
     }
 
     @Override
-    public boolean handles(int status, MultivaluedMap<String,Object> headers) {
+    public boolean handles(int status, MultivaluedMap<String, Object> headers) {
         handlesCalled = true;
         headerPassedToHandlesMethod = "true".equals(headers.getFirst("CustomHeader"));
         return status == 200;
@@ -57,7 +57,7 @@ public class TestResponseExceptionMapper implements ResponseExceptionMapper<Thro
     }
 
     public static boolean isHeaderPassedToHandlesMethod() {
-      return headerPassedToHandlesMethod;
+        return headerPassedToHandlesMethod;
     }
 
     public static boolean isThrowableCalled() {

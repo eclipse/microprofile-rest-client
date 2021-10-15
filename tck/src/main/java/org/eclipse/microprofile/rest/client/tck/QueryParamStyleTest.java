@@ -28,7 +28,6 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.ext.QueryParamStyle;
 import org.eclipse.microprofile.rest.client.tck.interfaces.StringClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -39,8 +38,8 @@ import org.testng.annotations.Test;
 public class QueryParamStyleTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, InheritanceTest.class.getSimpleName()+".war")
-            .addClasses(ReturnWithURLRequestFilter.class, StringClient.class);
+        return ShrinkWrap.create(WebArchive.class, InheritanceTest.class.getSimpleName() + ".war")
+                .addClasses(ReturnWithURLRequestFilter.class, StringClient.class);
     }
 
     @Test
@@ -54,7 +53,7 @@ public class QueryParamStyleTest extends Arquillian {
     public void explicitMultiPair() throws Exception {
         String expected = "?myParam=foo&myParam=bar&myParam=baz";
         StringClient client = builder().queryParamStyle(QueryParamStyle.MULTI_PAIRS)
-                                       .build(StringClient.class);
+                .build(StringClient.class);
         test(client, expected);
     }
 
@@ -62,7 +61,7 @@ public class QueryParamStyleTest extends Arquillian {
     public void commaSeparated() throws Exception {
         String expected = "?myParam=foo,bar,baz";
         StringClient client = builder().queryParamStyle(QueryParamStyle.COMMA_SEPARATED)
-                                       .build(StringClient.class);
+                .build(StringClient.class);
         test(client, expected);
     }
 
@@ -70,7 +69,7 @@ public class QueryParamStyleTest extends Arquillian {
     public void arrayPairs() throws Exception {
         String expected = "?myParam[]=foo&myParam[]=bar&myParam[]=baz";
         StringClient client = builder().queryParamStyle(QueryParamStyle.ARRAY_PAIRS)
-                                       .build(StringClient.class);
+                .build(StringClient.class);
         test(client, expected);
     }
 
@@ -78,12 +77,12 @@ public class QueryParamStyleTest extends Arquillian {
         String responseStr = client.multiValues(Arrays.asList("foo", "bar", "baz"));
         assertNotNull(responseStr, "Response entity is null");
         assertTrue(responseStr.contains(expected),
-                   "Expected snippet, " + expected + ", in: " + responseStr);
+                "Expected snippet, " + expected + ", in: " + responseStr);
     }
 
     private RestClientBuilder builder() {
         return RestClientBuilder.newBuilder()
-                                .register(new ReturnWithURLRequestFilter())
-                                .baseUri(URI.create("http://localhost/stub"));
+                .register(new ReturnWithURLRequestFilter())
+                .baseUri(URI.create("http://localhost/stub"));
     }
 }

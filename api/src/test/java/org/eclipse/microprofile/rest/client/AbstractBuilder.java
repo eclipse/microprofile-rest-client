@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 
 package org.eclipse.microprofile.rest.client;
 
-import javax.ws.rs.core.Configurable;
-import javax.ws.rs.core.Configuration;
 import java.util.Map;
 
-public abstract class AbstractBuilder implements RestClientBuilder, Configurable<RestClientBuilder> {
+import jakarta.ws.rs.core.Configuration;
+
+public abstract class AbstractBuilder implements RestClientBuilder {
     @Override
     public Configuration getConfiguration() {
         return null;

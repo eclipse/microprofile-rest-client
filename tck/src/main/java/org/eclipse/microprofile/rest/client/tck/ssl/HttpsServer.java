@@ -15,6 +15,12 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.http.entity.ContentType;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -26,16 +32,12 @@ import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 /**
  *
  * HTTPS server which returns {@link #responseContent} on each request.
  *
- * Use {@link #keyStore(String, String)} and {@link #trustStore(String, String)} to set, appropriately, the server key store and trust store
+ * Use {@link #keyStore(String, String)} and {@link #trustStore(String, String)} to set, appropriately, the server key
+ * store and trust store
  *
  */
 public class HttpsServer {
@@ -65,35 +67,33 @@ public class HttpsServer {
 
     public HttpsServer start(int httpsPort, String httpsHostname) {
         server.setHandler(
-            new AbstractHandler() {
-                @Override
-                public void handle(String path,
-                                   Request request,
-                                   HttpServletRequest httpRequest,
-                                   HttpServletResponse response) throws IOException {
-                    response.setHeader(CONTENT_TYPE, responseContentType);
-                    try (PrintWriter writer = response.getWriter()) {
-                        writer.println(responseContent);
+                new AbstractHandler() {
+                    @Override
+                    public void handle(String path,
+                            Request request,
+                            HttpServletRequest httpRequest,
+                            HttpServletResponse response) throws IOException {
+                        response.setHeader(CONTENT_TYPE, responseContentType);
+                        try (PrintWriter writer = response.getWriter()) {
+                            writer.println(responseContent);
+                        }
                     }
-                }
-            });
+                });
         // SSL HTTP Configuration
-        HttpConfiguration httpsConfig = new HttpConfiguration(); //httpConfig);
+        HttpConfiguration httpsConfig = new HttpConfiguration(); // httpConfig);
         httpsConfig.setSecureScheme("https");
         httpsConfig.setSecurePort(httpsPort);
 
         ServerConnector sslConnector = new ServerConnector(server,
-            new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
-            new HttpConnectionFactory(httpsConfig)
-        );
+                new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
+                new HttpConnectionFactory(httpsConfig));
 
         sslConnector.setPort(httpsPort);
         sslConnector.setHost(httpsHostname);
         server.addConnector(sslConnector);
         try {
             server.start();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to start https server", e);
         }
         return this;
@@ -102,8 +102,7 @@ public class HttpsServer {
     public void stop() {
         try {
             server.stop();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to stop https server", e);
         }
     }

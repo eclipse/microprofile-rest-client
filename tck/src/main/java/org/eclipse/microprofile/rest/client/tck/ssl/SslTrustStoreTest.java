@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package org.eclipse.microprofile.rest.client.tck.ssl;
 
+import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
+import static org.testng.Assert.assertEquals;
+
+import java.security.KeyStore;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
@@ -29,12 +34,8 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-import javax.ws.rs.ProcessingException;
-import java.security.KeyStore;
-
-import static org.eclipse.microprofile.rest.client.tck.utils.ConfigUtil.configLine;
-import static org.junit.Assert.assertEquals;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
 
 public class SslTrustStoreTest extends AbstractSslTest {
 
@@ -61,19 +62,21 @@ public class SslTrustStoreTest extends AbstractSslTest {
 
         // @formatter:off
         String config =
-            configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
-            configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
-            configLine(ClientWithTruststore.class, "trustStoreType", "pkcs12") +
-            configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
-            configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStore", "classpath:/META-INF/" + clientTruststoreFromClasspath) +
-            configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStoreType", "pkcs12") +
-            configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStorePassword", PASSWORD) +
-            configLine(JsonPClientWithTruststoreFromClasspath.class, "uri", BASE_URI_STRING) +
-            configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(anotherTruststore)) +
-            configLine(ClientWithNonMatchingStore.class, "trustStoreType", "pkcs12") +
-            configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
-            configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
+                configLine(JsonPClient.class, "uri", BASE_URI_STRING) +
+                        configLine(ClientWithTruststore.class, "trustStore", filePath(clientTruststore)) +
+                        configLine(ClientWithTruststore.class, "trustStoreType", "pkcs12") +
+                        configLine(ClientWithTruststore.class, "trustStorePassword", PASSWORD) +
+                        configLine(ClientWithTruststore.class, "uri", BASE_URI_STRING) +
+                        configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStore",
+                                "classpath:/META-INF/" + clientTruststoreFromClasspath)
+                        +
+                        configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStoreType", "pkcs12") +
+                        configLine(JsonPClientWithTruststoreFromClasspath.class, "trustStorePassword", PASSWORD) +
+                        configLine(JsonPClientWithTruststoreFromClasspath.class, "uri", BASE_URI_STRING) +
+                        configLine(ClientWithNonMatchingStore.class, "trustStore", filePath(anotherTruststore)) +
+                        configLine(ClientWithNonMatchingStore.class, "trustStoreType", "pkcs12") +
+                        configLine(ClientWithNonMatchingStore.class, "trustStorePassword", PASSWORD) +
+                        configLine(ClientWithNonMatchingStore.class, "uri", BASE_URI_STRING);
         // @formatter:on
         webArchive.addClasses(
                 JsonPClient.class,
@@ -82,9 +85,10 @@ public class SslTrustStoreTest extends AbstractSslTest {
                 JsonPClientWithTruststoreFromClasspath.class,
                 HttpsServer.class,
                 AbstractSslTest.class)
-            .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
-            .addAsWebInfResource(new ClassLoaderAsset("ssl/" + clientTruststoreFromClasspath), "classes/META-INF/" + clientTruststoreFromClasspath)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsWebInfResource(new StringAsset(config), "classes/META-INF/microprofile-config.properties")
+                .addAsWebInfResource(new ClassLoaderAsset("ssl/" + clientTruststoreFromClasspath),
+                        "classes/META-INF/" + clientTruststoreFromClasspath)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return webArchive;
     }
@@ -92,32 +96,31 @@ public class SslTrustStoreTest extends AbstractSslTest {
     @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithSelfSignedKeystore() {
         RestClientBuilder.newBuilder()
-            .baseUri(BASE_URI)
-            .build(JsonPClient.class)
-            .get("1");
+                .baseUri(BASE_URI)
+                .build(JsonPClient.class)
+                .get("1");
     }
 
     @Test
     public void shouldSucceedWithRegisteredSelfSignedKeystore() throws Exception {
         KeyStore trustStore = getKeyStore(clientTruststore);
         JsonPClient client = RestClientBuilder.newBuilder()
-            .baseUri(BASE_URI)
-            .trustStore(trustStore)
-            .build(JsonPClient.class);
+                .baseUri(BASE_URI)
+                .trustStore(trustStore)
+                .build(JsonPClient.class);
 
         assertEquals("bar", client.get("1").getString("foo"));
     }
-
 
     @Test(expectedExceptions = ProcessingException.class)
     public void shouldFailWithNonMatchingKeystore() throws Exception {
         KeyStore ks = getKeyStore(anotherTruststore);
 
         RestClientBuilder.newBuilder()
-            .baseUri(BASE_URI)
-            .trustStore(ks)
-            .build(JsonPClient.class)
-            .get("1");
+                .baseUri(BASE_URI)
+                .trustStore(ks)
+                .build(JsonPClient.class)
+                .get("1");
     }
 
     @Test(expectedExceptions = ProcessingException.class)

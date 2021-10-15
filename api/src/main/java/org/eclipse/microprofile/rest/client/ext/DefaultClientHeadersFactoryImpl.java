@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,23 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+
 /**
- * This class propagates JAX-RS headers whose names are specified using the
- * MicroProfile Config property,
+ * This class propagates JAX-RS headers whose names are specified using the MicroProfile Config property,
  * <code>org.eclipse.microprofile.rest.client.propagateHeaders</code>.
  *
- * <p>The value of this property should be a comma-separated list of HTTP header
- * names. If the headers specified in the property exist in the inbound JAX-RS
- * request, this class will propagate those headers to the outbound Rest Client
+ * <p>
+ * The value of this property should be a comma-separated list of HTTP header names. If the headers specified in the
+ * property exist in the inbound JAX-RS request, this class will propagate those headers to the outbound Rest Client
  * request.
  *
- * <p>Any headers present on {@code clientOutgoingHeaders} will not be returned when calling the
+ * <p>
+ * Any headers present on {@code clientOutgoingHeaders} will not be returned when calling the
  * {@link #update(MultivaluedMap, MultivaluedMap) update} method.
  *
  * @since 1.2
@@ -51,8 +51,7 @@ public class DefaultClientHeadersFactoryImpl implements ClientHeadersFactory {
     private static Optional<Config> config() {
         try {
             return Optional.ofNullable(ConfigProvider.getConfig());
-        }
-        catch (ExceptionInInitializerError | NoClassDefFoundError | IllegalStateException ex) {
+        } catch (ExceptionInInitializerError | NoClassDefFoundError | IllegalStateException ex) {
             // expected if no MP Config implementation is available
             return Optional.empty();
         }
@@ -68,7 +67,7 @@ public class DefaultClientHeadersFactoryImpl implements ClientHeadersFactory {
 
     @Override
     public MultivaluedMap<String, String> update(MultivaluedMap<String, String> incomingHeaders,
-                                                 MultivaluedMap<String, String> clientOutgoingHeaders) {
+            MultivaluedMap<String, String> clientOutgoingHeaders) {
 
         if (LOG.isLoggable(Level.FINER)) {
             LOG.entering(CLASS_NAME, "update", new Object[]{incomingHeaders, clientOutgoingHeaders});
@@ -77,11 +76,11 @@ public class DefaultClientHeadersFactoryImpl implements ClientHeadersFactory {
         Optional<String> propagateHeaderString = getHeadersProperty();
         if (propagateHeaderString.isPresent()) {
             Arrays.stream(propagateHeaderString.get().split(","))
-                  .forEach( header -> {
-                      if (incomingHeaders.containsKey(header)) {
-                          propagatedHeaders.put(header, incomingHeaders.get(header));
-                      }
-                  });
+                    .forEach(header -> {
+                        if (incomingHeaders.containsKey(header)) {
+                            propagatedHeaders.put(header, incomingHeaders.get(header));
+                        }
+                    });
         }
         if (LOG.isLoggable(Level.FINER)) {
             LOG.exiting(CLASS_NAME, "update", propagatedHeaders);

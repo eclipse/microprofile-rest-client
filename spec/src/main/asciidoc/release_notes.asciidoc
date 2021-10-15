@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2020 Contributors to the Eclipse Foundation
+// Copyright (c) 2016-2021 Contributors to the Eclipse Foundation
 //
 // See the NOTICE file(s) distributed with this work for additional
 // information regarding copyright ownership.
@@ -19,6 +19,19 @@
 // John D. Ament, Andy McCright
 
 == Release Notes
+
+[[release_notes_30]]
+=== Release Notes for MicroProfile Rest Client 3.0
+
+A full list of changes delivered in the 3.0 release can be found at
+link:https://github.com/eclipse/microprofile-rest-client/milestone/8?closed=1[MicroProfile Rest Client 3.0 Milestone].
+
+==== Incompatible Changes
+This release aligns with Jakarta EE 9.1, so it won't work with earlier versions of Jakarta or Java EE.
+
+==== API/SPI Changes
+There are no functional changes introduced in this release, except the dependency updating from javax to jakarta.
+
 
 [[release_notes_20]]
 === Release Notes for MicroProfile Rest Client 2.0

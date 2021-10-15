@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Contributors to the Eclipse Foundation
+ * Copyright (c) 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import static org.testng.Assert.assertTrue;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.FeatureProviderClient;
@@ -30,17 +32,16 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-
-import static org.testng.Assert.assertTrue;
+import jakarta.inject.Inject;
 
 /**
  *
  */
-public class FeatureRegistrationTest extends WiremockArquillianTest{
+public class FeatureRegistrationTest extends WiremockArquillianTest {
     @Deployment
     public static WebArchive createDeployment() {
-        StringAsset mpConfig = new StringAsset(FeatureProviderClient.class.getName() + "/mp-rest/url=" + getStringURL());
+        StringAsset mpConfig =
+                new StringAsset(FeatureProviderClient.class.getName() + "/mp-rest/url=" + getStringURL());
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
                 .addClasses(SimpleFeature.class,
                         InjectedSimpleFeature.class,
@@ -61,17 +62,17 @@ public class FeatureRegistrationTest extends WiremockArquillianTest{
     public void testFeatureRegistrationViaBuilder() {
         SimpleFeature.reset();
         RestClientBuilder.newBuilder()
-            .register(SimpleFeature.class)
-            .baseUrl(getServerURL())
-            .build(SimpleGetApi.class);
+                .register(SimpleFeature.class)
+                .baseUrl(getServerURL())
+                .build(SimpleGetApi.class);
 
         assertTrue(SimpleFeature.wasInvoked(), "The SimpleFeature should have been invoked " +
-            "when building the client");
+                "when building the client");
     }
 
     @Test
     public void testFeatureRegistrationViaCDI() {
         assertTrue(InjectedSimpleFeature.wasInvoked(), "The InjectedSimpleFeature should have " +
-            "been invoked when building the client");
+                "been invoked when building the client");
     }
 }

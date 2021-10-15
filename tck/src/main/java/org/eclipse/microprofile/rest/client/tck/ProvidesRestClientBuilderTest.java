@@ -16,6 +16,10 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
+
 import java.net.URI;
 import java.net.URL;
 
@@ -29,11 +33,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.fail;
-
-public class ProvidesRestClientBuilderTest extends Arquillian{
+public class ProvidesRestClientBuilderTest extends Arquillian {
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -72,8 +72,7 @@ public class ProvidesRestClientBuilderTest extends Arquillian{
         try {
             builder.build(SimpleGetApi.class);
             fail("Did not throw expected IllegalStateException");
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             assertEquals(t.getClass(), IllegalStateException.class);
         }
     }

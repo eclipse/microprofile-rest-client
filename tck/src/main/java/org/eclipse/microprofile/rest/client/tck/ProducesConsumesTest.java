@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Contributors to the Eclipse Foundation
+ * Copyright 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ProducesConsumesClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ProducesConsumesFilter;
@@ -36,11 +33,13 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 /**
- * Tests that MP Rest Client's <code>@Produces</code> annotation affects the value transmitted in
- * the <code>Accept</code> header, and that it's <code>@Consumes</code> annotation affects the
- * value transmitted in the <code>Content-Type</code> header.  Note that this is opposite of
- * what you would expect for JAX-RS resources.
+ * Tests that MP Rest Client's <code>@Produces</code> annotation affects the value transmitted in the
+ * <code>Accept</code> header, and that it's <code>@Consumes</code> annotation affects the value transmitted in the
+ * <code>Content-Type</code> header. Note that this is opposite of what you would expect for JAX-RS resources.
  */
 public class ProducesConsumesTest extends Arquillian {
     private final static Logger LOG = Logger.getLogger(ProducesConsumesTest.class.getName());
@@ -49,17 +48,17 @@ public class ProducesConsumesTest extends Arquillian {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, ProducesConsumesTest.class.getSimpleName()+".war")
-            .addClasses(ProducesConsumesClient.class, ProducesConsumesFilter.class);
+        return ShrinkWrap.create(WebArchive.class, ProducesConsumesTest.class.getSimpleName() + ".war")
+                .addClasses(ProducesConsumesClient.class, ProducesConsumesFilter.class);
     }
 
     @Test
     public void testProducesConsumesAnnotationOnMethod() {
         final String m = "testProducesConsumesAnnotationOnClientInterface";
         ProducesConsumesClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:8080/null"))
-                                            .register(ProducesConsumesFilter.class)
-                                            .build(ProducesConsumesClient.class);
+                .baseUri(URI.create("http://localhost:8080/null"))
+                .register(ProducesConsumesFilter.class)
+                .build(ProducesConsumesClient.class);
 
         LOG.info(m + " @Produce(application/json) @Consume(application/xml)");
         Response r = client.produceJSONConsumeXML(XML_PAYLOAD);
@@ -84,9 +83,9 @@ public class ProducesConsumesTest extends Arquillian {
     public void testProducesConsumesAnnotationOnInterface() {
         final String m = "testProducesConsumesAnnotationOnInterface";
         ProducesConsumesClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:8080/null"))
-                                            .register(ProducesConsumesFilter.class)
-                                            .build(ProducesConsumesClient.class);
+                .baseUri(URI.create("http://localhost:8080/null"))
+                .register(ProducesConsumesFilter.class)
+                .build(ProducesConsumesClient.class);
 
         LOG.info(m + " @Produce(text/html) @Consume(text/plain)");
         Response r = client.produceHtmlConsumeText("1", "whatever");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.ws.rs.sse.InboundSseEvent;
-
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -42,23 +40,25 @@ import org.reactivestreams.Subscription;
 import org.testng.annotations.Test;
 import org.testng.log4testng.Logger;
 
+import jakarta.ws.rs.sse.InboundSseEvent;
+
 public class BasicReactiveStreamsTest extends AbstractSseTest {
 
     private static final Logger LOG = Logger.getLogger(BasicReactiveStreamsTest.class);
 
     @Deployment
     public static WebArchive createDeployment() {
-        WebArchive webArchive = ShrinkWrap.create(WebArchive.class, 
-                                                  BasicReactiveStreamsTest.class.getSimpleName() + ".war")
+        WebArchive webArchive = ShrinkWrap.create(WebArchive.class,
+                BasicReactiveStreamsTest.class.getSimpleName() + ".war")
                 .addClasses(AbstractSseTest.class,
-                            BasicReactiveStreamsTest.class,
-                            HttpSseServer.class,
-                            MyEventSource.class,
-                            MyEventSourceServlet.class,
-                            RsSseClient.class,
-                            RsWeatherEventClient.class,
-                            WeatherEvent.class,
-                            WeatherEventProvider.class)
+                        BasicReactiveStreamsTest.class,
+                        HttpSseServer.class,
+                        MyEventSource.class,
+                        MyEventSourceServlet.class,
+                        RsSseClient.class,
+                        RsWeatherEventClient.class,
+                        WeatherEvent.class,
+                        WeatherEventProvider.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return webArchive;
@@ -75,8 +75,8 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         });
 
         RsSseClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
-                                            .build(RsSseClient.class);
+                .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
+                .build(RsSseClient.class);
         Publisher<InboundSseEvent> publisher = client.getEvents();
         InboundSseEventSubscriber subscriber = new InboundSseEventSubscriber(3, resultsLatch);
         publisher.subscribe(subscriber);
@@ -98,8 +98,8 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         });
 
         RsSseClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:" + PORT+ "/string/sse"))
-                                            .build(RsSseClient.class);
+                .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
+                .build(RsSseClient.class);
         Publisher<String> publisher = client.getStrings();
         StringSubscriber subscriber = new StringSubscriber(3, resultsLatch);
         publisher.subscribe(subscriber);
@@ -120,17 +120,17 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         });
 
         RsWeatherEventClient client = RestClientBuilder.newBuilder()
-                                                     .baseUri(URI.create("http://localhost:" + PORT+ "/string/sse"))
-                                                     .build(RsWeatherEventClient.class);
+                .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
+                .build(RsWeatherEventClient.class);
         Publisher<WeatherEvent> publisher = client.getEvents();
         WeatherEventSubscriber subscriber = new WeatherEventSubscriber(3, resultsLatch);
         publisher.subscribe(subscriber);
         assertTrue(resultsLatch.await(30, TimeUnit.SECONDS));
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         assertEquals(subscriber.weatherEvents, new HashSet<>(Arrays.asList(
-            new WeatherEvent(df.parse("2020-01-21"), "Significant snowfall"),
-            new WeatherEvent(df.parse("2020-02-16"), "Hail storm"),
-            new WeatherEvent(df.parse("2020-04-12"), "Blizzard"))));
+                new WeatherEvent(df.parse("2020-01-21"), "Significant snowfall"),
+                new WeatherEvent(df.parse("2020-02-16"), "Hail storm"),
+                new WeatherEvent(df.parse("2020-04-12"), "Blizzard"))));
         assertNull(serverException.get());
         assertNull(subscriber.throwable);
     }
@@ -146,8 +146,8 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         });
 
         RsSseClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:" + PORT+ "/string/sse"))
-                                            .build(RsSseClient.class);
+                .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
+                .build(RsSseClient.class);
         Publisher<InboundSseEvent> publisher = client.getEvents();
         InboundSseEventSubscriber subscriber = new InboundSseEventSubscriber(3, resultsLatch);
         publisher.subscribe(subscriber);
@@ -171,8 +171,8 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         });
 
         RsSseClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:" + PORT+ "/string/sse"))
-                                            .build(RsSseClient.class);
+                .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
+                .build(RsSseClient.class);
         Publisher<InboundSseEvent> publisher = client.getEvents();
         InboundSseEventSubscriber subscriber = new InboundSseEventSubscriber(3, resultsLatch);
         publisher.subscribe(subscriber);
@@ -180,9 +180,9 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         assertTrue(resultsLatch.await(40, TimeUnit.SECONDS));
         assertEquals(subscriber.names, new HashSet<>(Arrays.asList("1", "2", "3")));
         assertEquals(subscriber.data, new HashSet<>(Arrays.asList(
-            "{\"date\":\"2020-01-21\", \"description\":\"Significant snowfall\"}",
-            "{\"date\":\"2020-02-16\", \"description\":\"Hail storm\"}",
-            "{\"date\":\"2020-04-12\", \"description\":\"Blizzard\"}")));
+                "{\"date\":\"2020-01-21\", \"description\":\"Significant snowfall\"}",
+                "{\"date\":\"2020-02-16\", \"description\":\"Hail storm\"}",
+                "{\"date\":\"2020-04-12\", \"description\":\"Blizzard\"}")));
         assertNull(serverException.get());
         assertNull(subscriptionException.get());
     }
@@ -204,10 +204,10 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
         });
 
         RsSseClient client = RestClientBuilder.newBuilder()
-                                            .baseUri(URI.create("http://localhost:" + PORT+ "/string/sse"))
-                                            .build(RsSseClient.class);
+                .baseUri(URI.create("http://localhost:" + PORT + "/string/sse"))
+                .build(RsSseClient.class);
         Publisher<InboundSseEvent> publisher = client.getEvents();
-        InboundSseEventSubscriber subscriber = new InboundSseEventSubscriber(20, resultsLatch){
+        InboundSseEventSubscriber subscriber = new InboundSseEventSubscriber(20, resultsLatch) {
             @Override
             public void onComplete() {
                 super.onComplete();
@@ -224,24 +224,13 @@ public class BasicReactiveStreamsTest extends AbstractSseTest {
     }
 
     /*
-    @Test
-    public void testClientClosesConnection() throws Exception {
-        AtomicBoolean clientClosedConnection = new AtomicBoolean(false);
-        CountDownLatch latch = new CountDownLatch(1);
-        try (HttpSseServer server = new HttpSseServer()) {
-            server.start(PORT, es -> {
-                es.emitNamedEvent("1", "Happy");
-                sleep(1000);
-                es.emitNamedEvent("2", "Meh");
-                sleep(1000);
-                es.emitNamedEvent("3", "Sad");
-                clientClosedConnection.set(es.awaitClose(30, TimeUnit.SECONDS));
-            });
-            latch.await(30, TimeUnit.SECONDS);
-            assertTrue(clientClosedConnection.get(), "Client did not close connection");
-        }
-    }
-    */
+     * @Test public void testClientClosesConnection() throws Exception { AtomicBoolean clientClosedConnection = new
+     * AtomicBoolean(false); CountDownLatch latch = new CountDownLatch(1); try (HttpSseServer server = new
+     * HttpSseServer()) { server.start(PORT, es -> { es.emitNamedEvent("1", "Happy"); sleep(1000);
+     * es.emitNamedEvent("2", "Meh"); sleep(1000); es.emitNamedEvent("3", "Sad");
+     * clientClosedConnection.set(es.awaitClose(30, TimeUnit.SECONDS)); }); latch.await(30, TimeUnit.SECONDS);
+     * assertTrue(clientClosedConnection.get(), "Client did not close connection"); } }
+     */
 
     private static class InboundSseEventSubscriber implements Subscriber<InboundSseEvent>, AutoCloseable {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
 
 package org.eclipse.microprofile.rest.client.tck.providers;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
+
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Response;
 
 public class CustomHttpMethodFilter implements ClientRequestFilter {
 
@@ -30,8 +31,7 @@ public class CustomHttpMethodFilter implements ClientRequestFilter {
         String httpMethod = clientRequestContext.getMethod();
         if ("MYMETHOD".equals(httpMethod)) {
             clientRequestContext.abortWith(Response.ok(httpMethod).build());
-        }
-        else {
+        } else {
             clientRequestContext.abortWith(Response.status(405).entity(httpMethod).build());
         }
     }

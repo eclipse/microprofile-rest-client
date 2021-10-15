@@ -24,6 +24,7 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  * A resolver that always picks BuilderImpl1 builder
+ * 
  * @author Ondrej Mihalyi
  */
 public class RestClientBuilder1Resolver extends RestClientBuilderResolver {
@@ -32,6 +33,5 @@ public class RestClientBuilder1Resolver extends RestClientBuilderResolver {
     public RestClientBuilder newBuilder() {
         return new BuilderImpl1();
     }
-    
-}
 
+}

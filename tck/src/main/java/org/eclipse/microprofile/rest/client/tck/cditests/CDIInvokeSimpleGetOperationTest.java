@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Contributors to the Eclipse Foundation
+ * Copyright 2017, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,16 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.testng.Assert.assertEquals;
+
+import java.util.Set;
+
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.WiremockArquillianTest;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
@@ -29,25 +39,17 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-import java.util.Set;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static org.testng.Assert.assertEquals;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 /**
- * Verifies via CDI injection that you can use a programmatic interface.  verifies that the interface has Dependent scope.
+ * Verifies via CDI injection that you can use a programmatic interface. verifies that the interface has Dependent
+ * scope.
  */
-public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
+public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest {
     @Inject
     @RestClient
     private SimpleGetApi api;
@@ -55,23 +57,23 @@ public class CDIInvokeSimpleGetOperationTest extends WiremockArquillianTest{
     private BeanManager beanManager;
     @Deployment
     public static WebArchive createDeployment() {
-        String propertyName = SimpleGetApi.class.getName()+"/mp-rest/url";
+        String propertyName = SimpleGetApi.class.getName() + "/mp-rest/url";
         String value = getStringURL();
         String simpleName = CDIInvokeSimpleGetOperationTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(SimpleGetApi.class, WiremockArquillianTest.class)
-            .addAsManifestResource(new StringAsset(propertyName+"="+value), "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(SimpleGetApi.class, WiremockArquillianTest.class)
+                .addAsManifestResource(new StringAsset(propertyName + "=" + value), "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     @Test
-    public void testInvokesGetOperationWithCDIBean() throws Exception{
+    public void testInvokesGetOperationWithCDIBean() throws Exception {
         String expectedBody = "Hello, MicroProfile!";
         stubFor(get(urlEqualTo("/"))
-            .willReturn(aResponse()
-                .withBody(expectedBody)));
+                .willReturn(aResponse()
+                        .withBody(expectedBody)));
 
         Response response = api.executeGet();
 

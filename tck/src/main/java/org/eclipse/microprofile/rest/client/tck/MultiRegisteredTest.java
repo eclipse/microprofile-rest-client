@@ -18,6 +18,12 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.testng.Assert.assertEquals;
+
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithPriority;
 import org.eclipse.microprofile.rest.client.tck.interfaces.InterfaceWithoutPriority;
@@ -30,39 +36,37 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.testng.Assert.assertEquals;
-
 public class MultiRegisteredTest extends WiremockArquillianTest {
     @Deployment
     public static Archive<?> createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, MultiRegisteredTest.class.getSimpleName()+".war")
-            .addClasses(InterfaceWithoutPriority.class, InterfaceWithPriority.class, WiremockArquillianTest.class)
-            .addPackage(InjectedSimpleFeature.class.getPackage());
+        return ShrinkWrap.create(WebArchive.class, MultiRegisteredTest.class.getSimpleName() + ".war")
+                .addClasses(InterfaceWithoutPriority.class, InterfaceWithPriority.class, WiremockArquillianTest.class)
+                .addPackage(InjectedSimpleFeature.class.getPackage());
     }
 
     @Test
     public void testOverrideProviderAnnotationOnBuilder() {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(200).withBody("")));
-        InterfaceWithoutPriority client = RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
-            .register(Prioritized2000MessageBodyReader.class, 500)
-            .baseUri(getServerURI())
-            .build(InterfaceWithoutPriority.class);
+        InterfaceWithoutPriority client =
+                RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
+                        .register(Prioritized2000MessageBodyReader.class, 500)
+                        .baseUri(getServerURI())
+                        .build(InterfaceWithoutPriority.class);
         String body = client.get().readEntity(String.class);
-        assertEquals(body, "Prioritized 2000", "The body returned should be the body from "+Prioritized2000MessageBodyReader.class);
+        assertEquals(body, "Prioritized 2000",
+                "The body returned should be the body from " + Prioritized2000MessageBodyReader.class);
     }
 
     @Test
     public void testOverrideInterfaceAndProviderAnnotationOnBuilder() {
         stubFor(get(urlEqualTo("/")).willReturn(aResponse().withStatus(200).withBody("")));
-        InterfaceWithPriority client = RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
-            .register(Prioritized2000MessageBodyReader.class, 500)
-            .baseUri(getServerURI())
-            .build(InterfaceWithPriority.class);
+        InterfaceWithPriority client =
+                RestClientBuilder.newBuilder().register(UnprioritizedMessageBodyReader.class, 1000)
+                        .register(Prioritized2000MessageBodyReader.class, 500)
+                        .baseUri(getServerURI())
+                        .build(InterfaceWithPriority.class);
         String body = client.get().readEntity(String.class);
-        assertEquals(body, "Prioritized 2000", "The body returned should be the body from "+Prioritized2000MessageBodyReader.class);
+        assertEquals(body, "Prioritized 2000",
+                "The body returned should be the body from " + Prioritized2000MessageBodyReader.class);
     }
 }

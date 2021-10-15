@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Contributors to the Eclipse Foundation
+ * Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.eclipse.microprofile.rest.client.tck.sse;
 
 import java.util.Date;
 
-import javax.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbProperty;
 
 public class WeatherEvent {
 
@@ -74,16 +74,14 @@ public class WeatherEvent {
             if (other.date != null) {
                 return false;
             }
-        }
-        else if (!date.equals(other.date)) {
+        } else if (!date.equals(other.date)) {
             return false;
         }
         if (description == null) {
             if (other.description != null) {
                 return false;
             }
-        }
-        else if (!description.equals(other.description)) {
+        } else if (!description.equals(other.description)) {
             return false;
         }
         return true;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Contributors to the Eclipse Foundation
+ * Copyright 2020, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-
+import jakarta.inject.Inject;
 
 /**
  * Verifies the style used when sending multiple query param values configured via MP Confg and CDI.
@@ -62,24 +61,24 @@ public class CDIQueryParamStyleTest extends Arquillian {
         String urlProperty = "queryParamStyle/mp-rest/uri=http://localhost:8080/stub";
         String filterProperty = "queryParamStyle/mp-rest/providers=" + ReturnWithURLRequestFilter.class.getName();
         String multiPairsProperty = MultiPairsStringClient.class.getName()
-            + "/mp-rest/queryParamStyle=MULTI_PAIRS";
+                + "/mp-rest/queryParamStyle=MULTI_PAIRS";
         String commaSeparatedProperty = CommaSeparatedStringClient.class.getName()
-            + "/mp-rest/queryParamStyle=COMMA_SEPARATED";
+                + "/mp-rest/queryParamStyle=COMMA_SEPARATED";
         String arrayPairsProperty = ArrayPairsStringClient.class.getName()
-            + "/mp-rest/queryParamStyle=ARRAY_PAIRS";
+                + "/mp-rest/queryParamStyle=ARRAY_PAIRS";
         String simpleName = CDIQueryParamStyleTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-            .addClasses(StringClient.class, ReturnWithURLRequestFilter.class, QueryParamStyleTest.class)
-            .addAsManifestResource(new StringAsset(String.format(filterProperty + "%n" 
-                                                               + urlProperty + "%n"
-                                                               + multiPairsProperty + "%n"
-                                                               + commaSeparatedProperty + "%n"
-                                                               + arrayPairsProperty + "%n")),
-                                                   "microprofile-config.properties")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(StringClient.class, ReturnWithURLRequestFilter.class, QueryParamStyleTest.class)
+                .addAsManifestResource(new StringAsset(String.format(filterProperty + "%n"
+                        + urlProperty + "%n"
+                        + multiPairsProperty + "%n"
+                        + commaSeparatedProperty + "%n"
+                        + arrayPairsProperty + "%n")),
+                        "microprofile-config.properties")
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         return ShrinkWrap.create(WebArchive.class, simpleName + ".war")
-            .addAsLibrary(jar)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addAsLibrary(jar)
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
@@ -117,7 +116,7 @@ public class CDIQueryParamStyleTest extends Arquillian {
     @RegisterRestClient(configKey = "queryParamStyle")
     public static interface CommaSeparatedStringClient extends StringClient {
     }
-    
+
     @RegisterRestClient(configKey = "queryParamStyle")
     public static interface ArrayPairsStringClient extends StringClient {
     }
