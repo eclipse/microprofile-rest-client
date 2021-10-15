@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import jakarta.inject.Inject;
@@ -73,7 +73,7 @@ public class CDIInterceptorTest extends Arquillian {
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
-    @AfterTest
+    @AfterMethod
     public void cleanUp() {
         LoggableInterceptor.reset();
     }
