@@ -103,7 +103,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     /**
      * Set the connect timeout.
      * <p>
-     * Like JAX-RS's <code>javax.ws.rs.client.ClientBuilder</code>'s <code>connectTimeout</code> method, specifying a
+     * Like JAX-RS's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>connectTimeout</code> method, specifying a
      * timeout of 0 represents infinity, and negative values are not allowed.
      * </p>
      * <p>
@@ -126,12 +126,12 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     /**
      * Set the read timeout.
      * <p>
-     * Like JAX-RS's <code>javax.ws.rs.client.ClientBuilder</code>'s <code>readTimeout</code> method, specifying a
+     * Like JAX-RS's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>readTimeout</code> method, specifying a
      * timeout of 0 represents infinity, and negative values are not allowed.
      * </p>
      * <p>
      * Also like the JAX-RS Client API, if the read timeout is reached, the client interface method will throw a
-     * <code>javax.ws.rs.ProcessingException</code>.
+     * <code>jakarta.ws.rs.ProcessingException</code>.
      * </p>
      * <p>
      * If the client instance is injected via CDI and the

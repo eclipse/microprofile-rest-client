@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Contributors to the Eclipse Foundation
+ * Copyright (c) 2018, 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ package org.eclipse.microprofile.rest.client.ext;
  * also the <code>AsyncInvocationInterceptor</code>'s lifecycle methods as well. Like other providers, the priority is
  * ascending (where a provider with priority 1 will execute before a provider of priority 2), however, the interceptors'
  * <code>applyContext</code> methods will be invoked in descending order. The priority of the provider can be specified
- * using the <code>javax.annotation.Priority</code> annotation or when registering the provider using the
+ * using the <code>jakarta.annotation.Priority</code> annotation or when registering the provider using the
  * <code>RestClientBuilder</code>.
  *
  * The timing of when providers of this interface is invoked relative to other providers (such as filters, entity
