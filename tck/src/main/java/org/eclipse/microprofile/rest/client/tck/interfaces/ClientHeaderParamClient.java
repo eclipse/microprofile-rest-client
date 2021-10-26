@@ -79,8 +79,11 @@ public interface ClientHeaderParamClient {
     String methodRequiredComputeMethodFails();
 
     @GET
+    //CHECKSTYLE:OFF
+    // something in the parent pom is forcing these lines to merged into one line, which is longer than 150 characters
     @ClientHeaderParam(name = "MultiValueInvokedFromAnotherClass",
                        value = "{org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator.generateHeader}")
+    //CHECKSTYLE:OFF
     String methodComputeMultiValuedHeaderFromOtherClass();
 
     default String computeForInterface() {
