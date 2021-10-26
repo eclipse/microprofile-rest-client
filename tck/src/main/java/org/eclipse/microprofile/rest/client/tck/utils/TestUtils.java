@@ -30,4 +30,7 @@ public class TestUtils {
             throw new SkipException(reason);
         }
     }
+
+    private TestUtils() {
+    }
 }

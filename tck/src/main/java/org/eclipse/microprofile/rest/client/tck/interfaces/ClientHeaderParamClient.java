@@ -79,7 +79,8 @@ public interface ClientHeaderParamClient {
     String methodRequiredComputeMethodFails();
 
     @GET
-    @ClientHeaderParam(name = "MultiValueInvokedFromAnotherClass", value = "{org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator.generateHeader}")
+    @ClientHeaderParam(name = "MultiValueInvokedFromAnotherClass",
+                       value = "{org.eclipse.microprofile.rest.client.tck.ext.HeaderGenerator.generateHeader}")
     String methodComputeMultiValuedHeaderFromOtherClass();
 
     default String computeForInterface() {

@@ -27,4 +27,7 @@ public class ClassUtils {
             return false;
         }
     }
+
+    private ClassUtils() {
+    }
 }
