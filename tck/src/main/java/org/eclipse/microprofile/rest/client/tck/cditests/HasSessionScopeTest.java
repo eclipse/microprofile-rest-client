@@ -28,6 +28,8 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ConfigKeyClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SimpleGetApi;
+import org.eclipse.microprofile.rest.client.tck.utils.ClassUtils;
+import org.eclipse.microprofile.rest.client.tck.utils.TestUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -58,7 +60,8 @@ public class HasSessionScopeTest extends Arquillian {
         String configKeyScope = "myConfigKey/mp-rest/scope=" + SessionScoped.class.getName();
         String simpleName = HasSessionScopeTest.class.getSimpleName();
         JavaArchive jar = ShrinkWrap.create(JavaArchive.class, simpleName + ".jar")
-                .addClasses(SimpleGetApi.class, MySessionScopedApi.class, ConfigKeyClient.class)
+                .addClasses(SimpleGetApi.class, MySessionScopedApi.class, ConfigKeyClient.class, ClassUtils.class,
+                        TestUtils.class)
                 .addAsManifestResource(new StringAsset(url + "\n" + scope + "\n" + configKeyScope),
                         "microprofile-config.properties")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
