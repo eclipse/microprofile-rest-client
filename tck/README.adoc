@@ -191,3 +191,7 @@ TBD.
 == Example Implementation Using the TCK
 
 TBD.
+
+== Running against CDI Lite
+
+For all tests under the https://github.com/eclipse/microprofile-rest-client/tree/master/tck/src/main/java/org/eclipse/microprofile/rest/client/tck/cditests[cditest] folder, the implementation needs to provide a way to enable the injection working on the Arquillian subclass.
