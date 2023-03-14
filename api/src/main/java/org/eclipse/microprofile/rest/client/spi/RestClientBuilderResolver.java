@@ -51,7 +51,7 @@ public abstract class RestClientBuilderResolver {
      * Implementations are expected to override the {@link #newBuilder()} method to create custom RestClientBuilder
      * implementations.
      * <p>
-     * 
+     *
      * @return new RestClientBuilder instance
      */
     public abstract RestClientBuilder newBuilder();
@@ -95,19 +95,21 @@ public abstract class RestClientBuilderResolver {
             return null;
         }
 
-        RestClientBuilderResolver instance = null;
-
-        ServiceLoader<RestClientBuilderResolver> sl = ServiceLoader.load(RestClientBuilderResolver.class, cl);
-        for (RestClientBuilderResolver spi : sl) {
-            if (instance != null) {
-                throw new IllegalStateException("Multiple RestClientBuilderResolver implementations found: "
-                        + spi.getClass().getName() + " and "
-                        + instance.getClass().getName());
+        final PrivilegedAction<RestClientBuilderResolver> action = () -> {
+            ServiceLoader<RestClientBuilderResolver> sl = ServiceLoader.load(RestClientBuilderResolver.class, cl);
+            RestClientBuilderResolver instance = null;
+            for (RestClientBuilderResolver spi : sl) {
+                if (instance != null) {
+                    throw new IllegalStateException("Multiple RestClientBuilderResolver implementations found: "
+                            + spi.getClass().getName() + " and "
+                            + instance.getClass().getName());
+                }
+                instance = spi;
             }
-            instance = spi;
-        }
+            return instance;
+        };
 
-        return instance;
+        return System.getSecurityManager() == null ? action.run() : AccessController.doPrivileged(action);
     }
 
     /**
