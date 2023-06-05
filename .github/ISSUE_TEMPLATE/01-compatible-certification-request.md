@@ -2,7 +2,7 @@
 name: Compatible Certification Request
 about: Start a request for a compatible certification 
 title: 'MicroProfile Rest Client [Version] Compatible Certification Request'
-labels: 'Certification :trophy:'
+labels: 'certification'
 assignees: ''
 
 ---
