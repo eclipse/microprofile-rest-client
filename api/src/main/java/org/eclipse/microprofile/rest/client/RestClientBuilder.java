@@ -118,7 +118,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      *            the time unit of the timeout argument.
      * @return the current builder with the connect timeout set.
      * @throws IllegalArgumentException
-     *             - if the value of timeout is negative.
+     *             if the value of timeout is negative.
      * @since 1.2
      */
     RestClientBuilder connectTimeout(long timeout, TimeUnit unit);
@@ -145,7 +145,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
      *            the time unit of the timeout argument.
      * @return the current builder with the connect timeout set.
      * @throws IllegalArgumentException
-     *             - if the value of timeout is negative.
+     *             if the value of timeout is negative.
      * @since 1.2
      */
     RestClientBuilder readTimeout(long timeout, TimeUnit unit);
