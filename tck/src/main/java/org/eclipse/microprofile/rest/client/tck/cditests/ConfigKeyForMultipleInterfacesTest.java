@@ -53,7 +53,7 @@ public class ConfigKeyForMultipleInterfacesTest extends Arquillian {
     public static WebArchive createDeployment() {
         String uriPropertyName = "myConfigKey/mp-rest/uri";
         String uriValue = "http://localhost:1234/configKeyUri";
-        String simpleName = ConfigKeyTest.class.getSimpleName();
+        String simpleName = ConfigKeyForMultipleInterfacesTest.class.getSimpleName();
         String providerProperty = SimpleGetApiWithConfigKey.class.getName() +
                 "/mp-rest/providers=" +
                 ReturnWithURLRequestFilter.class.getName();
