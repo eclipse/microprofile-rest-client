@@ -18,31 +18,38 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 import java.net.URI;
 
+import jakarta.ws.rs.WebApplicationException;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.RootResource;
 import org.eclipse.microprofile.rest.client.tck.interfaces.SubResource;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithURLRequestFilter;
+import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapper;
+import org.eclipse.microprofile.rest.client.tck.providers.TestResponseExceptionMapperOverridePriority;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import jakarta.ws.rs.core.Response;
+
+import static org.testng.Assert.*;
 
 public class SubResourceTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, SubResourceTest.class.getSimpleName() + ".war")
-                .addClasses(RootResource.class, SubResource.class)
+                .addClasses(RootResource.class, SubResource.class, TestResponseExceptionMapper.class)
                 .addPackage(ReturnWithURLRequestFilter.class.getPackage());
+    }
+
+    @BeforeTest
+    public void resetHandlers() {
+        TestResponseExceptionMapper.reset();
     }
 
     @Test
@@ -58,5 +65,32 @@ public class SubResourceTest extends Arquillian {
         assertNotNull(responseStr, "Response entity is null");
         assertTrue(responseStr.contains("GET ") && responseStr.contains("/root/sub"),
                 "Did not invoke expected method/URI. Expected GET .../root/sub ; got " + responseStr);
+    }
+
+
+    @Test
+    public void exceptionMappedOnSubResourceInterface() throws Exception {
+        ReturnWithURLRequestFilter filter = new ReturnWithURLRequestFilter();
+
+        RestClientBuilder builder = RestClientBuilder.newBuilder()
+            .register(filter)
+            .register(TestResponseExceptionMapper.class);
+
+        RootResource client = builder.baseUri(new URI("http://localhost/stub")).build(RootResource.class);
+        SubResource subClient = client.sub();
+        assertNotNull(subClient, "SubResource interface is null");
+
+        try {
+            Response response = subClient.getFromSub();
+            fail("A " + WebApplicationException.class + " should have been thrown via the registered "
+                + TestResponseExceptionMapper.class);
+        } catch (WebApplicationException w) {
+            assertEquals(w.getMessage(), TestResponseExceptionMapper.MESSAGE,
+                "The message should be sourced from " + TestResponseExceptionMapper.class);
+            assertTrue(TestResponseExceptionMapper.isHandlesCalled(),
+                "The handles method should have been called on " + TestResponseExceptionMapper.class);
+            assertTrue(TestResponseExceptionMapper.isThrowableCalled(),
+                "The toThrowable method should have been called on " + TestResponseExceptionMapper.class);
+        }
     }
 }
