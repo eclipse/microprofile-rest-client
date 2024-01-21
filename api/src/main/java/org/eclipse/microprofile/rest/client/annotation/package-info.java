@@ -22,7 +22,7 @@
  * APIs for annotating MP Rest Client interfaces.
  *
  * Example:
- * 
+ *
  * <pre>
  * &#064;RegisterProvider(MyMessageBodyReader.class)
  * &#064;RegisterProvider(MyMessageBodyWriter.class)

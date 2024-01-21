@@ -24,7 +24,7 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 /**
  * A resolver that should be picked in tests by default
- * 
+ *
  * @author Ondrej Mihalyi
  * @author John D. Ament
  */

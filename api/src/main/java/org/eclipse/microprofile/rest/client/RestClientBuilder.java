@@ -217,7 +217,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
 
     /**
      * Specifies whether client built by this builder should follow HTTP redirect responses (30x) or not.
-     * 
+     *
      * @param follow
      *            - true if the client should follow HTTP redirects, false if not.
      * @return the current builder with the followRedirect property set.
@@ -227,7 +227,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
 
     /**
      * Specifies the HTTP proxy hostname/IP address and port to use for requests from client instances.
-     * 
+     *
      * @param proxyHost
      *            - hostname or IP address of proxy server - must be non-null
      * @param proxyPort
@@ -241,7 +241,7 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
 
     /**
      * Specifies the URI formatting style to use when multiple query parameter values are passed to the client.
-     * 
+     *
      * @param style
      *            - the URI formatting style to use for multiple query parameter values
      * @return the current builder with the style of query params set

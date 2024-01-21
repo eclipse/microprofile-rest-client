@@ -24,7 +24,7 @@
  * at a specific injection point.
  *
  * Example:
- * 
+ *
  * <pre>
  * &#064;RegisterProvider
  * &#064;Dependent

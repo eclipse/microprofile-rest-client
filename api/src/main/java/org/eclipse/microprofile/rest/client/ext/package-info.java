@@ -20,7 +20,7 @@
 
 /**
  * APIs for extending MP Rest Client functionality - such as new providers. Example:
- * 
+ *
  * <pre>
  * &#064;RegisterProvider(UnknownWidgetExceptionMapper.class)
  * public interface MyClientService {
