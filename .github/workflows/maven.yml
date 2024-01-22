@@ -1,0 +1,62 @@
+name: Eclipse MicroProfile REST Client CI
+
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+    paths:
+        - '**/pom.xml'
+        - 'api'
+        - 'spec'
+        - 'tck'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+        - '**/pom.xml'
+        - 'api'
+        - 'spec'
+        - 'tck'
+
+# Only run the latest job
+concurrency:
+    group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+    cancel-in-progress: true
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Validate Formatting
+        run: |
+          mvn -B -ntp validate formatter:validate -Denforcer.skip=true
+          mvn -B -ntp validate impsort:check -Denforcer.skip=true
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: format-check
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest ]
+        java: ['11', '17', '21']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK ${{ matrix.java }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'temurin'
+        cache: 'maven'
+    - name: Build with Maven - ${{ matrix.os }} - JDK ${{ matrix.java }}
+      run: mvn -B -ntp clean install
