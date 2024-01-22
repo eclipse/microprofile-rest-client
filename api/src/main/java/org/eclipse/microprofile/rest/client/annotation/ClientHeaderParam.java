@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * contain no arguments or a single <code>String</code> argument. The String argument is the name of the header.
  * <p>
  * Here is an example that explicitly defines a header value and computes a value:
- * 
+ *
  * <pre>
  * public interface MyClient {
  *
@@ -59,7 +59,7 @@ import java.lang.annotation.Target;
  *    Response useComputedHeaderValue();
  * }
  * </pre>
- * 
+ *
  * The implementation should fail to deploy a client interface if the annotation contains a
  * <code>@ClientHeaderParam</code> annotation with a <code>value</code> attribute that references a method that does not
  * exist, or contains an invalid signature.

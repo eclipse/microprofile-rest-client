@@ -20,7 +20,7 @@
 
 /**
  * APIs for building a type-safe RESTful client leveraging existing JAX-RS APIs, for example:
- * 
+ *
  * <pre>
  * public interface MyClientService {
  *     &#064;GET
@@ -35,7 +35,7 @@
  *                                            .build();
  * Widget w = service.getWidget(widgetId); // invokes remote service, returns domain object
  * </pre>
- * 
+ *
  * @since 1.0
  */
 @org.osgi.annotation.versioning.Version("2.0")

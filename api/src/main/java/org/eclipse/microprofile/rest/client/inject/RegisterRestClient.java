@@ -42,7 +42,7 @@ public @interface RegisterRestClient {
     /**
      * Sets the base URI for the rest client interface. This value will be used for the URI unless it is overridden by
      * MicroProfile Config.
-     * 
+     *
      * @return the base URI for annotated client interface. An empty value indicates that the base URI must be specified
      *         in MicroprofileConfig.
      * @since 1.2

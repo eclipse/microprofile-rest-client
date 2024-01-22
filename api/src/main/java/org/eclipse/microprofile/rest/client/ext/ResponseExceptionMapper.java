@@ -60,7 +60,7 @@ public interface ResponseExceptionMapper<T extends Throwable> {
     /**
      * The priority of this mapper. By default, it will use the {@link Priority} annotation's value as the priority. If
      * no annotation is present, it uses a default priority of {@link Priorities#USER}.
-     * 
+     *
      * @return the priority of this mapper
      */
     default int getPriority() {
