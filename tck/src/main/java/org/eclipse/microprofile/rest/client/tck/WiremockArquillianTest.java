@@ -59,7 +59,7 @@ public abstract class WiremockArquillianTest extends Arquillian {
 
     protected static String getStringURL() {
         int port = getPort();
-        return scheme + "://" + host + ":" + port + "" + context;
+        return scheme + "://" + host + ":" + port + (context.isBlank() ? "/" : context);
     }
 
     @BeforeClass
@@ -73,6 +73,6 @@ public abstract class WiremockArquillianTest extends Arquillian {
         host = System.getProperty("wiremock.server.host", "localhost");
         port = Integer.parseInt(System.getProperty("wiremock.server.port", "8765"));
         scheme = System.getProperty("wiremock.server.scheme", "http");
-        context = System.getProperty("wiremock.server.context", "/");
+        context = System.getProperty("wiremock.server.context", "");
     }
 }

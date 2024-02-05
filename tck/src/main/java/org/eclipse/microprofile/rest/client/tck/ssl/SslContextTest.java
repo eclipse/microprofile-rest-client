@@ -17,7 +17,7 @@ package org.eclipse.microprofile.rest.client.tck.ssl;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.JsonPClient;
 import org.jboss.arquillian.container.test.api.Deployment;

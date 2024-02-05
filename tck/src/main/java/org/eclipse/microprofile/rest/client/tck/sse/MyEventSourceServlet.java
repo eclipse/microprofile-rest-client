@@ -19,10 +19,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.eclipse.jetty.servlets.EventSource;
 import org.eclipse.jetty.servlets.EventSourceServlet;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class MyEventSourceServlet extends EventSourceServlet {
     private static final long serialVersionUID = -45238967561209543L;

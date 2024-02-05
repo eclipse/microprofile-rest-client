@@ -18,19 +18,20 @@ package org.eclipse.microprofile.rest.client.tck.ssl;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -44,7 +45,7 @@ public class HttpsServer {
     private static final String CONTENT_TYPE = "Content-Type";
 
     private final Server server = new Server();
-    private SslContextFactory sslContextFactory = new SslContextFactory();
+    private SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
 
     private String responseContent = "{\"foo\": \"bar\"}";
     private String responseContentType = ContentType.APPLICATION_JSON.getMimeType();
@@ -83,6 +84,11 @@ public class HttpsServer {
         HttpConfiguration httpsConfig = new HttpConfiguration(); // httpConfig);
         httpsConfig.setSecureScheme("https");
         httpsConfig.setSecurePort(httpsPort);
+        // We need to disable SNI checking as localhost is restricted.
+        final SecureRequestCustomizer customizer = new SecureRequestCustomizer();
+        customizer.setSniRequired(false);
+        customizer.setSniHostCheck(false);
+        httpsConfig.addCustomizer(customizer);
 
         ServerConnector sslConnector = new ServerConnector(server,
                 new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
