@@ -23,6 +23,8 @@ When closed, a client instance is expected to throw an `IllegalStateException` w
 
 When a client instance is closed, the implementation is expected to clean up any underlying resources.
 
+=== Builder API
+
 A client instance can be closed by casting the instance to a `Closeable` or `AutoCloseable` and invoking the the `close()` method (or auto-invoked if using in a try-with-resources block).
 For example:
 
@@ -67,3 +69,7 @@ try (MyServiceClient c = client) {
 
 String response2 = client.greet(); // throws IllegalStateException
 ----
+
+=== Injected Client
+
+Implementations must close a client once the CDI bean falls out of scope.
