@@ -38,6 +38,6 @@
  *
  * @since 1.0
  */
-@org.osgi.annotation.versioning.Version("2.0")
+@org.osgi.annotation.versioning.Version("2.1")
 @org.osgi.annotation.versioning.ProviderType
 package org.eclipse.microprofile.rest.client;
