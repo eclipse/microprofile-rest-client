@@ -101,6 +101,26 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     }
 
     /**
+     * Specifies the base URI to be used when making requests. Assuming that the interface has a
+     * <code>@Path("/api")</code> at the interface level and a <code>uri</code> is given with
+     * <code>http://my-service:8080/service</code> then all REST calls will be invoked with a <code>uri</code> of
+     * <code>http://my-service:8080/service/api</code> in addition to any <code>@Path</code> annotations included on the
+     * method.
+     *
+     * Subsequent calls to this method will replace the previously specified baseUri/baseUrl.
+     *
+     * @param uri
+     *            the base URI for the service.
+     * @return the current builder with the baseUri set
+     * @throws IllegalArgumentException
+     *             if the passed in URI is invalid
+     * @since 4.0
+     */
+    default RestClientBuilder baseUri(String uri) {
+        return baseUri(URI.create(uri));
+    }
+
+    /**
      * Set the connect timeout.
      * <p>
      * Like JAX-RS's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>connectTimeout</code> method, specifying a
