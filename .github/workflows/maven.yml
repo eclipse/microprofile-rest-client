@@ -5,18 +5,20 @@ on:
     branches-ignore:
       - 'dependabot/**'
     paths:
+        - '.github/workflows/maven.yml'
         - '**/pom.xml'
-        - 'api'
-        - 'spec'
-        - 'tck'
+        - 'api/**'
+        - 'spec/**'
+        - 'tck/**'
   pull_request:
     branches:
       - '**'
     paths:
+        - '.github/workflows/maven.yml'
         - '**/pom.xml'
-        - 'api'
-        - 'spec'
-        - 'tck'
+        - 'api/**'
+        - 'spec/**'
+        - 'tck/**'
 
 # Only run the latest job
 concurrency:
