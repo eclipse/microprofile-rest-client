@@ -16,10 +16,11 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 /**
  * @author <a href="mailto:jperkins@redhat.com">James R. Perkins</a>
