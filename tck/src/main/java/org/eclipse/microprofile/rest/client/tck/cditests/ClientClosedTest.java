@@ -18,12 +18,6 @@
 
 package org.eclipse.microprofile.rest.client.tck.cditests;
 
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.core.Application;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped.AutoCloseableClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped.CloseableClient;
@@ -38,6 +32,13 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
+
 /**
  * Tests that clients are closed when destroyed by the CDI container.
  *
@@ -48,9 +49,9 @@ public class ClientClosedTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientClosedTest.class.getSimpleName() + ".war")
-            .addClasses(ReturnWith200RequestFilter.class, AutoCloseableClient.class,
-                CloseableClient.class, StringClient.class, RestActivator.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+                .addClasses(ReturnWith200RequestFilter.class, AutoCloseableClient.class,
+                        CloseableClient.class, StringClient.class, RestActivator.class)
+                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Inject
@@ -91,7 +92,7 @@ public class ClientClosedTest extends Arquillian {
         resolved.destroy(client, ctx);
         // The bean has been destroyed, expect an IllegalStateException if the method is invoked per the specification
         Assert.expectThrows("Expected an IllegalStateException to be thrown", IllegalStateException.class,
-            client::executeGet);
+                client::executeGet);
     }
 
     @SuppressWarnings("unchecked")

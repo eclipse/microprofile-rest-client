@@ -16,9 +16,10 @@
 
 package org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped;
 
-import jakarta.ws.rs.Path;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+
+import jakarta.ws.rs.Path;
 
 @Path("/")
 // The host/port is hard-coded here as it is not currently used. The StringClientRequestFilter is used to abort the
