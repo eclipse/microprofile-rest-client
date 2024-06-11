@@ -84,6 +84,8 @@ public class FilterPriorityTest extends Arquillian {
         assertEquals("TestClientRequestFilterPriority4", result.requestsInvoked.get(1).getSimpleName());
         assertEquals("TestClientRequestFilterPriority1", result.requestsInvoked.get(2).getSimpleName());
         assertEquals("TestClientRequestFilterPriority3", result.requestsInvoked.get(3).getSimpleName());
+        // Per the Jakarta Rest specification, the order of priorities between Client
+        // request and response filters are reversed.
         assertEquals("TestClientResponseFilterPriority2", result.responsesInvoked.get(0).getSimpleName());
         assertEquals("TestClientResponseFilterPriority4", result.responsesInvoked.get(1).getSimpleName());
         assertEquals("TestClientResponseFilterPriority1", result.responsesInvoked.get(2).getSimpleName());
