@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2017-2021 Contributors to the Eclipse Foundation
+// Copyright (c) 2017 Contributors to the Eclipse Foundation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -282,3 +282,60 @@ public interface BadInterfaceThree {
 All three interfaces will result in a RestClientDefinitionException.
 
 As previously mentioned, specifying the same header name in multiple `@ClientHeaderParam` annotations on the same target will result in a RestClientDefinitionException. Likewise, specifying multiple compute methods in the `@ClientHeaderParam` value attribute will result in a RestClientDefinitionException.
+
+=== Processing Multipart Data
+
+The `multipart/form-data` media type enables requests to send multiple entities (parts) as a single entity using `jakarta.ws.rs.core.EntityPart` objects.
+
+MicroProfile Multipart Rest Clients are defined as Java interfaces.  For example:
+
+[source, java]
+----
+@Consumes(MediaType.MULTIPART_FORM_DATA)
+@Produces(MediaType.MULTIPART_FORM_DATA)
+@Path("/test-app")
+public interface MultiPartClient extends AutoCloseable {
+
+    @POST
+    @Path("upload/")
+    void uploadFile(List<EntityPart> entityParts) throws IOException;
+}
+----
+
+Example code utilizing this interface:
+
+[source, java]
+----
+    public void uploadMultipleFiles() throws Exception {
+        try (MultiPartClient client = RestClientBuilder.newBuilder()
+                .baseUri(uri)
+                .build(MultiPartClient.class)) {
+            final Map<String, byte[]> entityPartContent = new LinkedHashMap<>(2);
+            try (InputStream in = MultiPartClientTest.class
+                    .getResourceAsStream("/multipart/test-file1.txt")) {
+                entityPartContent.put("test-file1.txt", in.readAllBytes());
+            }
+            try (InputStream in = MultiPartClientTest.class
+                    .getResourceAsStream("/multipart/test-file2.txt")) {
+                entityPartContent.put("test-file2.txt", in.readAllBytes());
+            }
+            final List<EntityPart> files = entityPartContent.entrySet()
+                    .stream()
+                    .map((entry) -> {
+                        try {
+                            return EntityPart.withName(entry.getKey())
+                                    .fileName(entry.getKey())
+                                    .content(entry.getValue())
+                                    .mediaType(MediaType.APPLICATION_OCTET_STREAM_TYPE)
+                                    .build();
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                    })
+                    .collect(Collectors.toList());
+            client.uploadFile(files);
+            
+        }
+    }
+---- 
+    
