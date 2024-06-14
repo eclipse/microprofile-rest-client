@@ -25,10 +25,10 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.Path;
 
-@ClientHeaderParam(name = "InterfaceAndBuilderHeader", value = "interface")
 @Path("/")
-public interface ClientBuilderHeaderClient {
+public interface ClientBuilderHeaderMethodClient {
 
     @GET
+    @ClientHeaderParam(name = "InterfaceAndBuilderHeader", value = "method")
     JsonObject getAllHeaders(@HeaderParam("HeaderParam") String param);
 }

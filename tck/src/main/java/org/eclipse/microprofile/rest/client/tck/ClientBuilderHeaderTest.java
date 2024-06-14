@@ -18,99 +18,93 @@
 
 package org.eclipse.microprofile.rest.client.tck;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.containing;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.tck.interfaces.ClientBuilderHeaderClient;
-import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllClientHeadersFilter;
+import org.eclipse.microprofile.rest.client.tck.interfaces.ClientBuilderHeaderMethodClient;
 import org.eclipse.microprofile.rest.client.tck.providers.ReturnWithAllDuplicateClientHeadersFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.testng.annotations.BeforeTest;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.github.tomakehurst.wiremock.client.MappingBuilder;
 
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 
-public class ClientBuilderHeaderTest extends WiremockArquillianTest {
+public class ClientBuilderHeaderTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientBuilderHeaderTest.class.getSimpleName() + ".war")
                 .addClasses(
-                        ClientBuilderHeaderClient.class,
+                        ClientBuilderHeaderMethodClient.class,
                         ReturnWithAllDuplicateClientHeadersFilter.class,
                         WiremockArquillianTest.class);
     }
 
-    private static void stub(String expectedHeaderName, String... expectedHeaderValue) {
-        String expectedIncomingHeader = Arrays.stream(expectedHeaderValue)
-                .collect(Collectors.joining(","));
-        String outputBody = expectedIncomingHeader.replace(',', '-');
-        MappingBuilder mappingBuilder = get(urlEqualTo("/"));
+    @Test
+    public void testHeaderBuilderMethod() {
 
-        // headers can be sent either in a single line with comma-separated values or in multiple lines
-        // this should match both cases:
-        Arrays.stream(expectedHeaderValue)
-                .forEach(val -> mappingBuilder.withHeader(expectedHeaderName, containing(val)));
-        stubFor(
-                mappingBuilder
-                        .willReturn(
-                                aResponse().withStatus(200)
-                                        .withBody(outputBody)));
-    }
-    @BeforeTest
-    public void resetWiremock() {
-        setupServer();
+        RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri("http://localhost:8080/");
+        builder.register(ReturnWithAllDuplicateClientHeadersFilter.class);
+        builder.header("InterfaceAndBuilderHeader", "builder");
+        ClientBuilderHeaderMethodClient client = builder.build(ClientBuilderHeaderMethodClient.class);
+
+        checkHeaders(client.getAllHeaders("headerparam"), "method");
     }
 
     @Test
-    public void testHeaderBuilderMethod() {
-        stub("InterfaceAndBuilderHeader", "builder", "interface", "method");
+    public void testHeaderBuilderInterface() {
 
-        RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri(getServerURI());
-        builder.register(ReturnWithAllClientHeadersFilter.class);
+        RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri("http://localhost:8080/");
+        builder.register(ReturnWithAllDuplicateClientHeadersFilter.class);
         builder.header("InterfaceAndBuilderHeader", "builder");
         ClientBuilderHeaderClient client = builder.build(ClientBuilderHeaderClient.class);
 
-        JsonObject headers = client.getAllHeaders("headerparam");
-        JsonArray header = headers.getJsonArray("InterfaceAndBuilderHeader");
-        final List<String> headerValues =
-                header.stream().map(v -> v.toString().toLowerCase()).collect(Collectors.toList());
-
-        assertTrue(headerValues.contains("builder"),
-                "Header InterfaceAndBuilderHeader did not container \"builder\": " + headers);
-        assertTrue(headerValues.contains("interface"),
-                "Header InterfaceAndBuilderHeader did not container \"interface\": " + headers);
-        assertTrue(headerValues.contains("method"),
-                "Header InterfaceAndBuilderHeader did not container \"method\": " + headers);
-        assertTrue(headers.get("HeaderParam").toString().contains("headerparam"),
-                "Header HeaderParam did not container \"headerparam\": " + headers);
+        checkHeaders(client.getAllHeaders("headerparam"), "interface");
     }
 
     @Test
     public void testHeaderBuilderMethodNullValue() {
-        stub("BuilderHeader", "BuilderHeaderValue");
 
-        RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri(getServerURI());
+        RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri("http://localhost:8080/");
         try {
             builder.header("BuilderHeader", null);
         } catch (NullPointerException npe) {
             return;
         }
         fail("header(\"builderHeader\", null) should have thrown a NullPointerException");
+    }
+
+    private static void checkHeaders(final JsonObject headers, final String clientHeaderParamName) {
+        final List<String> clientRequestHeaders = headerValues(headers, "InterfaceAndBuilderHeader");
+
+        assertTrue(clientRequestHeaders.contains("builder"),
+                "Header InterfaceAndBuilderHeader did not container \"builder\": " + clientRequestHeaders);
+        assertTrue(clientRequestHeaders.contains(clientHeaderParamName),
+                "Header InterfaceAndBuilderHeader did not container \"" + clientHeaderParamName + "\": "
+                        + clientRequestHeaders);
+
+        final List<String> headerParamHeaders = headerValues(headers, "HeaderParam");
+        assertTrue(headerParamHeaders.contains("headerparam"),
+                "Header HeaderParam did not container \"headerparam\": " + headerParamHeaders);
+    }
+
+    private static List<String> headerValues(final JsonObject headers, final String headerName) {
+        final JsonArray headerValues = headers.getJsonArray(headerName);
+        Assert.assertNotNull(headerValues,
+                String.format("Expected header '%s' to be present in %s", headerName, headers));
+        return headerValues.stream().map(
+                v -> (v.getValueType() == JsonValue.ValueType.STRING ? ((JsonString) v).getString() : v.toString()))
+                .collect(Collectors.toList());
     }
 }
