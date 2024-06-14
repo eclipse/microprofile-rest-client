@@ -91,6 +91,11 @@ public class BuilderImpl1 extends AbstractBuilder {
     }
 
     @Override
+    public RestClientBuilder header(String name, Object value) {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
     public <T> T build(Class<T> clazz) {
         throw new IllegalStateException("not implemented");
     }

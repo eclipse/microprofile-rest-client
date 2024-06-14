@@ -149,6 +149,19 @@ implementation must invoke the `DefaultClientHeadersFactoryImpl`. This default f
 
 `org.eclipse.microprofile.rest.client.propagateHeaders`
 
+You can also configure headers on a per instance basis using the `RestClientBuilder.header(String name, Object value)` method. Headers added via this method will be merged with the headers added via `@ClientHeaderParam` annotations, `@HeaderParam` annotations, and `ClientHeadersFactory` implementations.
+**Note: The method will throw a `NullPointerException` if the value is `null`.**
+
+Example:
+
+[source, java]
+----
+RedirectClient client = RestClientBuilder.newBuilder()
+                                         .baseUri(someUri)
+                                         .header("Some-Header", headerValueObj)
+                                         .build(SomeClient.class);
+----
+
 === Following Redirect Responses
 
 By default, a Rest Client instance will not automatically follow redirect responses. Redirect responses are typically responses with status codes in the 300 range and include `Location` header that indicates the URL of the redirected resource.
