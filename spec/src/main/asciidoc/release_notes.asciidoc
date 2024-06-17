@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2016-2021 Contributors to the Eclipse Foundation
+// Copyright (c) 2016 Contributors to the Eclipse Foundation
 //
 // See the NOTICE file(s) distributed with this work for additional
 // information regarding copyright ownership.
@@ -16,9 +16,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // Contributors:
-// John D. Ament, Andy McCright
+// John D. Ament, Andy McCright, Jim Krueger
 
 == Release Notes
+
+[[release_notes_40]]
+=== Release Notes for MicroProfile Rest Client 4.0
+
+A full list of changes delivered in the 4.0 release can be found at
+link:https://github.com/eclipse/microprofile-rest-client/milestone/10?closed=1[MicroProfile Rest Client 4.0 Milestone].
+
+==== Incompatible Changes
+This release aligns with Jakarta EE 10, so it won't work with earlier versions of Jakarta or Java EE.
+
+==== API/SPI Changes
+- New overloaded `baseUri(String uri)` method so users don’t have
+to call `URI.create()`
+- New `header(String name, Object value)` method for adding
+headers to Client instances
+
+==== Functional/Specification Changes
+- Clarify specification CDI support (`@RestClient` qualifier is not optional)
+- Add multi-part processing example to specification.
+- Clarify specification that when a client injected as a CDI bean falls out of scope, the client is closed
+
+==== Other Changes
+- TCK tests added to ensure that priorities specified for client request and response filters are honored by implementations.
+- TCK test added for proper handling of `ResponseExceptionMapper` providers on subresource interface method invocations
+
+==== Jakarta Compatibility
+- EE10
+
+==== Supported Java SE Versions
+- 11
+- 17
+- 21
 
 [[release_notes_30]]
 === Release Notes for MicroProfile Rest Client 3.0
