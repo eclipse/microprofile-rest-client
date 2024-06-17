@@ -270,6 +270,20 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     RestClientBuilder queryParamStyle(QueryParamStyle style);
 
     /**
+     * Add an arbitrary header.
+     *
+     * @param name
+     *            - the name of the header
+     * @param name
+     *            - the value of the HTTP header to add to the request.
+     * @return the current builder with the header added to the request.
+     * @throws NullPointerException
+     *             if the value is null.
+     * @since 4.0
+     */
+    RestClientBuilder header(String name, Object value);
+
+    /**
      * Based on the configured RestClientBuilder, creates a new instance of the given REST interface to invoke API calls
      * against.
      *
