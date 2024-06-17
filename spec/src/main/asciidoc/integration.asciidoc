@@ -48,17 +48,17 @@ the default connect and read timeouts and use the timeout value specified in the
 blocking/non-interruptible operations should be less than or equal to the time specified in the annotation, allowing the MP Fault Tolerance implementation to
 interrupt the request and the throw the appropriate `TimeoutException`.
 
-=== JAX-RS
+=== Jakarta RESTful Web Services
 
-When a client interface is executed from within a JAX-RS context (resource or provider class), it is possible to propagate HTTP headers using the `DefaultClientHeadersFactoryImpl` by adding the
-`@RegisterClientHeaders` annotation to the interface with no value. To specify which headers to propagate from the inbound JAX-RS request to the outbound MP Rest Client request, users must use a
+When a client interface is executed from within a Jakarta RESTful Web Services context (resource or provider class), it is possible to propagate HTTP headers using the `DefaultClientHeadersFactoryImpl` by adding the
+`@RegisterClientHeaders` annotation to the interface with no value. To specify which headers to propagate from the inbound Jakarta RESTful Web Services request to the outbound MP Rest Client request, users must use a
 comma-separated list of headers in the following MicroProfile Config property:
 
 `org.eclipse.microprofile.rest.client.propagateHeaders`.
 
-If the client interface is used within a JAX-RS context, then the implementation may support injection of `@Context` 
-fields and methods into custom `ClientHeadersFactory` instances. The injected objects are related to the JAX-RS context
-(i.e. an injected `UriInfo` will be specific to the JAX-RS resource's URI, not the URI of the MP Rest Client interface).
+If the client interface is used within a Jakarta RESTful Web Services context, then the implementation may support injection of `@Context` 
+fields and methods into custom `ClientHeadersFactory` instances. The injected objects are related to the Jakarta RESTful Web Services context
+(i.e. an injected `UriInfo` will be specific to the Jakarta RESTful Web Services resource's URI, not the URI of the MP Rest Client interface).
 This injection is optional for the implementation, so the only portable injection mechanism of `ClientHeadersFactory`
 instances is `@Inject` when the client is managed by CDI.
 

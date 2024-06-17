@@ -39,7 +39,8 @@ import jakarta.ws.rs.core.Response;
 /**
  * Tests that MP Rest Client's <code>@Produces</code> annotation affects the value transmitted in the
  * <code>Accept</code> header, and that it's <code>@Consumes</code> annotation affects the value transmitted in the
- * <code>Content-Type</code> header. Note that this is opposite of what you would expect for JAX-RS resources.
+ * <code>Content-Type</code> header. Note that this is opposite of what you would expect for Jakarta RESTful Web
+ * Services resources.
  */
 public class ProducesConsumesTest extends Arquillian {
     private final static Logger LOG = Logger.getLogger(ProducesConsumesTest.class.getName());

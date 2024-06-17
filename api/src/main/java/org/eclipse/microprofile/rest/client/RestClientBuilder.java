@@ -40,8 +40,8 @@ import jakarta.ws.rs.core.Configurable;
  * Invoking {@link #newBuilder()} is intended to always create a new instance, not use a cached version.
  * </p>
  * <p>
- * The <code>RestClientBuilder</code> is a {@link Configurable} class as defined by JAX-RS. This allows a user to
- * register providers, implementation specific configuration.
+ * The <code>RestClientBuilder</code> is a {@link Configurable} class as defined by Jakarta RESTful Web Services. This
+ * allows a user to register providers, implementation specific configuration.
  * </p>
  * <p>
  * Implementations are expected to implement this class and provide the instance via the mechanism in
@@ -123,8 +123,8 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     /**
      * Set the connect timeout.
      * <p>
-     * Like JAX-RS's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>connectTimeout</code> method, specifying a
-     * timeout of 0 represents infinity, and negative values are not allowed.
+     * Like Jakarta RESTful Web Services's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>connectTimeout</code>
+     * method, specifying a timeout of 0 represents infinity, and negative values are not allowed.
      * </p>
      * <p>
      * If the client instance is injected via CDI and the
@@ -146,12 +146,12 @@ public interface RestClientBuilder extends Configurable<RestClientBuilder> {
     /**
      * Set the read timeout.
      * <p>
-     * Like JAX-RS's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>readTimeout</code> method, specifying a
-     * timeout of 0 represents infinity, and negative values are not allowed.
+     * Like Jakarta RESTful Web Services's <code>jakarta.ws.rs.client.ClientBuilder</code>'s <code>readTimeout</code>
+     * method, specifying a timeout of 0 represents infinity, and negative values are not allowed.
      * </p>
      * <p>
-     * Also like the JAX-RS Client API, if the read timeout is reached, the client interface method will throw a
-     * <code>jakarta.ws.rs.ProcessingException</code>.
+     * Also like the Jakarta RESTful Web Services Client API, if the read timeout is reached, the client interface
+     * method will throw a <code>jakarta.ws.rs.ProcessingException</code>.
      * </p>
      * <p>
      * If the client instance is injected via CDI and the

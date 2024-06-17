@@ -19,7 +19,7 @@
  *******************************************************************************/
 
 /**
- * APIs for building a type-safe RESTful client leveraging existing JAX-RS APIs, for example:
+ * APIs for building a type-safe RESTful client leveraging existing Jakarta RESTful Web Services APIs, for example:
  *
  * <pre>
  * public interface MyClientService {

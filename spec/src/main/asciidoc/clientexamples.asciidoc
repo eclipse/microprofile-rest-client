@@ -140,12 +140,12 @@ public interface MyInvalidClient {
 }
 ----
 
-It is also possible to add or propagate headers en masse using a `ClientHeadersFactory`. This interface has a single method and takes two read-only `MultivaluedMap` parameters: The first map represents headers for the incoming request - if the client is executing in a JAX-RS environment then this map will contain headers from the inbound JAX-RS request. The second map represents the headers to be sent,
+It is also possible to add or propagate headers en masse using a `ClientHeadersFactory`. This interface has a single method and takes two read-only `MultivaluedMap` parameters: The first map represents headers for the incoming request - if the client is executing in a Jakarta RESTful Web Services environment then this map will contain headers from the inbound Jakarta RESTful Web Services request. The second map represents the headers to be sent,
 and it contains headers that have been specified via `@ClientHeaderParam`, `@HeaderParam`, `@BeanParam`, etc. The method should return a `MultivaluedMap` containing the "final" map of headers to be sent to the outbound processing flow. Providers such as filters, interceptors, message body writers, etc. could still modify the final map of headers prior to
 sending the HTTP request.
 
 By default, no `ClientHeadersFactory` implementation is used. To enable a `ClientHeadersFactory`, the client interface must be annotated with the `@RegisterClientHeaders` annotation. If this annotation specifies a value, the client implementation must invoke an instance of the specified `ClientHeadersFactory` implementation class. If no value is specified, then the client
-implementation must invoke the `DefaultClientHeadersFactoryImpl`. This default factory will propagate specified headers from the inbound JAX-RS request to the outbound request - these headers are specified with a comma-separated list using the following MicroProfile Config property:
+implementation must invoke the `DefaultClientHeadersFactoryImpl`. This default factory will propagate specified headers from the inbound Jakarta RESTful Web Services request to the outbound request - these headers are specified with a comma-separated list using the following MicroProfile Config property:
 
 `org.eclipse.microprofile.rest.client.propagateHeaders`
 

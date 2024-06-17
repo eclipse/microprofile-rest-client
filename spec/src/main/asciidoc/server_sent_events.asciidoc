@@ -150,10 +150,10 @@ This allows subscribers to consume the type-safe business objects (`WeatherEvent
 needing to manually deserialize them from the `InboundSseEvent`. Depending on the execution environment, the provider
 class may not be necessary.
 
-Similar to JAX-RS, MicroProfile Rest Client implementations must use registered `MessageBodyReader` implementations to
+Similar to Jakarta RESTful Web Services, MicroProfile Rest Client implementations must use registered `MessageBodyReader` implementations to
 deserialize the data from the SSE into the business object. The SSE specification does not specify that a content type
 be sent with each SSE, so it is not always possible for Rest Client implementations to choose the correct 
-`MessageBodyReader` for the specified business object. MessageBodyReader selection is documented in the JAX-RS 
+`MessageBodyReader` for the specified business object. MessageBodyReader selection is documented in the Jakarta RESTful Web Services 
 specification. Users are advised to either use `Publisher<InboundSseEvent>` or create and register their own
 `MessageBodyReader` when type selection is difficult to determine. Users are always advised to use 
 `Publisher<InboundSseEvent>` when a server pushes different types of objects from the endpoint.

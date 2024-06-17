@@ -17,7 +17,7 @@
 [[providers]]
 == MicroProfile Rest Client Provider Registration
 
-The RestClientBuilder interface extends the `Configurable` interface from JAX-RS, allowing a user to register custom providers while its being built.  The behavior of the providers supported is defined by the JAX-RS Client API specification.  Below is a list of provider types expected to be supported by an implementation:
+The RestClientBuilder interface extends the `Configurable` interface from Jakarta RESTful Web Services, allowing a user to register custom providers while its being built.  The behavior of the providers supported is defined by the Jakarta RESTful Web Services Client API specification.  Below is a list of provider types expected to be supported by an implementation:
 
 === ClientResponseFilter
 
@@ -31,15 +31,15 @@ Both the `ClientRequestFilter` and `ClientResponseFilter` interfaces contains me
 
 === MessageBodyReader
 
-The `MessageBodyReader` interface defined by JAX-RS allows the entity to be read from the API response after invocation.
+The `MessageBodyReader` interface defined by Jakarta RESTful Web Services allows the entity to be read from the API response after invocation.
 
 === MessageBodyWriter
 
-The `MessageBodyWriter` interface defined by JAX-RS allows a request body to be written in the request for `@POST`, `@PUT` operations, as well as other HTTP methods that support bodies.
+The `MessageBodyWriter` interface defined by Jakarta RESTful Web Services allows a request body to be written in the request for `@POST`, `@PUT` operations, as well as other HTTP methods that support bodies.
 
 === ParamConverter
 
-The `ParamConverter` interface defined by JAX-RS allows a parameter in a resource method to be converted to a format to be used in a request or a response.
+The `ParamConverter` interface defined by Jakarta RESTful Web Services allows a parameter in a resource method to be converted to a format to be used in a request or a response.
 
 === ReaderInterceptor
 
@@ -55,7 +55,7 @@ The `ResponseExceptionMapper` is specific to MicroProfile Rest Client.  This map
 
 ==== How to Implement ResponseExceptionMapper
 
-The specification provides default methods for `getPriority()` and `handles(int status, MultivaluedMap<String,Object> headers)` methods.  Priority is meant to be derived via a `@Priority` annotation added to the `ResponseExceptionMapper` implementation.  The runtime will sort ascending, taking the one with the lowest numeric value first to check if it can handle the `Response` object based on it's status code and headers.  The usage of ascending sorting is done to be consistent with JAX-RS behavior.
+The specification provides default methods for `getPriority()` and `handles(int status, MultivaluedMap<String,Object> headers)` methods.  Priority is meant to be derived via a `@Priority` annotation added to the `ResponseExceptionMapper` implementation.  The runtime will sort ascending, taking the one with the lowest numeric value first to check if it can handle the `Response` object based on it's status code and headers.  The usage of ascending sorting is done to be consistent with Jakarta RESTful Web Services behavior.
 
 Likewise, the `handles` method by default will handle any response status code >= 400.  You may override this behavior if you so choose to handle other response codes (both a smaller ranger and a larger range are expected) or base the decision on the response headers.
 
@@ -166,7 +166,7 @@ Implementations may provide any number of providers registered automatically, bu
 
 === JSON-P and JSON-B Providers
 
-Implementations of the MicroProfile Rest Client should behave similar to JAX-RS implementations with regard to built-in JSON-P and JSON-B providers. Implementations must provide a built-in JSON-P entity provider. If the implementation supports JSON-B, then it must also provide a built-in JSON-B entity provider. Note that the JSON-B provider should take precedence over the JSON-P provider unless the client interface method's entity parameter or return type is a JSON-P object type (`jakarta.json.JsonObject`, `jakarta.json.JsonArray`, etc.).
+Implementations of the MicroProfile Rest Client should behave similar to Jakarta RESTful Web Services implementations with regard to built-in JSON-P and JSON-B providers. Implementations must provide a built-in JSON-P entity provider. If the implementation supports JSON-B, then it must also provide a built-in JSON-B entity provider. Note that the JSON-B provider should take precedence over the JSON-P provider unless the client interface method's entity parameter or return type is a JSON-P object type (`jakarta.json.JsonObject`, `jakarta.json.JsonArray`, etc.).
 
 When an interface is registered that contains:
 
@@ -175,7 +175,7 @@ When an interface is registered that contains:
 - a method that declares input or output of type `jakarta.json.JsonValue` or any subclass therein (JSON-P only) or
 - no `@Produces` or `@Consumes`
 
-Then a JSON-B or JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the JAX-RS 2.1 specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
+Then a JSON-B or JSON-P `MessageBodyReader` and `MessageBodyWriter` will be registered automatically by the implementation.  This is in alignment with the Jakarta RESTful Web Services specification.  The provider registered will have a priority of `Integer.MAX_VALUE`, allowing a user to register a custom provider to be used instead.
 
 Users may configure how JSON-B serializes a request entity or deserializes a response entity by registering a class or instance of `ContextResolver<Jsonb>`. For example, the following code would enable the JSON-B provider implementation to deserialize private fields (without needing getters/setters):
 
