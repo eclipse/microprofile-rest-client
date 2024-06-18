@@ -37,9 +37,6 @@ endif::[]
 :sectnums!:
 include::license-efsl.adoc[]
 
-== Microprofile Rest Client
-
-
 include::clientexamples.asciidoc[]
 
 include::programmatic_lookup.asciidoc[]
