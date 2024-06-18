@@ -28,13 +28,13 @@ import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
- * This class propagates JAX-RS headers whose names are specified using the MicroProfile Config property,
- * <code>org.eclipse.microprofile.rest.client.propagateHeaders</code>.
+ * This class propagates Jakarta RESTful Web Services headers whose names are specified using the MicroProfile Config
+ * property, <code>org.eclipse.microprofile.rest.client.propagateHeaders</code>.
  *
  * <p>
  * The value of this property should be a comma-separated list of HTTP header names. If the headers specified in the
- * property exist in the inbound JAX-RS request, this class will propagate those headers to the outbound Rest Client
- * request.
+ * property exist in the inbound Jakarta RESTful Web Services request, this class will propagate those headers to the
+ * outbound Rest Client request.
  *
  * <p>
  * Any headers present on {@code clientOutgoingHeaders} will not be returned when calling the

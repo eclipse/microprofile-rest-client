@@ -88,7 +88,7 @@ APIs now depend on Jakarta EE 8 APIs and they must be provided by the implementa
 
 Changes since 1.3:
 
-- Ensure CDI and optionally JAX-RS injection into `ClientHeadersFactory`.
+- Ensure CDI and optionally Jakarta RESTful Web Services injection into `ClientHeadersFactory`.
 - Specified `@Target` to `@RestClient` annotation.
 - Removed recursive classloader check when resolving service loader for Rest Client SPI.
 - Updated ParamConverter TCK test case to be more realistic (converting String-to-Widget rather than String-to-String).
@@ -109,7 +109,7 @@ Changes since 1.2:
 
 Changes since 1.1:
 
-- Generate headers en masse, including propagation of headers from inbound JAX-RS requests.
+- Generate headers en masse, including propagation of headers from inbound Jakarta RESTful Web Services requests.
 - New `@ClientHeaderParam` API for defining HTTP headers without modifying the client interface method signature.
 - New section documenting the <<integration.asciidoc#integration>>.
 - Clarification on built-in JSON-B/JSON-P entity providers.
@@ -140,9 +140,9 @@ http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/apidocs/[M
 Key features:
 
 - Built in alignment to other MicroProfile Specs - automatic registration of JSON provider, CDI support for injecting clients, fully configurable clients via MicroProfile Config
-- Can map JAX-RS `Response` objects into `Exception`s to be handled by your client code
+- Can map Jakarta RESTful Web Services `Response` objects into `Exception`s to be handled by your client code
 - Fully declarative annotation driven configuration, with supported builder patterns
-- Closely aligned to JAX-RS with configuration and behavior based on the JAX-RS `Client` object
+- Closely aligned to Jakarta RESTful Web Services with configuration and behavior based on the Jakarta RESTful Web Services `Client` object
 
 To get started, simply add this dependency to your project, assuming you have an implementation available:
 

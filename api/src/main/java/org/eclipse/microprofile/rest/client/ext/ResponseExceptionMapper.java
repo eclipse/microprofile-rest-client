@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Converts an JAX-RS Response object into an Exception.
+ * Converts an Jakarta RESTful Web Services Response object into an Exception.
  *
  */
 public interface ResponseExceptionMapper<T extends Throwable> {
@@ -37,7 +37,7 @@ public interface ResponseExceptionMapper<T extends Throwable> {
      * If this method reads the response body as a stream it must ensure that it resets the stream.
      *
      * @param response
-     *            the JAX-RS response processed from the underlying client
+     *            the Jakarta RESTful Web Services response processed from the underlying client
      * @return A throwable, if this mapper could convert the response.
      */
     T toThrowable(Response response);

@@ -32,7 +32,7 @@ import org.eclipse.microprofile.rest.client.ext.DefaultClientHeadersFactoryImpl;
  * <p>
  * If no implementation class of the ClientHeadersFactory interface is specified in the annotation, then the
  * {@link DefaultClientHeadersFactoryImpl} will be used. This implementation will simply propagate headers (specified
- * via MP Config property) from an inbound JAX-RS request (if applicable) to the outbound request.
+ * via MP Config property) from an inbound Jakarta RESTful Web Services request (if applicable) to the outbound request.
  * <p>
  * If a ClientHeadersFactory class specified is not found on the classpath, this should be considered a deployment
  * exception.
