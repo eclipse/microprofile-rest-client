@@ -1,4 +1,4 @@
-name: Eclipse MicroProfile REST Client CI
+name: MicroProfile REST Client CI
 
 on:
   push:
