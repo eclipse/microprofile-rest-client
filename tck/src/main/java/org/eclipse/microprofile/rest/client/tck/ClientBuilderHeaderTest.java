@@ -46,6 +46,7 @@ public class ClientBuilderHeaderTest extends Arquillian {
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientBuilderHeaderTest.class.getSimpleName() + ".war")
                 .addClasses(
+                        ClientBuilderHeaderClient.class,
                         ClientBuilderHeaderMethodClient.class,
                         ReturnWithAllDuplicateClientHeadersFilter.class);
     }

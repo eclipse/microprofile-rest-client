@@ -22,7 +22,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped.AutoCloseableClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped.CloseableClient;
 import org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped.StringClient;
-import org.eclipse.microprofile.rest.client.tck.providers.ReturnWith200RequestFilter;
+import org.eclipse.microprofile.rest.client.tck.interfaces.cdi.scoped.StringClientRequestFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.testng.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -49,7 +49,7 @@ public class ClientClosedTest extends Arquillian {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, ClientClosedTest.class.getSimpleName() + ".war")
-                .addClasses(ReturnWith200RequestFilter.class, AutoCloseableClient.class,
+                .addClasses(StringClientRequestFilter.class, AutoCloseableClient.class,
                         CloseableClient.class, StringClient.class, RestActivator.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
