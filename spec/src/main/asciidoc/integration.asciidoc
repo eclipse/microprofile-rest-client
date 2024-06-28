@@ -56,7 +56,7 @@ comma-separated list of headers in the following MicroProfile Config property:
 
 `org.eclipse.microprofile.rest.client.propagateHeaders`.
 
-If the client interface is used within a Jakarta RESTful Web Services context, then the implementation may support injection of `@Context` 
+If the client interface is used within a Jakarta RESTful Web Services context, then the implementation may support injection of `@Context`
 fields and methods into custom `ClientHeadersFactory` instances. The injected objects are related to the Jakarta RESTful Web Services context
 (i.e. an injected `UriInfo` will be specific to the Jakarta RESTful Web Services resource's URI, not the URI of the MP Rest Client interface).
 This injection is optional for the implementation, so the only portable injection mechanism of `ClientHeadersFactory`
@@ -64,5 +64,5 @@ instances is `@Inject` when the client is managed by CDI.
 
 === Other MicroProfile Technologies
 
-Client requests can be automatically traced when using MP OpenTracing.  Likewise, requests can be measured using MP Metrics.
+Client requests can be automatically traced when using MP Telemetry.  Likewise, requests can be measured using MP Metrics.
 Configuration and usage of these technologies should be defined in their respective specification documents.
