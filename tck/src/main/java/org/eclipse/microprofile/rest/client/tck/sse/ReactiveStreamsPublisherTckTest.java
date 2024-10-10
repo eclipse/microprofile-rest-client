@@ -102,6 +102,16 @@ public class ReactiveStreamsPublisherTckTest extends PublisherVerification<Inbou
 
         CountDownLatch stopLatch = new CountDownLatch(1);
         try {
+            if (cleanupLatch != null) {
+                // We null out cleanupLatch in a @BeforeTest method, so if it is not null
+                // we must be in a test that calls this multiple times in a single @Test method,
+                // e.g. a stochastic test. In this case we can't rely on having awaited cleanupLatch
+                // in our @AfterTest method, and we need to do it ourselves.
+                if (!cleanupLatch.await(30, TimeUnit.SECONDS)) {
+                    // Just log; maybe by the time we create a new server the old one will be stopped.
+                    LOG.error("Server did not close long after test completed");
+                }
+            }
             cleanupLatch = new CountDownLatch(1);
             AtomicReference<Throwable> serverException = launchServer(stopLatch, es -> {
                 for (long i = 0; i < elements; i++) {
